@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIMUNIK - Ta'aruf</title>
+    <style>
+        /* CSS Style Tetap Sama (Copy dari jawaban sebelumnya) */
+        :root { --primary: #10b981; --dark: #064e3b; --bg: #f3f4f6; --white: #ffffff; }
+        * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: var(--bg); margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+        
+        .app-container { width: 100%; max-width: 480px; min-height: 80vh; background: var(--white); padding: 2rem; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); position: relative; }
+        .dashboard-container { width: 100%; max-width: 1000px; min-height: 90vh; padding: 0; display: none; } /* Dashboard Full Width */
+        .dashboard-content { padding: 2rem; }
+        
+        h1, h2, h3 { color: var(--dark); text-align: center; }
+        p { text-align: center; color: #6b7280; font-size: 0.9rem; }
+        a { color: var(--primary); text-decoration: none; font-weight: 600; cursor: pointer; }
+        
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 5px; color: #374151; }
+        input, select { width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 1rem; outline: none; }
+        input:focus { border-color: var(--primary); }
+        
+        .btn { width: 100%; padding: 12px; background-color: var(--primary); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .btn-outline { background: transparent; border: 1px solid var(--primary); color: var(--primary); margin-top: 10px; }
+        
+        .hidden { display: none !important; }
+        .card { background: white; border-radius: 8px; padding: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-bottom: 15px; display: flex; align-items: center; gap: 15px; }
+        .avatar { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; }
+        
+        /* Untuk form lengkap agar scrollable */
+        .scrollable-form { max-height: 70vh; overflow-y: auto; padding-right: 5px; }
+    </style>
+</head>
+<body>
+
+    <!-- === 1. LOGIN VIEW === -->
+    <div id="login-view" class="app-container">
+        <h1>SIMUNIK 👋</h1>
+        <br>
+        <div class="form-group"><input type="email" id="loginEmail" placeholder="Email" required></div>
+        <div class="form-group"><input type="password" id="loginPass" placeholder="Password" required></div>
+        <button onclick="login()" class="btn">Masuk</button>
+        <div style="margin-top: 20px;">
+            <a onclick="showView('register-view')">Belum punya akun? Daftar</a>
+        </div>
+        <footer style="margin-top:40px; font-size:0.8rem; color:#9ca3af;">© 2026 — BarokahTeam</footer>
+    </div>
+
+    <!-- === 2. REGISTER VIEW (Simple) === -->
+    <div id="register-view" class="app-container hidden">
+        <h2>Buat Akun Baru</h2>
+        <p>Lengkapi profil nanti setelah login.</p>
+        <form onsubmit="handleRegister(event)">
+            <div class="form-group"><input type="email" id="regEmail" placeholder="Email" required></div>
+            <div class="form-group"><input type="password" id="regPass" placeholder="Password" required></div>
+            <div class="form-group"><input type="text" id="regNama" placeholder="Nama Lengkap" required></div>
+            
+            <div class="form-group" style="background:#ecfdf5; padding:10px; border-radius:6px;">
+                <label style="color:var(--dark);">Kode Komunitas:</label>
+                <input type="text" id="regKode" placeholder="BarokahTeam" required>
+            </div>
+
+            <button type="submit" class="btn">Daftar</button>
+            <button type="button" onclick="showView('login-view')" class="btn btn-outline">Batal</button>
+        </form>
+    </div>
+
+    <!-- === 3. COMPLETE PROFILE VIEW (Biodata) === -->
+    <div id="complete-profile-view" class="app-container hidden" style="max-width:600px; min-height:auto; overflow-y:auto;">
+        <h3>Lengkapi Data Diri</h3>
+        <p>Data ini wajib diisi agar dapat mengakses fitur.</p>
+        
+        <form onsubmit="handleUpdateProfile(event)">
+            <div class="scrollable-form">
+                <div class="form-group">
+                    <label>Nama Orang Tua</label>
+                    <input type="text" id="upOrtu" required>
+                </div>
+                <div class="form-group">
+                    <label>Tempat, Tanggal Lahir</label>
+                    <input type="text" id="upTTL" placeholder="Contoh: Garut, 04 November 2003" required>
+                </div>
+                <div class="form-group">
+                    <label>Jenis Kelamin</label>
+                    <select id="upGender" required>
+                        <option value="Laki-laki">Laki-laki</option>
+                        <option value="Perempuan">Perempuan</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Anak ke ... dari ... saudara</label>
+                    <input type="text" id="upAnakKe" placeholder="Contoh: Anak ke 3 dari 4 bersaudara" required>
+                </div>
+                <div class="form-group">
+                    <label>Suku</label>
+                    <input type="text" id="upSuku" required>
+                </div>
+                <div class="form-group">
+                    <label>Tinggi & Berat</label>
+                    <input type="text" id="upTB" placeholder="Contoh: 170 cm 58kg" required>
+                </div>
+                <div class="form-group">
+                    <label>Status Menikah</label>
+                    <select id="upMenikah" required>
+                        <option value="Belum Menikah">Belum Menikah</option>
+                        <option value="Janda/Duda">Janda/Duda</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Pendidikan</label>
+                    <input type="text" id="upPendidikan" required>
+                </div>
+                <div class="form-group">
+                    <label>Pekerjaan</label>
+                    <input type="text" id="upPekerjaan" required>
+                </div>
+                <div class="form-group">
+                    <label>Hobi</label>
+                    <input type="text" id="upHobi" required>
+                </div>
+                <div class="form-group">
+                    <label>Dapukan</label>
+                    <input type="text" id="upDapukan" required>
+                </div>
+
+                <!-- Dropdowns (Logic load dari JS) -->
+                <div class="form-group">
+                    <label>Daerah</label>
+                    <select id="upDaerah" onchange="loadDesaOptions('up')" required></select>
+                </div>
+                <div class="form-group">
+                    <label>Desa</label>
+                    <select id="upDesa" onchange="loadKelompokOptions('up')" required></select>
+                </div>
+                <div class="form-group">
+                    <label>Kelompok</label>
+                    <select id="upKelompok" required></select>
+                </div>
+
+                <div class="form-group">
+                    <label>Foto Profil</label>
+                    <input type="file" id="upFoto" accept="image/*" required>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn">Simpan Data Diri</button>
+        </form>
+    </div>
+
+    <!-- === 4. DASHBOARD VIEW === -->
+    <div id="dashboard-view" class="app-container dashboard-container hidden">
+        <div style="background: var(--dark); color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center;">
+            <h3 style="margin:0;">Dashboard SIMUNIK</h3>
+            <div>
+                <div id="userName" style="font-weight:bold;">User</div>
+                <a onclick="logout()" style="color: #fca5a5; font-size: 0.8rem;">Logout</a>
+            </div>
+        </div>
+        <div class="dashboard-content" id="dashboard-list">
+            <!-- Data user muncul disini -->
+        </div>
+    </div>
+
+    <script>
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbwTGFTatNOATbDYW6AM2-PCEK6gkAHwtDxLjgDRkFu0FaAgbsYcOyRdmccPbQX0SA61/exec";
+        let currentUser = null;
+        let masterData = { daerah: [], desa: {}, kelompok: {} };
+
+        async function fetchGAS(action, params = {}, method = 'GET', body = null) {
+            let url = `${GAS_URL}?action=${action}`;
+            if (method === 'GET') Object.keys(params).forEach(key => url += `&${key}=${encodeURIComponent(params[key])}`);
+            const options = { method: method, mode: 'cors' };
+            if (body) { options.headers = { 'Content-Type': 'application/json' }; options.body = JSON.stringify(body); }
+            try { return await (await fetch(url, options)).json(); } catch (e) { alert("Gagal koneksi"); return {status:'error'}; }
+        }
+
+        function showView(id) {
+            document.querySelectorAll('.app-container, .dashboard-container').forEach(el => el.classList.add('hidden'));
+            const target = document.getElementById(id);
+            if(target) target.classList.remove('hidden');
+            if(id === 'dashboard-view') target.style.display = 'block';
+        }
+
+        // --- REGISTER ---
+        async function handleRegister(e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            btn.disabled = true; btn.textContent = "Memproses...";
+
+            const res = await fetchGAS('register', {}, 'POST', {
+                email: document.getElementById('regEmail').value,
+                password: document.getElementById('regPass').value,
+                nama: document.getElementById('regNama').value,
+                kodeKomunitas: document.getElementById('regKode').value
+            });
+            alert(res.message);
+            if(res.status === 'success') showView('login-view');
+            btn.disabled = false; btn.textContent = "Daftar";
+        }
+
+        // --- LOGIN & LOGIC CEK PROFILE ---
+        async function login() {
+            const res = await fetchGAS('login', {
+                email: document.getElementById('loginEmail').value,
+                password: document.getElementById('loginPass').value
+            });
+
+            if (res.status === 'success') {
+                currentUser = res.user;
+                
+                // Cek apakah profil lengkap?
+                if (!currentUser.isComplete) {
+                    // Kalau belum lengkap, isi form biodata dulu
+                    loadMasterData(); // Load dropdown options
+                    showView('complete-profile-view');
+                } else {
+                    // Kalau sudah lengkap, langsung dashboard
+                    loadDashboard();
+                }
+            } else {
+                alert(res.message);
+            }
+        }
+
+        // --- UPDATE PROFILE ---
+        async function handleUpdateProfile(e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            btn.disabled = true; btn.textContent = "Menyimpan...";
+
+            let fotoBase64 = null;
+            const fotoInput = document.getElementById('upFoto');
+            if(fotoInput.files[0]) {
+                fotoBase64 = await fileToBase64(fotoInput.files[0]);
+            }
+
+            const res = await fetchGAS('register', {}, 'POST', { // Endpoint tetap doPost, action beda
+                action: 'updateProfile',
+                email: currentUser.email,
+                nama: currentUser.nama,
+                namaOrtu: document.getElementById('upOrtu').value,
+                ttl: document.getElementById('upTTL').value,
+                gender: document.getElementById('upGender').value,
+                anakKe: document.getElementById('upAnakKe').value,
+                suku: document.getElementById('upSuku').value,
+                tbBerat: document.getElementById('upTB').value,
+                menikah: document.getElementById('upMenikah').value,
+                pendidikan: document.getElementById('upPendidikan').value,
+                pekerjaan: document.getElementById('upPekerjaan').value,
+                hobi: document.getElementById('upHobi').value,
+                dapukan: document.getElementById('upDapukan').value,
+                daerah: document.getElementById('upDaerah').value,
+                desa: document.getElementById('upDesa').value,
+                kelompok: document.getElementById('upKelompok').value,
+                foto: fotoBase64
+            });
+
+            alert(res.message);
+            if(res.status === 'success') {
+                // Update data user di frontend agar bisa masuk dashboard
+                currentUser.isComplete = true;
+                loadDashboard();
+            }
+            btn.disabled = false; btn.textContent = "Simpan Data Diri";
+        }
+
+        // --- LOGIC DROPDOWN (Sama seperti sebelumnya) ---
+        async function loadMasterData() {
+            const res = await fetchGAS('getMasterData');
+            if(res.status === 'success') {
+                masterData = res.data;
+                const daerahSelect = document.getElementById('upDaerah');
+                daerahSelect.innerHTML = '<option value="">Pilih Daerah...</option>';
+                masterData.daerah.forEach(d => daerahSelect.innerHTML += `<option value="${d}">${d}</option>`);
+            }
+        }
+        function loadDesaOptions(prefix) {
+            const daerah = document.getElementById(prefix + 'Daerah').value;
+            const desaSelect = document.getElementById(prefix + 'Desa');
+            desaSelect.innerHTML = '<option value="">Pilih Desa...</option>';
+            if (masterData.desa[daerah]) masterData.desa[daerah].forEach(d => desaSelect.innerHTML += `<option value="${d}">${d}</option>`);
+        }
+        function loadKelompokOptions(prefix) {
+            const desa = document.getElementById(prefix + 'Desa').value;
+            const kelSelect = document.getElementById(prefix + 'Kelompok');
+            kelSelect.innerHTML = '<option value="">Pilih Kelompok...</option>';
+            if (masterData.kelompok[desa]) masterData.kelompok[desa].forEach(k => kelSelect.innerHTML += `<option value="${k}">${k}</option>`);
+        }
+
+        // --- DASHBOARD (Load Data Users) ---
+        async function loadDashboard() {
+            showView('dashboard-view');
+            document.getElementById('userName').textContent = currentUser.nama;
+
+            // Gunakan fungsi getUsers yang sama di backend (di code.gs tambahkan logic getUsers jika belum ada)
+            // Untuk singkatnya di sini, saya asumsikan 'getUsers' sudah ada di Code.gs
+            const res = await fetchGAS('getUsers', { 
+                role: currentUser.role, desa: currentUser.desa, daerah: currentUser.daerah, email: currentUser.email 
+            });
+
+            const container = document.getElementById('dashboard-list');
+            container.innerHTML = '';
+            
+            // Simple render card (sesuaikan dengan data kolom baru di backend)
+            if (res.data && res.data.length > 0) {
+                res.data.forEach(u => {
+                    container.innerHTML += `
+                    <div class="card">
+                        <img src="${u.foto || 'https://via.placeholder.com/60'}" class="avatar">
+                        <div>
+                            <div style="font-weight:bold;">${u.nama}</div>
+                            <div style="font-size:0.9rem;">${u.gender} | ${u.suku}</div>
+                            <div style="font-size:0.8rem; color:#666;">${u.pekerjaan}</div>
+                        </div>
+                    </div>`;
+                });
+            } else {
+                container.innerHTML = '<p class="text-center">Belum ada data.</p>';
+            }
+        }
+
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result.split(',')[1]);
+                reader.onerror = error => reject(error);
+            });
+        }
+        function logout() { location.reload(); }
+    </script>
+</body>
+</html>
