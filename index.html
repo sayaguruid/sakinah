@@ -35,15 +35,22 @@
         input::placeholder { color: var(--text-light); }
         select { padding-left: 12px; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; }
         input[type="file"] { padding: 10px; font-size: 0.85rem; cursor: pointer; }
-        
+        textarea { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius); font-size: 0.9rem; font-family: 'Inter', sans-serif; outline: none; resize: vertical; transition: all 0.2s; background: var(--bg); color: var(--text-main); line-height: 1.6; }
+        textarea:focus { border-color: var(--border-focus); box-shadow: 0 0 0 3px var(--primary-glow); }
+        textarea::placeholder { color: var(--text-light); }
+
         .btn { width: 100%; padding: 11px; background: var(--primary); color: white; border: none; border-radius: var(--radius); font-weight: 600; font-family: 'Inter', sans-serif; cursor: pointer; font-size: 0.9rem; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .btn:hover { background: var(--primary-hover); }
         .btn:disabled { background: var(--text-light); cursor: not-allowed; }
         .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-muted); margin-top: 0.75rem; }
         .btn-outline:hover { background: var(--surface); border-color: var(--text-light); color: var(--text-main); }
-        .btn-sm { padding: 6px 12px; width: auto; font-size: 0.8rem; }
+        .btn-sm { padding: 6px 14px; width: auto; font-size: 0.8rem; border-radius: 6px; }
         .btn-success { background: var(--success); } .btn-success:hover { background: #059669; }
         .btn-danger-sm { background: var(--danger); } .btn-danger-sm:hover { background: #DC2626; }
+        .btn-warning-sm { background: var(--warning); color: var(--text-main); } .btn-warning-sm:hover { background: #D97706; }
+        .btn-wa { background: #25D366; } .btn-wa:hover { background: #1EBE57; }
+        .btn-info-sm { background: #3B82F6; } .btn-info-sm:hover { background: #2563EB; }
+        .btn-purple-sm { background: #8B5CF6; } .btn-purple-sm:hover { background: #7C3AED; }
 
         .link { color: var(--primary); font-size: 0.85rem; font-weight: 500; cursor: pointer; text-decoration: none; display: inline-block; }
         .link:hover { text-decoration: underline; }
@@ -73,18 +80,19 @@
         .main-header { padding: 1.25rem 2rem; border-bottom: 1px solid var(--border); background: var(--bg); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 10; }
         .main-header h3 { font-size: 1.15rem; font-weight: 600; color: var(--text-main); }
         .main-content { padding: 2rem; max-width: 1400px; }
-        
+
         .hamburger { display: none; background: none; border: none; font-size: 1.2rem; color: var(--text-main); cursor: pointer; }
         .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 99; }
 
         .alert { padding: 12px 16px; border-radius: var(--radius); font-size: 0.85rem; margin-bottom: 1.5rem; display: flex; align-items: flex-start; gap: 10px; line-height: 1.5; }
-        .alert i { margin-top: 2px; }
+        .alert i { margin-top: 2px; flex-shrink: 0; }
         .alert-warning { background: var(--warning-light); color: #92400E; border: 1px solid #FDE68A; }
         .alert-info { background: var(--primary-light); color: var(--primary); border: 1px solid #C7D2FE; }
+        .alert-success { background: var(--success-light); color: #065F46; border: 1px solid #A7F3D0; }
 
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1.25rem; }
         .section-title { font-size: 0.8rem; font-weight: 700; color: var(--text-muted); margin: 1.5rem 0 1rem; text-transform: uppercase; letter-spacing: 0.5px; }
-        
+
         .search-bar { width: 100%; padding: 10px 12px 10px 36px; border: 1px solid var(--border); border-radius: var(--radius); font-size: 0.9rem; outline: none; background: var(--surface); transition: all 0.2s; font-family: 'Inter', sans-serif; }
         .search-bar:focus { border-color: var(--border-focus); background: var(--bg); box-shadow: 0 0 0 3px var(--primary-glow); }
         .search-wrap { position: relative; margin-bottom: 1.5rem; }
@@ -97,21 +105,32 @@
         .card-img { width: 100px; height: 100px; object-fit: cover; border-radius: var(--radius); background: var(--surface); flex-shrink: 0; }
         .card-avatar { width: 100px; height: 100px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; font-weight: 700; color: var(--primary); background: var(--primary-light); border-radius: var(--radius); flex-shrink: 0; }
         .card-identity { flex: 1; display: flex; flex-direction: column; justify-content: center; }
-        .card-name { font-weight: 700; font-size: 1.05rem; margin-bottom: 4px; }
+        .card-name { font-weight: 700; font-size: 1.05rem; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
         .card-sub { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 2px; }
-        
+
         .card-body { padding: 1rem; }
         .data-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
         .data-item { font-size: 0.82rem; }
         .data-label { color: var(--text-light); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.3px; }
         .data-value { color: var(--text-main); font-weight: 500; }
         .full-col { grid-column: 1 / -1; }
-        
+
         .card-footer { padding: 0.75rem 1rem; border-top: 1px solid var(--border); margin-top: auto; }
-        
-        .badge { padding: 2px 8px; border-radius: 12px; font-size: 0.7rem; font-weight: 600; display: inline-block; text-align: center; }
-        .badge-m { background: #DBEAFE; color: #1E40AF; } .badge-f { background: #FCE7F3; color: #BE185D; }
-        .badge-pending { background: #FEF3C7; color: #92400E; } .badge-approved { background: #D1FAE5; color: #065F46; } .badge-rejected { background: #FEE2E2; color: #991B1B; }
+
+        .badge { padding: 2px 8px; border-radius: 12px; font-size: 0.7rem; font-weight: 600; display: inline-block; text-align: center; white-space: nowrap; }
+        .badge-m { background: #DBEAFE; color: #1E40AF; }
+        .badge-f { background: #FCE7F3; color: #BE185D; }
+        .badge-pending { background: #FEF3C7; color: #92400E; }
+        .badge-approved { background: #D1FAE5; color: #065F46; }
+        .badge-rejected { background: #FEE2E2; color: #991B1B; }
+        .badge-taaruf { background: #DBEAFE; color: #1E40AF; }
+        .badge-proses { background: #FEF3C7; color: #92400E; }
+        .badge-menikah { background: #D1FAE5; color: #065F46; }
+
+        .filter-tabs { display: flex; gap: 6px; margin-bottom: 1.25rem; flex-wrap: wrap; }
+        .filter-tab { padding: 6px 14px; border: 1px solid var(--border); border-radius: 20px; font-size: 0.8rem; font-weight: 500; cursor: pointer; background: var(--bg); color: var(--text-muted); font-family: 'Inter', sans-serif; transition: all 0.2s; white-space: nowrap; }
+        .filter-tab:hover { border-color: var(--primary); color: var(--primary); }
+        .filter-tab.active { background: var(--primary); color: white; border-color: var(--primary); }
 
         .table-wrap { border: 1px solid var(--border); border-radius: var(--radius); overflow-x: auto; background: var(--bg); }
         table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
@@ -124,8 +143,9 @@
         .img-preview { width: 80px; height: 80px; object-fit: cover; margin-top: 8px; border-radius: var(--radius); border: 1px solid var(--border); display: none; }
         .question-box { background: var(--surface); border: 1px solid var(--border); padding: 12px; border-radius: var(--radius); font-weight: 500; font-size: 0.9rem; margin-bottom: 8px; }
 
-        .toast { position: fixed; top: 20px; right: 20px; padding: 12px 20px; border-radius: var(--radius); color: white; font-weight: 500; font-family: 'Inter', sans-serif; z-index: 10000; animation: slideIn 0.3s ease; max-width: 320px; font-size: 0.85rem; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        .toast-success { background: var(--success); } .toast-error { background: var(--danger); }
+        .toast { position: fixed; top: 20px; right: 20px; padding: 12px 20px; border-radius: var(--radius); color: white; font-weight: 500; font-family: 'Inter', sans-serif; z-index: 10000; animation: slideIn 0.3s ease; max-width: 360px; font-size: 0.85rem; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        .toast-success { background: var(--success); }
+        .toast-error { background: var(--danger); }
         @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         .loading-overlay { position: fixed; inset: 0; background: rgba(255,255,255,0.8); display: flex; align-items: center; justify-content: center; z-index: 9998; }
         .spinner { width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.6s linear infinite; }
@@ -134,20 +154,41 @@
         .action-btns { display: flex; gap: 6px; flex-wrap: wrap; }
         .sub-text { font-size: 0.75rem; color: var(--text-light); margin-top: 2px; }
         .data-cell-line { margin-bottom: 4px; }
+        .kriteria-box { background: var(--primary-light); border: 1px dashed var(--primary); border-radius: 6px; padding: 8px 10px; margin-top: 8px; font-size: 0.8rem; line-height: 1.5; color: var(--text-main); }
+        .kriteria-box .kriteria-label { font-size: 0.7rem; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 2px; }
+        .empty-state { text-align: center; color: var(--text-muted); padding: 3rem 1rem; }
+        .empty-state i { font-size: 2.5rem; margin-bottom: 1rem; display: block; opacity: 0.4; }
+        .empty-state p { font-size: 0.9rem; }
+        .status-card { border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem; margin-bottom: 1rem; background: var(--bg); transition: box-shadow 0.2s; }
+        .status-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+        .status-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; flex-wrap: wrap; gap: 8px; }
+        .status-card-title { font-weight: 700; font-size: 1rem; }
+        .status-card-meta { font-size: 0.8rem; color: var(--text-muted); line-height: 1.7; }
+        .status-card-meta i { width: 16px; text-align: center; margin-right: 4px; }
 
-        /* CSS untuk Modal Foto Besar */
         .photo-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(4px); z-index: 10000; display: flex; align-items: center; justify-content: center; padding: 2rem; cursor: pointer; animation: slideIn 0.2s ease; }
         .photo-modal-content { position: relative; max-width: 90vw; max-height: 90vh; cursor: default; }
         .photo-modal-content img { max-width: 100%; max-height: 85vh; border-radius: var(--radius); box-shadow: 0 20px 50px rgba(0,0,0,0.3); object-fit: contain; background: white; }
         .photo-modal-close { position: absolute; top: -12px; right: -12px; width: 36px; height: 36px; border-radius: 50%; background: white; border: none; font-size: 1.2rem; color: var(--text-main); cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.2); transition: all 0.2s; }
         .photo-modal-close:hover { background: var(--danger); color: white; }
 
+        .wa-info-box { background: #ECFDF5; border: 1px solid #A7F3D0; border-radius: var(--radius); padding: 16px; margin-bottom: 1.5rem; }
+        .wa-info-box .wa-title { font-weight: 700; color: #065F46; font-size: 0.95rem; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+        .wa-info-box .wa-detail { font-size: 0.82rem; color: #065F46; line-height: 1.6; }
+        .wa-info-box .wa-btn { margin-top: 10px; }
+
         @media (max-width: 768px) {
-            .sidebar { transform: translateX(-100%); } .sidebar.open { transform: translateX(0); }
-            .overlay.open { display: block; } .main { margin-left: 0; }
-            .hamburger { display: block; } .main-content { padding: 1.25rem; }
-            .grid-2 { grid-template-columns: 1fr; } .card-grid { grid-template-columns: 1fr; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .overlay.open { display: block; }
+            .main { margin-left: 0; }
+            .hamburger { display: block; }
+            .main-content { padding: 1.25rem; }
+            .grid-2 { grid-template-columns: 1fr; }
+            .card-grid { grid-template-columns: 1fr; }
             .data-grid { grid-template-columns: 1fr; }
+            .filter-tabs { gap: 4px; }
+            .filter-tab { padding: 5px 10px; font-size: 0.75rem; }
         }
     </style>
 </head>
@@ -173,7 +214,7 @@
                 <div class="form-group"><label>Email</label><div class="input-wrapper"><i class="fas fa-envelope icon-left"></i><input type="email" id="regEmail" placeholder="email@contoh.com" required></div></div>
                 <div class="form-group"><label>Password</label><div class="input-wrapper"><i class="fas fa-lock icon-left"></i><input type="password" id="regPass" placeholder="Min 6 karakter" required minlength="6"></div></div>
                 <div class="form-group"><label>Nama Lengkap</label><div class="input-wrapper"><i class="fas fa-user icon-left"></i><input type="text" id="regNama" placeholder="Nama sesuai identitas" required></div></div>
-                <div class="alert alert-info"><i class="fas fa-shield-alt"></i><div><b>Verifikasi Komunitas</b><div class="question-box" id="verifyQuestion">Memuat...</div><input type="hidden" id="regQuestionHidden"><div class="input-wrapper" style="margin-top:8px;"><i class="fas fa-key icon-left"></i><input type="text" id="regAnswer" placeholder="Jawaban" required></div></div></div>
+                <div class="alert alert-info"><i class="fas fa-shield-alt"></i><div><b>Verifikasi Komunitas</b><br><span style="font-size:0.78rem;color:var(--text-muted);">Jawab pertanyaan berikut untuk membuktikan Anda anggota komunitas</span><div class="question-box" id="verifyQuestion" style="margin-top:6px;">Memuat pertanyaan...</div><input type="hidden" id="regQuestionHidden"><div class="input-wrapper" style="margin-top:8px;"><i class="fas fa-key icon-left"></i><input type="text" id="regAnswer" placeholder="Ketik jawaban Anda" required></div></div></div>
                 <button type="submit" id="btnRegister" class="btn"><i class="fas fa-check"></i> Daftar</button>
                 <button type="button" onclick="showView('login-view')" class="btn btn-outline"><i class="fas fa-arrow-left"></i> Kembali</button>
             </form>
@@ -211,15 +252,19 @@
             <header class="main-header">
                 <div style="display:flex;align-items:center;gap:12px;"><button class="hamburger" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><h3 id="pageTitle">Beranda</h3></div>
             </header>
-            
+
             <div class="main-content">
-                <div id="page-home"><div class="alert alert-info"><i class="fas fa-info-circle"></i><div>Selamat datang! Lengkapi profil dan mulai cari jodoh melalui menu <b>Cari Jodoh</b>.</div></div></div>
+                <div id="page-home"><div class="alert alert-info"><i class="fas fa-info-circle"></i><div>Selamat datang! Lengkapi profil dan mulai cari jodoh melalui menu <b>Cari Jodoh</b>.<br>Pengajuan ta'aruf akan diarahkan langsung ke WhatsApp tim ta'aruf daerah terkait.</div></div></div>
+
                 <div id="page-search" class="hidden">
+                    <div class="alert alert-warning" style="margin-bottom:1rem;"><i class="fab fa-whatsapp"></i><div>Klik <b>Ajukan Ta'aruf</b> untuk langsung terhubung ke WhatsApp tim ta'aruf daerah target.</div></div>
+                    <div id="search-taaruf-blocked" class="hidden" style="margin-bottom:1rem;"></div>
                     <div class="search-wrap"><i class="fas fa-search"></i><input type="text" class="search-bar" id="searchInput" placeholder="Cari nama..." oninput="filterDashboard()"></div>
                     <div id="dashboard-list" class="card-grid"></div>
                 </div>
+
                 <div id="page-status" class="hidden"><div id="status-content"></div></div>
-                
+
                 <div id="page-profile" class="hidden">
                     <div class="alert alert-warning" id="profileAlert"><i class="fas fa-exclamation-triangle"></i><div>Lengkapi profil terlebih dahulu untuk membuka fitur Cari Jodoh dan Status Ta'aruf.</div></div>
                     <form id="profileForm" onsubmit="handleUpdateProfile(event)">
@@ -249,21 +294,34 @@
                         </div>
                         <div class="section-title">Foto</div>
                         <div class="form-group">
-                            <input type="file" id="upFoto" accept="image/*" onchange="previewFoto(event, 'upFotoPreview')">
+                            <input type="file" id="upFoto" accept="image/*" onchange="previewFoto(event,'upFotoPreview')">
                             <img id="upFotoPreview" class="img-preview" src="" alt="Preview">
+                        </div>
+                        <div class="section-title">Kriteria Pasangan</div>
+                        <div class="form-group">
+                            <label>Kriteria pasangan yang diinginkan</label>
+                            <textarea id="upKriteria" rows="3" placeholder="Contoh: Sholeh/ah, berpengalaman bekerja, tinggi minimal 165cm, usia maks 30 tahun, domisili di daerah yang sama..."></textarea>
                         </div>
                         <button type="submit" id="btnSaveProfile" class="btn" style="margin-top:1rem;"><i class="fas fa-save"></i> Simpan Profil</button>
                     </form>
                 </div>
 
                 <div id="page-admin-home" class="hidden"><div class="alert alert-info"><i class="fas fa-shield-alt"></i><div>Anda masuk sebagai <b id="adminRoleLabel">Admin</b> Wilayah <b id="adminScopeLabel">-</b>.</div></div></div>
-                
+
                 <div id="page-admin-users" class="hidden">
                     <div class="search-wrap"><i class="fas fa-search"></i><input type="text" class="search-bar" id="adminSearchInput" placeholder="Cari peserta..." oninput="filterAdmin()"></div>
                     <div class="table-wrap"><table><thead><tr><th>Peserta</th><th>Data Pribadi</th><th>Pekerjaan & Lainnya</th><th>Wilayah</th><th>Status</th></tr></thead><tbody id="admin-tbody"></tbody></table></div>
                 </div>
 
                 <div id="page-admin-taaruf" class="hidden">
+                    <div class="filter-tabs" id="taarufFilterTabs">
+                        <button class="filter-tab active" onclick="filterTaaruf(this,'')">Semua</button>
+                        <button class="filter-tab" onclick="filterTaaruf(this,'Pending')">Belum Diterima</button>
+                        <button class="filter-tab" onclick="filterTaaruf(this,'Sedang Taaruf')">Sedang Taaruf</button>
+                        <button class="filter-tab" onclick="filterTaaruf(this,'Sedang Proses')">Sedang Proses</button>
+                        <button class="filter-tab" onclick="filterTaaruf(this,'Sudah Menikah')">Sudah Menikah</button>
+                        <button class="filter-tab" onclick="filterTaaruf(this,'Rejected')">Ditolak</button>
+                    </div>
                     <div class="table-wrap"><table><thead><tr><th>Tanggal</th><th>Pelamar</th><th>Target</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="admin-taaruf-tbody"></tbody></table></div>
                 </div>
             </div>
@@ -272,175 +330,470 @@
 
     <script>
         const GAS_URL = "https://script.google.com/macros/s/AKfycbwTGFTatNOATbDYW6AM2-PCEK6gkAHwtDxLjgDRkFu0FaAgbsYcOyRdmccPbQX0SA61/exec";
-        let currentUser = null; let masterData = { daerah: [], desa: {}, kelompok: {} }; let allUsers = []; let allTaarufRequests = [];
+        let currentUser = null;
+        let masterData = { daerah: [], desa: {}, kelompok: {} };
+        let allUsers = [];
+        let allTaarufRequests = [];
+        let currentTaarufFilter = '';
+        let cachedTaarufTim = {};
         const adminRoles = ['Admin', 'Desa', 'Daerah', 'Super Admin'];
 
-        function showToast(msg, type='success') { const t=document.createElement('div'); t.className=`toast toast-${type}`; t.innerHTML=`<i class="fas fa-${type==='success'?'check':'exclamation'}-circle"></i> ${msg}`; document.body.appendChild(t); setTimeout(()=>{t.style.opacity='0'; setTimeout(()=>t.remove(),300)}, 3000); }
-        function showLoading() { const o=document.createElement('div'); o.className='loading-overlay'; o.id='loadOv'; o.innerHTML='<div class="spinner"></div>'; document.body.appendChild(o); }
-        function hideLoading() { const el=document.getElementById('loadOv'); if(el) el.remove(); }
-        async function fetchGAS(action, params={}, method='GET', body=null) { let url=`${GAS_URL}?action=${action}`; try { if(method==='GET') { Object.keys(params).forEach(k=>url+=`&${k}=${encodeURIComponent(params[k])}`); return await (await fetch(url)).json(); } else { return await (await fetch(url, {method:'POST', headers:{'Content-Type':'text/plain'}, body:JSON.stringify({action,...body})})).json(); } } catch(e) { showToast('Gagal terhubung ke server','error'); return {status:'error'}; } }
-        function showView(id) { document.querySelectorAll('.auth-wrapper, .app-shell').forEach(el=>el.classList.add('hidden')); const t=document.getElementById(id); if(t) t.classList.remove('hidden'); }
-        function getPhotoUrl(url) { if(!url) return ''; const m=url.match(/\/d\/([a-zA-Z0-9_-]+)/); if(m) return `https://drive.google.com/thumbnail?id=${m[1]}&sz=w400`; return url.includes('thumbnail?id=')?url:url; }
-        function getInitials(n) { if(!n) return '?'; const p=n.trim().split(/\s+/); return p.length===1?p[0][0].toUpperCase():(p[0][0]+p[p.length-1][0]).toUpperCase(); }
-        function getAvatarColor(n) { let h=0; for(let i=0;i<(n||'').length;i++){h=n.charCodeAt(i)+((h<<5)-h);} return ['#4F46E5','#10B981','#F59E0B','#EF4444','#8B5CF6'][Math.abs(h)%5]; }
+        /* ========== UTILITAS ========== */
+        function showToast(msg, type) {
+            type = type || 'success';
+            var t = document.createElement('div');
+            t.className = 'toast toast-' + type;
+            t.innerHTML = '<i class="fas fa-' + (type === 'success' ? 'check' : 'exclamation') + '-circle"></i> ' + msg;
+            document.body.appendChild(t);
+            setTimeout(function() { t.style.opacity = '0'; t.style.transition = 'opacity 0.3s'; setTimeout(function() { t.remove(); }, 300); }, 3500);
+        }
+        function showLoading() { var o = document.createElement('div'); o.className = 'loading-overlay'; o.id = 'loadOv'; o.innerHTML = '<div class="spinner"></div>'; document.body.appendChild(o); }
+        function hideLoading() { var el = document.getElementById('loadOv'); if (el) el.remove(); }
+        async function fetchGAS(action, params, method, body) {
+            params = params || {};
+            method = method || 'GET';
+            body = body || null;
+            var url = GAS_URL + '?action=' + action;
+            try {
+                if (method === 'GET') { Object.keys(params).forEach(function(k) { url += '&' + k + '=' + encodeURIComponent(params[k]); }); return await (await fetch(url)).json(); }
+                else { return await (await fetch(url, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(Object.assign({ action: action }, body)) })).json(); }
+            } catch (e) { showToast('Gagal terhubung ke server', 'error'); return { status: 'error' }; }
+        }
+        function showView(id) { document.querySelectorAll('.auth-wrapper, .app-shell').forEach(function(el) { el.classList.add('hidden'); }); var t = document.getElementById(id); if (t) t.classList.remove('hidden'); }
+        function getPhotoUrl(url) { if (!url) return ''; var m = url.match(/\/d\/([a-zA-Z0-9_-]+)/); if (m) return 'https://drive.google.com/thumbnail?id=' + m[1] + '&sz=w400'; return url.indexOf('thumbnail?id=') !== -1 ? url : url; }
+        function getInitials(n) { if (!n) return '?'; var p = n.trim().split(/\s+/); return p.length === 1 ? p[0][0].toUpperCase() : (p[0][0] + p[p.length - 1][0]).toUpperCase(); }
+        function getAvatarColor(n) { var h = 0; for (var i = 0; i < (n || '').length; i++) { h = n.charCodeAt(i) + ((h << 5) - h); } return ['#4F46E5', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6'][Math.abs(h) % 5]; }
+        function esc(s) { return (s || '').replace(/'/g, "\\'").replace(/"/g, '&quot;'); }
 
-        // Fungsi Modal Foto Besar
+        /* ========== MODAL FOTO ========== */
         function openPhotoModal(url) {
-            const modalHtml = `
-                <div class="photo-modal-overlay" onclick="closePhotoModal(event)">
-                    <div class="photo-modal-content" onclick="event.stopPropagation()">
-                        <button class="photo-modal-close" onclick="closePhotoModal()"><i class="fas fa-times"></i></button>
-                        <img src="${url.replace('sz=w400', 'sz=w1200')}" alt="Foto Peserta">
-                    </div>
-                </div>
-            `;
-            document.body.insertAdjacentHTML('beforeend', modalHtml);
+            var html = '<div class="photo-modal-overlay" onclick="closePhotoModal(event)"><div class="photo-modal-content" onclick="event.stopPropagation()"><button class="photo-modal-close" onclick="closePhotoModal()"><i class="fas fa-times"></i></button><img src="' + url.replace('sz=w400', 'sz=w1200') + '" alt="Foto"></div></div>';
+            document.body.insertAdjacentHTML('beforeend', html);
         }
         function closePhotoModal(event) {
-            if(event && event.target !== event.currentTarget) return;
-            const modal = document.querySelector('.photo-modal-overlay');
-            if(modal) modal.remove();
+            if (event && event.target !== event.currentTarget) return;
+            var modal = document.querySelector('.photo-modal-overlay');
+            if (modal) modal.remove();
         }
 
+        /* ========== SIDEBAR & NAVIGASI ========== */
         function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); document.getElementById('overlay').classList.toggle('open'); }
         function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('overlay').classList.remove('open'); }
-        
+
         function handleLockedNav(page) {
             if (!currentUser.isComplete) { showToast('Lengkapi profil Anda terlebih dahulu.', 'error'); return; }
             switchPage(page);
         }
 
         function switchPage(page) {
-            document.querySelectorAll('.main-content > div').forEach(el => el.classList.add('hidden'));
-            const target = document.getElementById('page-' + page);
-            if(target) target.classList.remove('hidden');
-            document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
-            const activeLink = document.querySelector(`.sidebar-nav a[data-page="${page}"]`);
-            if(activeLink) activeLink.classList.add('active');
-
-            const titles = { 'home':'Beranda', 'search':'Cari Jodoh', 'status':'Status Ta\'aruf', 'profile':'Edit Profil', 'admin-home':'Dashboard Admin', 'admin-users':'Data Peserta', 'admin-taaruf':'Pengajuan Ta\'aruf' };
+            document.querySelectorAll('.main-content > div').forEach(function(el) { el.classList.add('hidden'); });
+            var target = document.getElementById('page-' + page);
+            if (target) target.classList.remove('hidden');
+            document.querySelectorAll('.sidebar-nav a').forEach(function(a) { a.classList.remove('active'); });
+            var activeLink = document.querySelector('.sidebar-nav a[data-page="' + page + '"]');
+            if (activeLink) activeLink.classList.add('active');
+            var titles = { 'home': 'Beranda', 'search': 'Cari Jodoh', 'status': "Status Ta'aruf", 'profile': 'Edit Profil', 'admin-home': 'Dashboard Admin', 'admin-users': 'Data Peserta', 'admin-taaruf': "Pengajuan Ta'aruf" };
             document.getElementById('pageTitle').textContent = titles[page] || '';
-            
-            if(page === 'search' && currentUser.isComplete) loadDashboard();
-            if(page === 'status' && currentUser.isComplete) loadMyTaarufStatus();
-            if(page === 'profile') prefillProfile();
-            if(page === 'admin-users') loadAdminUsers();
-            if(page === 'admin-taaruf') loadAdminTaaruf();
+            if (page === 'search' && currentUser.isComplete) loadDashboard();
+            if (page === 'status' && currentUser.isComplete) loadMyTaarufStatus();
+            if (page === 'profile') prefillProfile();
+            if (page === 'admin-users') loadAdminUsers();
+            if (page === 'admin-taaruf') loadAdminTaaruf();
             closeSidebar();
         }
 
         function updateShell() {
-            if(!currentUser) return;
+            if (!currentUser) return;
             document.getElementById('sidebarName').textContent = currentUser.nama;
-            document.getElementById('sidebarRole').textContent = currentUser.role + (currentUser.scope && currentUser.scope !== 'All' ? ' '+currentUser.scope : '');
-            const av = document.getElementById('sidebarAvatar');
-            if(currentUser.foto) av.innerHTML = `<img src="${getPhotoUrl(currentUser.foto)}">`; else av.textContent = getInitials(currentUser.nama);
-            
-            const isAdmin = adminRoles.includes(currentUser.role);
-            if(isAdmin) { 
-                document.getElementById('nav-personal').classList.add('hidden'); 
-                document.getElementById('nav-admin').classList.remove('hidden'); 
+            document.getElementById('sidebarRole').textContent = currentUser.role + (currentUser.scope && currentUser.scope !== 'All' ? ' ' + currentUser.scope : '');
+            var av = document.getElementById('sidebarAvatar');
+            if (currentUser.foto) av.innerHTML = '<img src="' + getPhotoUrl(currentUser.foto) + '">'; else av.textContent = getInitials(currentUser.nama);
+            var isAdmin = adminRoles.indexOf(currentUser.role) !== -1;
+            if (isAdmin) {
+                document.getElementById('nav-personal').classList.add('hidden');
+                document.getElementById('nav-admin').classList.remove('hidden');
                 document.getElementById('adminRoleLabel').textContent = currentUser.role;
                 document.getElementById('adminScopeLabel').textContent = currentUser.scope || 'All';
-            } else { 
-                document.getElementById('nav-personal').classList.remove('hidden'); 
-                document.getElementById('nav-admin').classList.add('hidden'); 
+            } else {
+                document.getElementById('nav-personal').classList.remove('hidden');
+                document.getElementById('nav-admin').classList.add('hidden');
                 updateLockedMenus();
             }
         }
 
         function updateLockedMenus() {
-            if(!currentUser) return;
-            const isComplete = currentUser.isComplete;
-            document.getElementById('lock-search').classList.toggle('hidden', isComplete);
-            document.getElementById('nav-search').classList.toggle('locked', !isComplete);
-            document.getElementById('lock-status').classList.toggle('hidden', isComplete);
-            document.getElementById('nav-status').classList.toggle('locked', !isComplete);
-            document.getElementById('profileAlert').classList.toggle('hidden', isComplete);
+            if (!currentUser) return;
+            var ic = currentUser.isComplete;
+            document.getElementById('lock-search').classList.toggle('hidden', ic);
+            document.getElementById('nav-search').classList.toggle('locked', !ic);
+            document.getElementById('lock-status').classList.toggle('hidden', ic);
+            document.getElementById('nav-status').classList.toggle('locked', !ic);
+            document.getElementById('profileAlert').classList.toggle('hidden', ic);
         }
 
-        function previewFoto(event, prevId) { 
-            const file = event.target.files[0]; const imgEl = document.getElementById(prevId);
-            if(file) { const r = new FileReader(); r.onload = e => { imgEl.src = e.target.result; imgEl.style.display = 'block'; }; r.readAsDataURL(file); } else { imgEl.style.display = 'none'; } 
+        function previewFoto(event, prevId) {
+            var file = event.target.files[0]; var imgEl = document.getElementById(prevId);
+            if (file) { var r = new FileReader(); r.onload = function(e) { imgEl.src = e.target.result; imgEl.style.display = 'block'; }; r.readAsDataURL(file); } else { imgEl.style.display = 'none'; }
         }
-        function compressImage(file,mw,q){return new Promise((res,rej)=>{const r=new FileReader();r.onload=(e)=>{const img=new Image();img.onload=()=>{const c=document.createElement('canvas');let w=img.width,h=img.height;if(w>mw){h=Math.round((mw/w)*h);w=mw;}c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);res(c.toDataURL('image/jpeg',q).split(',')[1]);};img.onerror=rej;img.src=e.target.result;};r.onerror=rej;r.readAsDataURL(file);});}
-
-        function showForgotPassword() { const email = prompt("Masukkan email akun Anda:"); if(email) { fetchGAS('forgotPassword', {}, 'POST', {email: email}).then(res => { showToast(res.message, res.status); }); } }
-        async function loadRegisterView() { showView('register-view'); const res = await fetchGAS('getVerifyQuestion'); if(res.status==='success') { document.getElementById('verifyQuestion').innerText = res.question; document.getElementById('regQuestionHidden').value = res.question; } }
-        async function handleRegister(e) { e.preventDefault(); const btn=document.getElementById('btnRegister'); btn.disabled=true; btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Proses...'; const res=await fetchGAS('register',{},'POST',{ email:document.getElementById('regEmail').value.trim(), password:document.getElementById('regPass').value, nama:document.getElementById('regNama').value.trim(), question:document.getElementById('regQuestionHidden').value, answer:document.getElementById('regAnswer').value.trim() }); if(res.status==='success'){showToast(res.message); showView('login-view'); document.getElementById('registerForm').reset();} else{showToast(res.message,'error');} btn.disabled=false; btn.innerHTML='<i class="fas fa-check"></i> Daftar'; }
-
-        async function login() { 
-            const btn=document.getElementById('btnLogin'); const email=document.getElementById('loginEmail').value.trim(); const password=document.getElementById('loginPass').value; 
-            if(!email||!password){showToast('Isi email dan password','error');return;} 
-            btn.disabled=true; btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Masuk...'; 
-            const res=await fetchGAS('login',{email,password}); 
-            if(res.status==='success'){ 
-                currentUser=res.user; if(!currentUser.role) currentUser.role = 'Personal'; if(!currentUser.scope) currentUser.scope = '';
-                showToast(`Assalamu'alaikum, ${currentUser.nama}!`);
-                showView('app-shell'); updateShell(); 
-                const isAdmin = adminRoles.includes(currentUser.role);
-                if(isAdmin) { switchPage('admin-home'); } 
-                else { if(!currentUser.isComplete) { switchPage('profile'); showToast('Silakan lengkapi profil Anda terlebih dahulu.', 'error'); } else { switchPage('home'); } }
-            } else{showToast(res.message,'error');} 
-            btn.disabled=false; btn.innerHTML='<i class="fas fa-arrow-right"></i> Masuk'; 
+        function compressImage(file, mw, q) {
+            return new Promise(function(res, rej) {
+                var r = new FileReader();
+                r.onload = function(e) { var img = new Image(); img.onload = function() { var c = document.createElement('canvas'); var w = img.width, h = img.height; if (w > mw) { h = Math.round((mw / w) * h); w = mw; } c.width = w; c.height = h; c.getContext('2d').drawImage(img, 0, 0, w, h); res(c.toDataURL('image/jpeg', q).split(',')[1]); }; img.onerror = rej; img.src = e.target.result; }; r.onerror = rej; r.readAsDataURL(file);
+            });
         }
 
-        async function loadMasterData(){if(masterData.daerah.length === 0){const res=await fetchGAS('getMasterData');if(res.status==='success'){masterData=res.data;}}}
-        function populateDaerah(){const s=document.getElementById('upDaerah');s.innerHTML='<option value="">-- Pilih Daerah --</option>';masterData.daerah.forEach(d=>s.innerHTML+=`<option value="${d}">${d}</option>`);}
-        function loadDesa(){const d=document.getElementById('upDaerah').value;const s=document.getElementById('upDesa');const k=document.getElementById('upKelompok');s.innerHTML='<option value="">-- Pilih --</option>';k.innerHTML='<option value="">-- Pilih --</option>';if(d&&masterData.desa[d])masterData.desa[d].forEach(i=>s.innerHTML+=`<option value="${i}">${i}</option>`);}
-        function loadKelompok(){const d=document.getElementById('upDesa').value;const k=document.getElementById('upKelompok');k.innerHTML='<option value="">-- Pilih --</option>';if(d&&masterData.kelompok[d])masterData.kelompok[d].forEach(i=>k.innerHTML+=`<option value="${i}">${i}</option>`);}
-        
+        /* ========== AUTH ========== */
+        function showForgotPassword() {
+            var email = prompt("Masukkan email akun Anda:");
+            if (email) { fetchGAS('forgotPassword', {}, 'POST', { email: email }).then(function(res) { showToast(res.message, res.status); }); }
+        }
+
+        async function loadRegisterView() {
+            showView('register-view');
+            document.getElementById('verifyQuestion').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memuat pertanyaan...';
+            var res = await fetchGAS('getVerifyQuestion');
+            if (res.status === 'success') {
+                document.getElementById('verifyQuestion').innerText = res.question;
+                document.getElementById('regQuestionHidden').value = res.question;
+            } else {
+                document.getElementById('verifyQuestion').innerText = 'Gagal memuat pertanyaan';
+            }
+        }
+
+        async function handleRegister(e) {
+            e.preventDefault();
+            var btn = document.getElementById('btnRegister');
+            btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Proses...';
+            var res = await fetchGAS('register', {}, 'POST', {
+                email: document.getElementById('regEmail').value.trim(),
+                password: document.getElementById('regPass').value,
+                nama: document.getElementById('regNama').value.trim(),
+                question: document.getElementById('regQuestionHidden').value,
+                answer: document.getElementById('regAnswer').value.trim()
+            });
+            if (res.status === 'success') { showToast(res.message); showView('login-view'); document.getElementById('registerForm').reset(); }
+            else { showToast(res.message, 'error'); }
+            btn.disabled = false; btn.innerHTML = '<i class="fas fa-check"></i> Daftar';
+        }
+
+        async function login() {
+            var btn = document.getElementById('btnLogin');
+            var email = document.getElementById('loginEmail').value.trim();
+            var password = document.getElementById('loginPass').value;
+            if (!email || !password) { showToast('Isi email dan password', 'error'); return; }
+            btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Masuk...';
+            var res = await fetchGAS('login', { email: email, password: password });
+            if (res.status === 'success') {
+                currentUser = res.user;
+                if (!currentUser.role) currentUser.role = 'Personal';
+                if (!currentUser.scope) currentUser.scope = '';
+                showToast("Assalamu'alaikum, " + currentUser.nama + "!");
+                showView('app-shell'); updateShell();
+                var isAdmin = adminRoles.indexOf(currentUser.role) !== -1;
+                if (isAdmin) { switchPage('admin-home'); }
+                else {
+                    if (!currentUser.isComplete) { switchPage('profile'); showToast('Silakan lengkapi profil Anda terlebih dahulu.', 'error'); }
+                    else { switchPage('home'); }
+                }
+            } else { showToast(res.message, 'error'); }
+            btn.disabled = false; btn.innerHTML = '<i class="fas fa-arrow-right"></i> Masuk';
+        }
+
+        function logout() { currentUser = null; document.getElementById('loginEmail').value = ''; document.getElementById('loginPass').value = ''; showView('login-view'); }
+
+        /* ========== MASTER DATA ========== */
+        async function loadMasterData() {
+            if (masterData.daerah.length === 0) {
+                var res = await fetchGAS('getMasterData');
+                if (res.status === 'success') { masterData = res.data; }
+            }
+        }
+        function populateDaerah() {
+            var s = document.getElementById('upDaerah');
+            s.innerHTML = '<option value="">-- Pilih Daerah --</option>';
+            masterData.daerah.forEach(function(d) { s.innerHTML += '<option value="' + d + '">' + d + '</option>'; });
+        }
+        function loadDesa() {
+            var d = document.getElementById('upDaerah').value;
+            var s = document.getElementById('upDesa');
+            var k = document.getElementById('upKelompok');
+            s.innerHTML = '<option value="">-- Pilih --</option>';
+            k.innerHTML = '<option value="">-- Pilih --</option>';
+            if (d && masterData.desa[d]) masterData.desa[d].forEach(function(i) { s.innerHTML += '<option value="' + i + '">' + i + '</option>'; });
+        }
+        function loadKelompok() {
+            var d = document.getElementById('upDesa').value;
+            var k = document.getElementById('upKelompok');
+            k.innerHTML = '<option value="">-- Pilih --</option>';
+            if (d && masterData.kelompok[d]) masterData.kelompok[d].forEach(function(i) { k.innerHTML += '<option value="' + i + '">' + i + '</option>'; });
+        }
+
+        /* ========== PROFIL ========== */
         async function prefillProfile() {
             await loadMasterData(); populateDaerah();
-            if(!currentUser) return;
-            const map = {'upNama':currentUser.nama, 'upOrtu':currentUser.namaOrtu, 'upTTL':currentUser.ttl, 'upAnakKe':currentUser.anakKe, 'upSuku':currentUser.suku, 'upTB':currentUser.tbBerat, 'upPendidikan':currentUser.pendidikan, 'upPekerjaan':currentUser.pekerjaan, 'upHobi':currentUser.hobi, 'upDapukan':currentUser.dapukan};
-            Object.keys(map).forEach(id => { const el=document.getElementById(id); if(el&&map[id]) el.value=map[id]; });
-            if(currentUser.gender) document.getElementById('upGender').value=currentUser.gender;
-            if(currentUser.menikah) document.getElementById('upMenikah').value=currentUser.menikah;
-            if(currentUser.daerah) { document.getElementById('upDaerah').value=currentUser.daerah; loadDesa(); setTimeout(()=>{ if(currentUser.desa){document.getElementById('upDesa').value=currentUser.desa; loadKelompok(); setTimeout(()=>{if(currentUser.kelompok)document.getElementById('upKelompok').value=currentUser.kelompok;},100);}},100); }
-            const imgPrev = document.getElementById('upFotoPreview');
-            if(currentUser.foto) { imgPrev.src = getPhotoUrl(currentUser.foto); imgPrev.style.display = 'block'; } else { imgPrev.style.display = 'none'; }
+            if (!currentUser) return;
+            var map = { 'upNama': currentUser.nama, 'upOrtu': currentUser.namaOrtu, 'upTTL': currentUser.ttl, 'upAnakKe': currentUser.anakKe, 'upSuku': currentUser.suku, 'upTB': currentUser.tbBerat, 'upPendidikan': currentUser.pendidikan, 'upPekerjaan': currentUser.pekerjaan, 'upHobi': currentUser.hobi, 'upDapukan': currentUser.dapukan };
+            Object.keys(map).forEach(function(id) { var el = document.getElementById(id); if (el && map[id]) el.value = map[id]; });
+            if (currentUser.gender) document.getElementById('upGender').value = currentUser.gender;
+            if (currentUser.menikah) document.getElementById('upMenikah').value = currentUser.menikah;
+            if (currentUser.kriteriaPasangan) document.getElementById('upKriteria').value = currentUser.kriteriaPasangan;
+            if (currentUser.daerah) {
+                document.getElementById('upDaerah').value = currentUser.daerah; loadDesa();
+                setTimeout(function() {
+                    if (currentUser.desa) { document.getElementById('upDesa').value = currentUser.desa; loadKelompok(); setTimeout(function() { if (currentUser.kelompok) document.getElementById('upKelompok').value = currentUser.kelompok; }, 100); }
+                }, 100);
+            }
+            var imgPrev = document.getElementById('upFotoPreview');
+            if (currentUser.foto) { imgPrev.src = getPhotoUrl(currentUser.foto); imgPrev.style.display = 'block'; } else { imgPrev.style.display = 'none'; }
             updateLockedMenus();
         }
 
         async function handleUpdateProfile(e) {
-            e.preventDefault(); const btn = document.getElementById('btnSaveProfile');
-            btn.disabled=true; btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Simpan...';
-            let fotoBase64=null; const fotoInput=document.getElementById('upFoto');
-            if(fotoInput&&fotoInput.files&&fotoInput.files[0]){if(fotoInput.files[0].size>2*1024*1024){showToast('Maks 2MB','error');btn.disabled=false;return;} try{fotoBase64=await compressImage(fotoInput.files[0],600,0.7);}catch(err){showToast('Gagal proses foto','error');}}
-            const p={email:currentUser.email, nama:document.getElementById('upNama').value.trim()||currentUser.nama, namaOrtu:document.getElementById('upOrtu').value.trim(), ttl:document.getElementById('upTTL').value.trim(), gender:document.getElementById('upGender').value, anakKe:document.getElementById('upAnakKe').value.trim(), suku:document.getElementById('upSuku').value.trim(), tbBerat:document.getElementById('upTB').value.trim(), menikah:document.getElementById('upMenikah').value, pendidikan:document.getElementById('upPendidikan').value.trim(), pekerjaan:document.getElementById('upPekerjaan').value.trim(), hobi:document.getElementById('upHobi').value.trim(), dapukan:document.getElementById('upDapukan').value.trim(), daerah:document.getElementById('upDaerah').value, desa:document.getElementById('upDesa').value, kelompok:document.getElementById('upKelompok').value, foto:fotoBase64};
-            if(!p.gender||!p.daerah){showToast('Jenis Kelamin dan Daerah wajib diisi','error');btn.disabled=false;return;}
-            const res=await fetchGAS('updateProfile',{},'POST',p);
-            if(res.status==='success'){showToast(res.message);currentUser.isComplete=true;currentUser.gender=p.gender;currentUser.daerah=p.daerah;currentUser.desa=p.desa;currentUser.kelompok=p.kelompok;updateLockedMenus();}else{showToast(res.message,'error');}
-            btn.disabled=false; btn.innerHTML='<i class="fas fa-save"></i> Simpan';
+            e.preventDefault();
+            var btn = document.getElementById('btnSaveProfile');
+            btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Simpan...';
+            var fotoBase64 = null;
+            var fotoInput = document.getElementById('upFoto');
+            if (fotoInput && fotoInput.files && fotoInput.files[0]) {
+                if (fotoInput.files[0].size > 2 * 1024 * 1024) { showToast('Ukuran foto maks 2MB', 'error'); btn.disabled = false; btn.innerHTML = '<i class="fas fa-save"></i> Simpan Profil'; return; }
+                try { fotoBase64 = await compressImage(fotoInput.files[0], 600, 0.7); } catch (err) { showToast('Gagal proses foto', 'error'); btn.disabled = false; btn.innerHTML = '<i class="fas fa-save"></i> Simpan Profil'; return; }
+            }
+            var p = {
+                email: currentUser.email, nama: document.getElementById('upNama').value.trim() || currentUser.nama,
+                namaOrtu: document.getElementById('upOrtu').value.trim(), ttl: document.getElementById('upTTL').value.trim(),
+                gender: document.getElementById('upGender').value, anakKe: document.getElementById('upAnakKe').value.trim(),
+                suku: document.getElementById('upSuku').value.trim(), tbBerat: document.getElementById('upTB').value.trim(),
+                menikah: document.getElementById('upMenikah').value, pendidikan: document.getElementById('upPendidikan').value.trim(),
+                pekerjaan: document.getElementById('upPekerjaan').value.trim(), hobi: document.getElementById('upHobi').value.trim(),
+                dapukan: document.getElementById('upDapukan').value.trim(), daerah: document.getElementById('upDaerah').value,
+                desa: document.getElementById('upDesa').value, kelompok: document.getElementById('upKelompok').value,
+                foto: fotoBase64, kriteriaPasangan: document.getElementById('upKriteria').value.trim()
+            };
+            if (!p.gender || !p.daerah) { showToast('Jenis Kelamin dan Daerah wajib diisi', 'error'); btn.disabled = false; btn.innerHTML = '<i class="fas fa-save"></i> Simpan Profil'; return; }
+            var res = await fetchGAS('updateProfile', {}, 'POST', p);
+            if (res.status === 'success') {
+                showToast(res.message);
+                currentUser.isComplete = true; currentUser.gender = p.gender; currentUser.daerah = p.daerah;
+                currentUser.desa = p.desa; currentUser.kelompok = p.kelompok; currentUser.kriteriaPasangan = p.kriteriaPasangan;
+                updateLockedMenus();
+            } else { showToast(res.message, 'error'); }
+            btn.disabled = false; btn.innerHTML = '<i class="fas fa-save"></i> Simpan Profil';
         }
 
-        // Personal - Cari Jodoh
-        async function loadDashboard(){const c=document.getElementById('dashboard-list');c.innerHTML='<div style="text-align:center;color:var(--text-muted);padding:2rem;"><i class="fas fa-spinner fa-spin"></i> Memuat...</div>';const res=await fetchGAS('getUsers',{role:'Personal',email:currentUser.email,gender:currentUser.gender||''});if(res.status==='success'&&res.data.length>0){allUsers=res.data;renderCards(allUsers);}else{allUsers=[];c.innerHTML='<div style="text-align:center;color:var(--text-muted);padding:2rem;">Belum ada peserta.</div>';}}
-        function renderCards(users){const c=document.getElementById('dashboard-list');const s=(document.getElementById('searchInput')?.value||'').toLowerCase();const f=users.filter(u=>!s||(u.nama&&u.nama.toLowerCase().includes(s)));if(f.length===0){c.innerHTML='<div style="text-align:center;color:var(--text-muted);padding:2rem;">Tidak ditemukan.</div>';return;} c.innerHTML=f.map(u=>{const ps=u.foto?getPhotoUrl(u.foto):'';const gc=u.gender==='Perempuan'?'badge-f':'badge-m';const ac=getAvatarColor(u.nama);return`<div class="card"><div class="card-top">${ps?`<img src="${ps}" class="card-img" style="cursor:pointer;" onclick="openPhotoModal('${ps}')">`:`<div class="card-avatar" style="background:${ac}15;color:${ac}">${getInitials(u.nama)}</div>`}<div class="card-identity"><div class="card-name">${u.nama} <span class="badge ${gc}" style="marginLeft:'8px'">${u.gender}</span></div><div class="card-sub"><i class="fas fa-briefcase" style="width:14px;text-align:center;margin-right:4px"></i> ${u.pekerjaan||'-'}</div><div class="card-sub"><i class="fas fa-graduation-cap" style="width:14px;text-align:center;margin-right:4px"></i> ${u.pendidikan||'-'}</div><div class="card-sub"><i class="fas fa-map-marker-alt" style="width:14px;text-align:center;margin-right:4px"></i> ${u.daerah||'-'}, ${u.desa||'-'}</div></div></div><div class="card-body"><div class="data-grid"><div class="data-item full-col"><div class="data-label">Nama Orang Tua</div><div class="data-value">${u.namaOrtu||'-'}</div></div><div class="data-item"><div class="data-label">TTL</div><div class="data-value">${u.ttl||'-'}</div></div><div class="data-item"><div class="data-label">Anak Ke</div><div class="data-value">${u.anakKe||'-'}</div></div><div class="data-item"><div class="data-label">Suku</div><div class="data-value">${u.suku||'-'}</div></div><div class="data-item"><div class="data-label">TB / BB</div><div class="data-value">${u.tbBerat||'-'}</div></div><div class="data-item"><div class="data-label">Status Menikah</div><div class="data-value">${u.menikah||'-'}</div></div><div class="data-item"><div class="data-label">Hobi</div><div class="data-value">${u.hobi||'-'}</div></div><div class="data-item"><div class="data-label">Dapukan</div><div class="data-value">${u.dapukan||'-'}</div></div><div class="data-item full-col"><div class="data-label">Kelompok</div><div class="data-value">${u.kelompok||'-'}</div></div></div></div><div class="card-footer"><button class="btn btn-sm" style="width:100%;" onclick="requestTaaruf('${u.email}','${u.nama.replace(/'/g,"\\'")}')"><i class="fas fa-paper-plane"></i> Ajukan Ta'aruf</button></div></div>`;}).join('');}
-        function filterDashboard(){renderCards(allUsers);}
-        async function requestTaaruf(email,nama){if(!confirm(`Kirim pengajuan ke ${nama}?`))return;showLoading();const res=await fetchGAS('requestTaaruf',{},'POST',{pelamarEmail:currentUser.email,targetEmail:email});hideLoading();showToast(res.message,res.status);}
-        async function loadMyTaarufStatus(){const el=document.getElementById('status-content');el.innerHTML='<div style="text-align:center;color:var(--text-muted);padding:2rem;"><i class="fas fa-spinner fa-spin"></i></div>';const res=await fetchGAS('getMyTaaruf',{email:currentUser.email});if(res.status==='success'&&res.data.length>0){el.innerHTML=res.data.map(r=>{const sc=r.status==='Pending'?'badge-pending':r.status==='Approved'?'badge-approved':'badge-rejected';return`<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--border);"><div><b>${r.targetNama}</b><br><small style="color:var(--text-muted)">${r.tanggal} • ${r.targetDaerah}, ${r.targetDesa}</small></div><span class="badge ${sc}">${r.status}</span></div>`;}).join('');}else{el.innerHTML='<div style="text-align:center;color:var(--text-muted);padding:2rem;">Belum ada pengajuan.</div>';}}
+        /* ========== TIM TAARUF (CACHE) ========== */
+        async function getTaarufTim(daerah) {
+            var key = (daerah || '').toLowerCase();
+            if (cachedTaarufTim[key]) return cachedTaarufTim[key];
+            var res = await fetchGAS('getTaarufTim', { daerah: key });
+            if (res.status === 'success') { cachedTaarufTim[key] = res.data; return res.data; }
+            return [];
+        }
 
-        // Admin - Data Peserta (Dengan Foto Klikable)
-        async function loadAdminUsers(){const t=document.getElementById('admin-tbody');t.innerHTML='<tr><td colspan="5" style="text-align:center;color:var(--text-muted);"><i class="fas fa-spinner fa-spin"></i></td></tr>';const res=await fetchGAS('getUsers',{role:currentUser.role,email:currentUser.email,scope:currentUser.scope});if(res.status==='success'&&res.data.length>0){allUsers=res.data;renderAdminUsers(allUsers);}else{allUsers=[];t.innerHTML='<tr><td colspan="5" style="text-align:center;color:var(--text-muted);">Tidak ada data.</td></tr>';}}
-        
-        function renderAdminUsers(users){const s=(document.getElementById('adminSearchInput')?.value||'').toLowerCase();const f=users.filter(u=>!s||(u.nama&&u.nama.toLowerCase().includes(s)));const t=document.getElementById('admin-tbody');if(f.length===0){t.innerHTML='<tr><td colspan="5" style="text-align:center;">Tidak ditemukan.</td></tr>';return;} t.innerHTML=f.map(u=>{const ac=getAvatarColor(u.nama);const sc=u.isComplete?'badge-approved':'badge-pending';const st=u.isComplete?'Lengkap':'Belum';const ps=u.foto?getPhotoUrl(u.foto):'';return`<tr><td><div style="display:flex;align-items:center;gap:10px;">${ps?`<img src="${ps}" style="width:40px;height:40px;border-radius:50%;object-fit:cover;cursor:pointer;border:2px solid var(--border);transition:0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'" onclick="openPhotoModal('${ps}')">`:`<div style="width:40px;height:40px;border-radius:50%;background:${ac}15;color:${ac};display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;">${getInitials(u.nama)}</div>`}<div><div style="font-weight:600;">${u.nama}</div><div class="sub-text">${u.email}</div></div></div></td><td><div class="data-cell-line"><b>Ortu:</b> ${u.namaOrtu||'-'}</div><div class="data-cell-line"><b>TTL:</b> ${u.ttl||'-'}</div><div class="data-cell-line"><b>JK:</b> ${u.gender||'-'} | <b>Anak ke:</b> ${u.anakKe||'-'}</div><div class="data-cell-line"><b>Suku:</b> ${u.suku||'-'} | <b>TB/BB:</b> ${u.tbBerat||'-'}</div><div class="data-cell-line"><b>Status:</b> ${u.menikah||'-'}</div></td><td><div class="data-cell-line"><b>Pendidikan:</b> ${u.pendidikan||'-'}</div><div class="data-cell-line"><b>Pekerjaan:</b> ${u.pekerjaan||'-'}</div><div class="data-cell-line"><b>Hobi:</b> ${u.hobi||'-'}</div><div class="data-cell-line"><b>Dapukan:</b> ${u.dapukan||'-'}</div></td><td><div class="data-cell-line">${u.daerah||'-'}</div><div class="data-cell-line">${u.desa||'-'}</div><div class="data-cell-line">${u.kelompok||'-'}</div></td><td><span class="badge ${sc}">${st}</span></td></tr>`;}).join('');}
-        
-        function filterAdmin(){renderAdminUsers(allUsers);}
+        /* ========== CARI JODOH (PERSONAL) ========== */
+        async function loadDashboard() {
+            var c = document.getElementById('dashboard-list');
+            var blockedEl = document.getElementById('search-taaruf-blocked');
+            c.innerHTML = '<div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>Memuat data peserta...</p></div>';
+            blockedEl.classList.add('hidden');
+            blockedEl.innerHTML = '';
 
-        async function loadAdminTaaruf(){const t=document.getElementById('admin-taaruf-tbody');t.innerHTML='<tr><td colspan="5" style="text-align:center;color:var(--text-muted);"><i class="fas fa-spinner fa-spin"></i></td></tr>';const res=await fetchGAS('getAllTaaruf',{role:currentUser.role,scope:currentUser.scope});if(res.status==='success'&&res.data.length>0){allTaarufRequests=res.data;renderAdminTaaruf(allTaarufRequests);}else{t.innerHTML='<tr><td colspan="5" style="text-align:center;color:var(--text-muted);">Belum ada pengajuan.</td></tr>';}}
-        function renderAdminTaaruf(requests){const t=document.getElementById('admin-taaruf-tbody');if(requests.length===0){t.innerHTML='<tr><td colspan="5" style="text-align:center;">Tidak ada data.</td></tr>';return;} t.innerHTML=requests.map(r=>{const sc=r.status==='Pending'?'badge-pending':r.status==='Approved'?'badge-approved':'badge-rejected';let actions = r.status === 'Pending' ? `<div class="action-btns"><button class="btn btn-sm btn-success" onclick="updateStatus('${r.pelamarEmail}','${r.targetEmail}','Approved')"><i class="fas fa-check"></i> Setuju</button><button class="btn btn-sm btn-danger-sm" onclick="updateStatus('${r.pelamarEmail}','${r.targetEmail}','Rejected')"><i class="fas fa-times"></i> Tolak</button></div>` : '-'; return`<tr><td>${r.tanggal}</td><td><b>${r.pelamarNama}</b><div class="sub-text">${r.pelamarEmail}</div><div class="sub-text" style="color:var(--primary)">${r.pelamarDaerah}, ${r.pelamarDesa}</div></td><td><b>${r.targetNama}</b><div class="sub-text">${r.targetEmail}</div><div class="sub-text" style="color:var(--primary)">${r.targetDaerah}, ${r.targetDesa}</div></td><td><span class="badge ${sc}">${r.status}</span></td><td>${actions}</td></tr>`;}).join('');}
-        
-        async function updateStatus(pEmail, tEmail, newStatus) {
-            if(!confirm(`Ubah status menjadi ${newStatus}?`)) return;
+            var res = await fetchGAS('getUsers', { role: 'Personal', email: currentUser.email, gender: currentUser.gender || '' });
+            if (res.status === 'success' && res.data.length > 0) {
+                allUsers = res.data;
+                if (res.iamInTaaruf) {
+                    blockedEl.classList.remove('hidden');
+                    blockedEl.innerHTML = '<div class="alert alert-warning"><i class="fas fa-heart"></i><div>Anda sedang dalam proses ta\'aruf. Daftar peserta di bawah hanya untuk dilihat, tombol ta\'aruf dinonaktifkan.</div></div>';
+                }
+                renderCards(allUsers, res.iamInTaaruf);
+            } else {
+                allUsers = [];
+                if (res.iamInTaaruf) {
+                    blockedEl.classList.remove('hidden');
+                    blockedEl.innerHTML = '<div class="alert alert-warning"><i class="fas fa-heart"></i><div>Anda sedang dalam proses ta\'aruf. Tidak ada peserta lain yang tersedia saat ini.</div></div>';
+                }
+                c.innerHTML = '<div class="empty-state"><i class="fas fa-user-friends"></i><p>Belum ada peserta yang tersedia.</p></div>';
+            }
+        }
+
+        function renderCards(users, iamInTaaruf) {
+            var c = document.getElementById('dashboard-list');
+            var s = (document.getElementById('searchInput') ? document.getElementById('searchInput').value : '').toLowerCase();
+            var f = users.filter(function(u) { return !s || (u.nama && u.nama.toLowerCase().indexOf(s) !== -1); });
+            if (f.length === 0) { c.innerHTML = '<div class="empty-state"><i class="fas fa-search"></i><p>Tidak ditemukan.</p></div>'; return; }
+            c.innerHTML = f.map(function(u) {
+                var ps = u.foto ? getPhotoUrl(u.foto) : '';
+                var gc = u.gender === 'Perempuan' ? 'badge-f' : 'badge-m';
+                var ac = getAvatarColor(u.nama);
+                var disabled = iamInTaaruf ? 'disabled' : '';
+                var kriteriaHtml = u.kriteriaPasangan ? '<div class="kriteria-box"><div class="kriteria-label">Kriteria Pasangan</div>' + esc(u.kriteriaPasangan) + '</div>' : '';
+                var photoBlock = ps
+                    ? '<img src="' + ps + '" class="card-img" style="cursor:pointer;" onclick="openPhotoModal(\'' + ps + '\')">'
+                    : '<div class="card-avatar" style="background:' + ac + '15;color:' + ac + '">' + getInitials(u.nama) + '</div>';
+                return '<div class="card"><div class="card-top">' + photoBlock + '<div class="card-identity"><div class="card-name">' + esc(u.nama) + ' <span class="badge ' + gc + '">' + u.gender + '</span></div><div class="card-sub"><i class="fas fa-briefcase" style="width:14px;text-align:center;margin-right:4px"></i> ' + (u.pekerjaan || '-') + '</div><div class="card-sub"><i class="fas fa-graduation-cap" style="width:14px;text-align:center;margin-right:4px"></i> ' + (u.pendidikan || '-') + '</div><div class="card-sub"><i class="fas fa-map-marker-alt" style="width:14px;text-align:center;margin-right:4px"></i> ' + (u.daerah || '-') + ', ' + (u.desa || '-') + '</div></div></div><div class="card-body"><div class="data-grid"><div class="data-item full-col"><div class="data-label">Nama Orang Tua</div><div class="data-value">' + esc(u.namaOrtu) + '</div></div><div class="data-item"><div class="data-label">TTL</div><div class="data-value">' + esc(u.ttl) + '</div></div><div class="data-item"><div class="data-label">Anak Ke</div><div class="data-value">' + esc(u.anakKe) + '</div></div><div class="data-item"><div class="data-label">Suku</div><div class="data-value">' + esc(u.suku) + '</div></div><div class="data-item"><div class="data-label">TB / BB</div><div class="data-value">' + esc(u.tbBerat) + '</div></div><div class="data-item"><div class="data-label">Status Menikah</div><div class="data-value">' + esc(u.menikah) + '</div></div><div class="data-item"><div class="data-label">Hobi</div><div class="data-value">' + esc(u.hobi) + '</div></div><div class="data-item"><div class="data-label">Dapukan</div><div class="data-value">' + esc(u.dapukan) + '</div></div><div class="data-item full-col"><div class="data-label">Kelompok</div><div class="data-value">' + esc(u.kelompok) + '</div></div></div>' + kriteriaHtml + '</div><div class="card-footer"><button class="btn btn-sm btn-wa" style="width:100%;" ' + disabled + ' onclick="requestTaaruf(\'' + u.email + '\',\'' + esc(u.nama) + '\',\'' + esc(u.daerah) + '\')"><i class="fab fa-whatsapp"></i> Ajukan Ta\'aruf</button></div></div>';
+            }).join('');
+        }
+
+        function filterDashboard() {
+            var iamInTaaruf = document.getElementById('search-taaruf-blocked').classList.contains('hidden') ? false : true;
+            renderCards(allUsers, iamInTaaruf);
+        }
+
+        async function requestTaaruf(email, nama, daerah) {
             showLoading();
-            const res = await fetchGAS('updateTaarufStatus', {}, 'POST', {pelamarEmail: pEmail, targetEmail: tEmail, newStatus: newStatus});
+            var res = await fetchGAS('requestTaaruf', {}, 'POST', { pelamarEmail: currentUser.email, targetEmail: email });
             hideLoading();
-            if(res.status==='success'){showToast(res.message);loadAdminTaaruf();}else{showToast(res.message,'error');}
+
+            if (res.status === 'success') {
+                if (res.waNumber && res.waNumber.length > 5) {
+                    var pesan = "Assalamu'alaikum, saya " + currentUser.nama + " dari kelompok " + (currentUser.kelompok || '-') + ". Saya ingin mengajukan ta'aruf dengan " + nama + " (" + (daerah || '-') + ") melalui SAKINAH. Mohon bimbingannya.";
+                    var waUrl = "https://wa.me/" + res.waNumber + "?text=" + encodeURIComponent(pesan);
+                    var box = document.getElementById('search-taaruf-blocked');
+                    box.classList.remove('hidden');
+                    box.innerHTML = '<div class="wa-info-box"><div class="wa-title"><i class="fab fa-whatsapp" style="color:#25D366;font-size:1.2rem;"></i> Tim Ta\'aruf ' + esc(daerah) + '</div><div class="wa-detail"><b>' + esc(res.teamName) + '</b>' + (res.teamPeran ? ' (' + esc(res.teamPeran) + ')' : '') + '<br>Nomor: ' + res.waNumber + '</div><div class="wa-btn"><a href="' + waUrl + '" target="_blank" rel="noopener" class="btn btn-sm btn-wa" style="width:auto;display:inline-flex;"><i class="fab fa-whatsapp"></i> Chat WhatsApp Sekarang</a></div></div>';
+                    showToast('Pengajuan dicatat! Silakan hubungi tim ta\'aruf via WhatsApp.');
+                    window.open(waUrl, '_blank');
+                } else {
+                    showToast('Pengajuan terkirim! Namun belum ada tim ta\'aruf untuk daerah ini. Hubungi admin.', 'error');
+                }
+                loadDashboard();
+            } else {
+                showToast(res.message, 'error');
+            }
         }
 
-        function logout(){currentUser=null;document.getElementById('loginEmail').value='';document.getElementById('loginPass').value='';showView('login-view');}
+        /* ========== STATUS TAARUF (PERSONAL) ========== */
+        async function loadMyTaarufStatus() {
+            var el = document.getElementById('status-content');
+            el.innerHTML = '<div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>Memuat status...</p></div>';
+            var res = await fetchGAS('getMyTaaruf', { email: currentUser.email });
+            if (res.status === 'success' && res.data.length > 0) {
+                el.innerHTML = res.data.map(function(r) {
+                    var bc = 'badge-pending';
+                    if (r.status === 'Sedang Taaruf') bc = 'badge-taaruf';
+                    else if (r.status === 'Sedang Proses') bc = 'badge-proses';
+                    else if (r.status === 'Sudah Menikah') bc = 'badge-menikah';
+                    else if (r.status === 'Approved') bc = 'badge-approved';
+                    else if (r.status === 'Rejected') bc = 'badge-rejected';
+                    var roleText = r.isPelamar ? 'Anda mengajukan' : 'Mengajukan Anda';
+                    var statusDesc = '';
+                    if (r.status === 'Pending') statusDesc = 'Menunggu konfirmasi tim ta\'aruf.';
+                    else if (r.status === 'Sedang Taaruf') statusDesc = 'Sedang dalam proses ta\'aruf.';
+                    else if (r.status === 'Sedang Proses') statusDesc = 'Proses ta\'aruf sedang berlanjut.';
+                    else if (r.status === 'Sudah Menikah') statusDesc = 'Alhamdulillah, proses telah selesai.';
+                    else if (r.status === 'Rejected') statusDesc = 'Pengajuan tidak dapat dilanjutkan.';
+                    return '<div class="status-card"><div class="status-card-header"><div class="status-card-title">' + esc(r.otherNama) + '</div><span class="badge ' + bc + '">' + r.status + '</span></div><div class="status-card-meta"><i class="fas fa-info-circle"></i> ' + roleText + '<br><i class="fas fa-calendar"></i> ' + r.tanggal + '<br><i class="fas fa-map-marker-alt"></i> ' + esc(r.otherDaerah) + ', ' + esc(r.otherDesa) + '<br><i class="fas fa-users"></i> Kelompok target: ' + esc(r.otherKelompok) + '<br><i class="fas fa-user-tag"></i> Kelompok Anda: ' + esc(r.myKelompok) + '<br><div style="margin-top:6px;color:var(--text-main);font-weight:500;font-size:0.82rem;">' + statusDesc + '</div></div></div>';
+                }).join('');
+            } else {
+                el.innerHTML = '<div class="empty-state"><i class="fas fa-heart"></i><p>Belum ada pengajuan ta\'aruf.</p></div>';
+            }
+        }
+
+        /* ========== ADMIN - DATA PESERTA ========== */
+        async function loadAdminUsers() {
+            var t = document.getElementById('admin-tbody');
+            t.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-muted);"><i class="fas fa-spinner fa-spin"></i></td></tr>';
+            var res = await fetchGAS('getUsers', { role: currentUser.role, email: currentUser.email, scope: currentUser.scope });
+            if (res.status === 'success' && res.data.length > 0) { allUsers = res.data; renderAdminUsers(allUsers); }
+            else { allUsers = []; t.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-muted);">Tidak ada data.</td></tr>'; }
+        }
+
+        function renderAdminUsers(users) {
+            var s = (document.getElementById('adminSearchInput') ? document.getElementById('adminSearchInput').value : '').toLowerCase();
+            var f = users.filter(function(u) { return !s || (u.nama && u.nama.toLowerCase().indexOf(s) !== -1); });
+            var t = document.getElementById('admin-tbody');
+            if (f.length === 0) { t.innerHTML = '<tr><td colspan="5" style="text-align:center;">Tidak ditemukan.</td></tr>'; return; }
+            t.innerHTML = f.map(function(u) {
+                var ac = getAvatarColor(u.nama);
+                var sc = u.isComplete ? 'badge-approved' : 'badge-pending';
+                var st = u.isComplete ? 'Lengkap' : 'Belum';
+                var ps = u.foto ? getPhotoUrl(u.foto) : '';
+                var kriteriaCell = u.kriteriaPasangan ? '<div class="data-cell-line" style="margin-top:4px;"><b>Kriteria:</b> <span style="font-size:0.78rem;color:var(--text-muted);">' + esc(u.kriteriaPasangan).substring(0, 80) + (u.kriteriaPasangan.length > 80 ? '...' : '') + '</span></div>' : '';
+                var photoBlock = ps
+                    ? '<img src="' + ps + '" style="width:40px;height:40px;border-radius:50%;object-fit:cover;cursor:pointer;border:2px solid var(--border);transition:0.2s;" onmouseover="this.style.transform=\'scale(1.1)\'" onmouseout="this.style.transform=\'scale(1)\'" onclick="openPhotoModal(\'' + ps + '\')">'
+                    : '<div style="width:40px;height:40px;border-radius:50%;background:' + ac + '15;color:' + ac + ';display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;">' + getInitials(u.nama) + '</div>';
+                return '<tr><td><div style="display:flex;align-items:center;gap:10px;">' + photoBlock + '<div><div style="font-weight:600;">' + esc(u.nama) + '</div><div class="sub-text">' + esc(u.email) + '</div></div></div></td><td><div class="data-cell-line"><b>Ortu:</b> ' + esc(u.namaOrtu) + '</div><div class="data-cell-line"><b>TTL:</b> ' + esc(u.ttl) + '</div><div class="data-cell-line"><b>JK:</b> ' + esc(u.gender) + ' | <b>Anak ke:</b> ' + esc(u.anakKe) + '</div><div class="data-cell-line"><b>Suku:</b> ' + esc(u.suku) + ' | <b>TB/BB:</b> ' + esc(u.tbBerat) + '</div><div class="data-cell-line"><b>Status:</b> ' + esc(u.menikah) + '</div></td><td><div class="data-cell-line"><b>Pendidikan:</b> ' + esc(u.pendidikan) + '</div><div class="data-cell-line"><b>Pekerjaan:</b> ' + esc(u.pekerjaan) + '</div><div class="data-cell-line"><b>Hobi:</b> ' + esc(u.hobi) + '</div><div class="data-cell-line"><b>Dapukan:</b> ' + esc(u.dapukan) + '</div>' + kriteriaCell + '</td><td><div class="data-cell-line">' + esc(u.daerah) + '</div><div class="data-cell-line">' + esc(u.desa) + '</div><div class="data-cell-line">' + esc(u.kelompok) + '</div></td><td><span class="badge ' + sc + '">' + st + '</span></td></tr>';
+            }).join('');
+        }
+
+        function filterAdmin() { renderAdminUsers(allUsers); }
+
+        /* ========== ADMIN - PENGAJUAN TAARUF ========== */
+        async function loadAdminTaaruf() {
+            var t = document.getElementById('admin-taaruf-tbody');
+            t.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-muted);"><i class="fas fa-spinner fa-spin"></i></td></tr>';
+            var res = await fetchGAS('getAllTaaruf', { role: currentUser.role, scope: currentUser.scope });
+            if (res.status === 'success' && res.data.length > 0) { allTaarufRequests = res.data; renderAdminTaaruf(allTaarufRequests); }
+            else { allTaarufRequests = []; t.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-muted);">Belum ada pengajuan.</td></tr>'; }
+        }
+
+        function filterTaaruf(btn, filter) {
+            currentTaarufFilter = filter;
+            document.querySelectorAll('#taarufFilterTabs .filter-tab').forEach(function(b) { b.classList.remove('active'); });
+            btn.classList.add('active');
+            renderAdminTaaruf(allTaarufRequests);
+        }
+
+        function getBadgeClass(status) {
+            if (status === 'Pending') return 'badge-pending';
+            if (status === 'Sedang Taaruf') return 'badge-taaruf';
+            if (status === 'Sedang Proses') return 'badge-proses';
+            if (status === 'Sudah Menikah') return 'badge-menikah';
+            if (status === 'Rejected') return 'badge-rejected';
+            if (status === 'Approved') return 'badge-approved';
+            return 'badge-pending';
+        }
+
+        function getActionButtons(status, pEmail, tEmail) {
+            if (status === 'Pending') {
+                return '<div class="action-btns">' +
+                    '<button class="btn btn-sm btn-info-sm" onclick="updateTaarufStatus(\'' + pEmail + '\',\'' + tEmail + '\',\'Sedang Taaruf\')" title="Ubah ke Sedang Taaruf"><i class="fas fa-heart"></i> Sedang Taaruf</button>' +
+                    '<button class="btn btn-sm btn-danger-sm" onclick="updateTaarufStatus(\'' + pEmail + '\',\'' + tEmail + '\',\'Rejected\')" title="Tolak"><i class="fas fa-times"></i> Tolak</button>' +
+                    '</div>';
+            }
+            if (status === 'Sedang Taaruf') {
+                return '<div class="action-btns">' +
+                    '<button class="btn btn-sm btn-warning-sm" onclick="updateTaarufStatus(\'' + pEmail + '\',\'' + tEmail + '\',\'Sedang Proses\')" title="Ubah ke Sedang Proses"><i class="fas fa-spinner"></i> Sedang Proses</button>' +
+                    '<button class="btn btn-sm btn-danger-sm" onclick="updateTaarufStatus(\'' + pEmail + '\',\'' + tEmail + '\',\'Rejected\')" title="Tolak"><i class="fas fa-times"></i> Tolak</button>' +
+                    '</div>';
+            }
+            if (status === 'Sedang Proses') {
+                return '<div class="action-btns">' +
+                    '<button class="btn btn-sm btn-success" onclick="updateTaarufStatus(\'' + pEmail + '\',\'' + tEmail + '\',\'Sudah Menikah\')" title="Ubah ke Sudah Menikah"><i class="fas fa-ring"></i> Sudah Menikah</button>' +
+                    '<button class="btn btn-sm btn-danger-sm" onclick="updateTaarufStatus(\'' + pEmail + '\',\'' + tEmail + '\',\'Rejected\')" title="Tolak"><i class="fas fa-times"></i> Tolak</button>' +
+                    '</div>';
+            }
+            if (status === 'Sudah Menikah') {
+                return '<span style="font-size:0.8rem;color:var(--success);font-weight:600;"><i class="fas fa-check-circle"></i> Selesai</span>';
+            }
+            if (status === 'Rejected') {
+                return '<span style="font-size:0.8rem;color:var(--danger);font-weight:500;">Ditolak</span>';
+            }
+            return '-';
+        }
+
+        function renderAdminTaaruf(requests) {
+            var t = document.getElementById('admin-taaruf-tbody');
+            var f = requests;
+            if (currentTaarufFilter) {
+                f = requests.filter(function(r) { return r.status === currentTaarufFilter; });
+            }
+            if (f.length === 0) { t.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-muted);">Tidak ada data untuk filter ini.</td></tr>'; return; }
+            t.innerHTML = f.map(function(r) {
+                var bc = getBadgeClass(r.status);
+                var actions = getActionButtons(r.status, r.pelamarEmail, r.targetEmail);
+                return '<tr><td style="white-space:nowrap;">' + r.tanggal + '</td><td><b>' + esc(r.pelamarNama) + '</b><div class="sub-text">' + esc(r.pelamarEmail) + '</div><div class="sub-text" style="color:var(--primary);">' + esc(r.pelamarDaerah) + ', ' + esc(r.pelamarDesa) + '</div><div class="sub-text"><i class="fas fa-users" style="width:12px;"></i> ' + esc(r.pelamarKelompok) + '</div></td><td><b>' + esc(r.targetNama) + '</b><div class="sub-text">' + esc(r.targetEmail) + '</div><div class="sub-text" style="color:var(--primary);">' + esc(r.targetDaerah) + ', ' + esc(r.targetDesa) + '</div><div class="sub-text"><i class="fas fa-users" style="width:12px;"></i> ' + esc(r.targetKelompok) + '</div></td><td><span class="badge ' + bc + '">' + r.status + '</span></td><td>' + actions + '</td></tr>';
+            }).join('');
+        }
+
+        async function updateTaarufStatus(pEmail, tEmail, newStatus) {
+            var confirmMsg = 'Ubah status menjadi "' + newStatus + '"?';
+            if (!confirm(confirmMsg)) return;
+            showLoading();
+            var res = await fetchGAS('updateTaarufStatus', {}, 'POST', { pelamarEmail: pEmail, targetEmail: tEmail, newStatus: newStatus });
+            hideLoading();
+            if (res.status === 'success') { showToast(res.message); loadAdminTaaruf(); }
+            else { showToast(res.message, 'error'); }
+        }
     </script>
 </body>
 </html>
