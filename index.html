@@ -5,1146 +5,442 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SAKINAH - Ta'aruf Online</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* ==========================================
-           SAKINAH — Modern Minimalist Design System
-           Palette: Deep Emerald + Warm Gold
-           ========================================== */
-
         :root {
-            --primary: #0B3D2E;
-            --primary-hover: #14553B;
-            --primary-light: #E2F0E9;
-            --primary-glow: rgba(11, 61, 46, 0.07);
-            --accent: #C8A951;
-            --accent-hover: #A88B34;
-            --accent-light: #FBF5E5;
-            --dark: #071F16;
-            --bg: #F8F6F3;
-            --white: #FFFFFF;
-            --text-main: #1C1C28;
-            --text-muted: #8A8A9A;
-            --border: #E5E1DB;
-            --danger: #C62828;
-            --danger-light: #FDECEA;
-            --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
-            --shadow-md: 0 4px 16px rgba(0,0,0,0.06);
-            --shadow-lg: 0 12px 40px rgba(11,61,46,0.08);
-            --ease: cubic-bezier(0.16, 1, 0.3, 1);
+            --primary: #4F46E5; --primary-hover: #4338CA; --primary-light: #EEF2FF; --primary-glow: rgba(79,70,229,0.1);
+            --bg: #FFFFFF; --surface: #F9FAFB; --border: #E5E7EB; --border-focus: #4F46E5;
+            --text-main: #111827; --text-muted: #6B7280; --text-light: #9CA3AF;
+            --danger: #EF4444; --danger-light: #FEF2F2; --success: #10B981; --success-light: #ECFDF5; --warning: #F59E0B; --warning-light: #FFFBEB;
+            --radius: 8px;
         }
-
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        html { scroll-behavior: smooth; }
-
-        body {
-            font-family: 'DM Sans', sans-serif;
-            background-color: var(--bg);
-            color: var(--text-main);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-            overflow-x: hidden;
-        }
-
-        /* === Atmosphere === */
-        .atmosphere {
-            position: fixed;
-            inset: 0;
-            z-index: 0;
-            pointer-events: none;
-            overflow: hidden;
-        }
-        .blob {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(120px);
-            opacity: 0.12;
-        }
-        .blob-1 {
-            width: 550px; height: 550px;
-            background: var(--primary);
-            top: -180px; right: -120px;
-            animation: drift 25s ease-in-out infinite;
-        }
-        .blob-2 {
-            width: 420px; height: 420px;
-            background: var(--accent);
-            bottom: -140px; left: -80px;
-            animation: drift 22s ease-in-out infinite reverse;
-        }
-        .blob-3 {
-            width: 300px; height: 300px;
-            background: var(--primary);
-            top: 45%; left: 35%;
-            animation: drift 30s ease-in-out infinite 4s;
-        }
-        @keyframes drift {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            33% { transform: translate(35px, -55px) scale(1.06); }
-            66% { transform: translate(-25px, 35px) scale(0.94); }
-        }
-
-        /* === View Card Container === */
-        .app-container {
-            position: relative;
-            z-index: 1;
-            width: 100%;
-            max-width: 440px;
-            background: var(--white);
-            padding: 2.5rem;
-            border-radius: 24px;
-            box-shadow: var(--shadow-md);
-            border: 1px solid rgba(0,0,0,0.04);
-        }
-        .app-container::after {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--accent), var(--primary), var(--accent));
-            border-radius: 24px 24px 0 0;
-        }
-        .dashboard-container {
-            max-width: 1080px;
-            padding: 0;
-            overflow: hidden;
-        }
-        .dashboard-container::after { display: none; }
-
-        @keyframes viewEnter {
-            from { opacity: 0; transform: translateY(18px) scale(0.985); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
-        /* === Typography === */
-        h1, h2, h3 { font-family: 'Playfair Display', serif; color: var(--dark); }
-        p { color: var(--text-muted); font-size: 0.88rem; line-height: 1.6; }
-
-        a {
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 600;
-            cursor: pointer;
-            transition: color 0.25s;
-            position: relative;
-        }
-        a::after {
-            content: '';
-            position: absolute;
-            bottom: -2px; left: 0;
-            width: 0; height: 1.5px;
-            background: var(--accent);
-            transition: width 0.3s ease;
-        }
-        a:hover { color: var(--primary-hover); }
-        a:hover::after { width: 100%; }
-
-        /* === Forms === */
-        .form-group { margin-bottom: 14px; }
-        label {
-            display: block;
-            font-size: 0.72rem;
-            font-weight: 700;
-            margin-bottom: 6px;
-            color: var(--text-main);
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-        }
-        .input-icon-wrap { position: relative; }
-        .input-icon-wrap i {
-            position: absolute;
-            left: 14px; top: 50%;
-            transform: translateY(-50%);
-            color: #BFBFC8;
-            font-size: 0.9rem;
-            transition: color 0.25s;
-            pointer-events: none;
-        }
-        input, select {
-            width: 100%;
-            padding: 12px 14px 12px 40px;
-            border: 1.5px solid var(--border);
-            border-radius: 12px;
-            font-size: 0.88rem;
-            font-family: 'DM Sans', sans-serif;
-            outline: none;
-            transition: all 0.25s var(--ease);
-            background: var(--bg);
-            color: var(--text-main);
-        }
-        select { padding-left: 14px; -webkit-appearance: none; cursor: pointer;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238A8A9A' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 14px center;
-            padding-right: 36px;
-        }
-        input:not([type="file"]) { -webkit-appearance: none; }
-        input::placeholder { color: #BFBFC8; font-size: 0.86rem; }
-        input:hover, select:hover { border-color: #CFC9C0; }
-        input:focus, select:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px var(--primary-glow);
-            background: var(--white);
-        }
-        .input-icon-wrap:focus-within i { color: var(--primary); }
-
-        /* File Input */
-        input[type="file"] {
-            padding: 12px 14px;
-            padding-left: 14px;
-            background: var(--white);
-            border: 1.5px dashed var(--border);
-            border-radius: 12px;
-            cursor: pointer;
-            font-size: 0.84rem;
-        }
-        input[type="file"]::file-selector-button {
-            background: var(--primary-light);
-            color: var(--primary);
-            border: none;
-            padding: 7px 14px;
-            border-radius: 8px;
-            font-family: 'DM Sans', sans-serif;
-            font-weight: 600;
-            font-size: 0.78rem;
-            cursor: pointer;
-            margin-right: 10px;
-            transition: all 0.2s;
-        }
-        input[type="file"]::file-selector-button:hover {
-            background: var(--primary);
-            color: white;
-        }
-
-        /* === Buttons === */
-        .btn {
-            width: 100%;
-            padding: 13px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-weight: 700;
-            font-family: 'DM Sans', sans-serif;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: all 0.25s var(--ease);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            letter-spacing: 0.02em;
-        }
-        .btn:hover {
-            background: var(--primary-hover);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(11,61,46,0.18);
-        }
-        .btn:active { transform: translateY(0); box-shadow: none; }
-        .btn:disabled {
-            background: #C5C5CE;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-        .btn-accent { background: var(--accent); color: var(--dark); }
-        .btn-accent:hover {
-            background: var(--accent-hover);
-            color: white;
-            box-shadow: 0 8px 24px rgba(200,169,81,0.25);
-        }
-        .btn-outline {
-            background: transparent;
-            border: 1.5px solid var(--border);
-            color: var(--text-muted);
-            margin-top: 10px;
-        }
-        .btn-outline:hover {
-            background: var(--bg);
-            border-color: var(--primary);
-            color: var(--primary);
-            box-shadow: none;
-            transform: translateY(-1px);
-        }
-        .btn-sm {
-            padding: 8px 14px;
-            width: auto;
-            font-size: 0.8rem;
-            border-radius: 10px;
-        }
-        .btn-danger-outline {
-            background: transparent;
-            border: 1.5px solid var(--danger);
-            color: var(--danger);
-        }
-        .btn-danger-outline:hover {
-            background: var(--danger-light);
-            box-shadow: none;
-        }
-
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text-main); min-height: 100vh; }
         .hidden { display: none !important; }
 
-        /* === Decorative === */
-        .crescent {
-            width: 36px; height: 36px;
-            border-radius: 50%;
-            box-shadow: 7px -3px 0 0 var(--accent);
-            margin: 0 auto 10px;
-            animation: glow 3.5s ease-in-out infinite;
-        }
-        @keyframes glow {
-            0%, 100% { box-shadow: 7px -3px 0 0 var(--accent); }
-            50% { box-shadow: 7px -3px 10px 2px rgba(200,169,81,0.25); }
-        }
-        .gold-line {
-            width: 50px; height: 2px;
-            background: linear-gradient(90deg, transparent, var(--accent), transparent);
-            margin: 12px auto;
-        }
+        .auth-wrapper { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--bg); padding: 1.5rem; }
+        .auth-card { width: 100%; max-width: 400px; }
+        .auth-header { text-align: center; margin-bottom: 2.5rem; }
+        .auth-header h1 { font-size: 1.75rem; font-weight: 700; color: var(--text-main); letter-spacing: -0.5px; }
+        .auth-header h1 span { color: var(--primary); }
+        .auth-header p { color: var(--text-muted); font-size: 0.9rem; margin-top: 0.5rem; }
 
-        /* === Info Box === */
-        .info-box {
-            background: var(--accent-light);
-            padding: 14px;
-            border-radius: 12px;
-            border-left: 3px solid var(--accent);
-            margin-bottom: 16px;
-        }
-        .info-box label { color: #7A6220; }
+        .form-group { margin-bottom: 1.25rem; }
+        label { display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-main); }
+        .input-wrapper { position: relative; }
+        .input-wrapper i.icon-left { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-light); font-size: 0.85rem; pointer-events: none; }
+        input, select { width: 100%; padding: 10px 12px 10px 36px; border: 1px solid var(--border); border-radius: var(--radius); font-size: 0.9rem; font-family: 'Inter', sans-serif; outline: none; transition: all 0.2s; background: var(--bg); color: var(--text-main); }
+        input:focus, select:focus { border-color: var(--border-focus); box-shadow: 0 0 0 3px var(--primary-glow); }
+        input::placeholder { color: var(--text-light); }
+        select { padding-left: 12px; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; }
+        input[type="file"] { padding: 10px; font-size: 0.85rem; cursor: pointer; }
+        
+        .btn { width: 100%; padding: 11px; background: var(--primary); color: white; border: none; border-radius: var(--radius); font-weight: 600; font-family: 'Inter', sans-serif; cursor: pointer; font-size: 0.9rem; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn:hover { background: var(--primary-hover); }
+        .btn:disabled { background: var(--text-light); cursor: not-allowed; }
+        .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-muted); margin-top: 0.75rem; }
+        .btn-outline:hover { background: var(--surface); border-color: var(--text-light); color: var(--text-main); }
+        .btn-sm { padding: 6px 12px; width: auto; font-size: 0.8rem; }
+        .btn-success { background: var(--success); } .btn-success:hover { background: #059669; }
+        .btn-danger-sm { background: var(--danger); } .btn-danger-sm:hover { background: #DC2626; }
 
-        /* === Section Title === */
-        .section-title {
-            font-family: 'DM Sans', sans-serif;
-            font-size: 0.72rem;
-            font-weight: 700;
-            color: var(--primary);
-            margin: 22px 0 10px;
-            padding-bottom: 8px;
-            border-bottom: 1.5px solid var(--primary-light);
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-        }
+        .link { color: var(--primary); font-size: 0.85rem; font-weight: 500; cursor: pointer; text-decoration: none; display: inline-block; }
+        .link:hover { text-decoration: underline; }
+        .link-muted { color: var(--text-muted); font-size: 0.85rem; }
+        .link-muted a { color: var(--primary); font-weight: 600; cursor: pointer; }
 
-        /* === Scrollable Form === */
-        .scrollable-form {
-            max-height: 58vh;
-            overflow-y: auto;
-            padding-right: 6px;
-        }
-        .scrollable-form::-webkit-scrollbar { width: 3px; }
-        .scrollable-form::-webkit-scrollbar-track { background: transparent; }
-        .scrollable-form::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+        .app-shell { display: flex; min-height: 100vh; }
+        .sidebar { width: 250px; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0; z-index: 100; transition: transform 0.2s; }
+        .sidebar-header { padding: 1.5rem; border-bottom: 1px solid var(--border); }
+        .sidebar-header h2 { font-size: 1.2rem; font-weight: 700; }
+        .sidebar-header h2 span { color: var(--primary); }
+        .sidebar-nav { flex: 1; padding: 1rem 0.75rem; display: flex; flex-direction: column; gap: 2px; }
+        .sidebar-nav a { display: flex; align-items: center; gap: 12px; padding: 10px 12px; color: var(--text-muted); font-size: 0.9rem; font-weight: 500; cursor: pointer; border-radius: var(--radius); transition: all 0.15s; text-decoration: none; position: relative; }
+        .sidebar-nav a:hover:not(.locked) { background: var(--border); color: var(--text-main); }
+        .sidebar-nav a.active { background: var(--primary-light); color: var(--primary); font-weight: 600; }
+        .sidebar-nav a i.nav-icon { width: 20px; text-align: center; font-size: 0.9rem; }
+        .sidebar-nav a .lock-badge { margin-left: auto; font-size: 0.65rem; background: var(--danger-light); color: var(--danger); padding: 2px 6px; border-radius: 4px; font-weight: 700; }
+        .sidebar-nav a.locked { opacity: 0.6; cursor: not-allowed; }
+        .sidebar-footer { padding: 1rem 1.25rem; border-top: 1px solid var(--border); }
+        .sidebar-user { display: flex; align-items: center; gap: 10px; }
+        .sidebar-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--primary-light); color: var(--primary); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.75rem; flex-shrink: 0; overflow: hidden; }
+        .sidebar-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .sidebar-user-info div:first-child { font-size: 0.85rem; font-weight: 600; color: var(--text-main); }
+        .sidebar-user-info div:last-child { font-size: 0.75rem; color: var(--text-muted); }
 
-        /* === Dashboard === */
-        .dashboard-header {
-            background: linear-gradient(135deg, var(--dark) 0%, var(--primary) 70%);
-            color: white;
-            padding: 1.25rem 1.75rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-            position: relative;
-            overflow: hidden;
-        }
-        .dashboard-header::before {
-            content: '';
-            position: absolute;
-            top: -40%; right: -15%;
-            width: 260px; height: 260px;
-            background: radial-gradient(circle, rgba(200,169,81,0.12) 0%, transparent 70%);
-            border-radius: 50%;
-            pointer-events: none;
-        }
-        .dashboard-header::after {
-            content: '';
-            position: absolute;
-            bottom: -60%; left: -10%;
-            width: 200px; height: 200px;
-            background: radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 70%);
-            border-radius: 50%;
-            pointer-events: none;
-        }
-        .dashboard-header h3 {
-            color: white;
-            margin: 0;
-            font-size: 1.35rem;
-            letter-spacing: 0.5px;
-        }
-        .header-sub { font-size: 0.75rem; opacity: 0.6; margin-top: 3px; letter-spacing: 0.02em; }
-        .header-right { display: flex; align-items: center; gap: 12px; z-index: 1; }
-        .header-user-name { font-weight: 600; font-size: 0.88rem; }
-        .header-user-role {
-            font-size: 0.68rem;
-            background: rgba(200,169,81,0.2);
-            color: var(--accent);
-            padding: 2px 10px;
-            border-radius: 10px;
-            font-weight: 700;
-            letter-spacing: 0.03em;
-        }
-        .header-btn {
-            padding: 7px 11px;
-            border-radius: 10px;
-            border: 1px solid rgba(255,255,255,0.15);
-            background: rgba(255,255,255,0.08);
-            color: white;
-            cursor: pointer;
-            font-size: 0.82rem;
-            transition: all 0.2s;
-        }
-        .header-btn:hover { background: rgba(255,255,255,0.16); }
-        .header-btn-logout {
-            border-color: rgba(217,48,37,0.3);
-            background: rgba(217,48,37,0.1);
-            color: #FCA5A5;
-        }
-        .header-btn-logout:hover { background: rgba(217,48,37,0.2); }
+        .main { flex: 1; margin-left: 250px; background: var(--bg); }
+        .main-header { padding: 1.25rem 2rem; border-bottom: 1px solid var(--border); background: var(--bg); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 10; }
+        .main-header h3 { font-size: 1.15rem; font-weight: 600; color: var(--text-main); }
+        .main-content { padding: 2rem; max-width: 1400px; }
+        
+        .hamburger { display: none; background: none; border: none; font-size: 1.2rem; color: var(--text-main); cursor: pointer; }
+        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 99; }
 
-        .dashboard-content { padding: 1.75rem; }
+        .alert { padding: 12px 16px; border-radius: var(--radius); font-size: 0.85rem; margin-bottom: 1.5rem; display: flex; align-items: flex-start; gap: 10px; line-height: 1.5; }
+        .alert i { margin-top: 2px; }
+        .alert-warning { background: var(--warning-light); color: #92400E; border: 1px solid #FDE68A; }
+        .alert-info { background: var(--primary-light); color: var(--primary); border: 1px solid #C7D2FE; }
 
-        /* === Search === */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1.25rem; }
+        .section-title { font-size: 0.8rem; font-weight: 700; color: var(--text-muted); margin: 1.5rem 0 1rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        
+        .search-bar { width: 100%; padding: 10px 12px 10px 36px; border: 1px solid var(--border); border-radius: var(--radius); font-size: 0.9rem; outline: none; background: var(--surface); transition: all 0.2s; font-family: 'Inter', sans-serif; }
+        .search-bar:focus { border-color: var(--border-focus); background: var(--bg); box-shadow: 0 0 0 3px var(--primary-glow); }
         .search-wrap { position: relative; margin-bottom: 1.5rem; }
-        .search-wrap i {
-            position: absolute;
-            left: 14px; top: 50%;
-            transform: translateY(-50%);
-            color: #BFBFC8;
-            font-size: 0.85rem;
-        }
-        .search-bar {
-            width: 100%;
-            padding: 13px 14px 13px 42px;
-            border: 1.5px solid var(--border);
-            border-radius: 14px;
-            font-size: 0.88rem;
-            font-family: 'DM Sans', sans-serif;
-            outline: none;
-            background: var(--bg);
-            transition: all 0.25s var(--ease);
-        }
-        .search-bar:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px var(--primary-glow);
-            background: white;
-        }
+        .search-wrap i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-light); }
 
-        /* === Profile Grid & Cards === */
-        .profile-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(255px, 1fr));
-            gap: 18px;
-        }
-        .card {
-            background: var(--white);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            overflow: hidden;
-            transition: all 0.35s var(--ease);
-            display: flex;
-            flex-direction: column;
-            position: relative;
-        }
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--accent), var(--primary));
-            opacity: 0;
-            transition: opacity 0.3s;
-            z-index: 2;
-        }
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-lg);
-            border-color: rgba(200,169,81,0.4);
-        }
-        .card:hover::before { opacity: 1; }
-        .card-img-top {
-            width: 100%; height: 210px;
-            object-fit: cover;
-            background: var(--border);
-            display: block;
-        }
-        .card-body {
-            padding: 16px;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-        .card-top-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-        .card-name {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.05rem;
-            font-weight: 700;
-            color: var(--dark);
-        }
-        .card-detail {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            margin-bottom: 4px;
-            display: flex;
-            align-items: center;
-            gap: 7px;
-        }
-        .card-detail i { width: 14px; text-align: center; color: var(--primary); font-size: 0.72rem; }
-        .card-footer {
-            padding: 12px 16px;
-            border-top: 1px solid var(--border);
-            margin-top: auto;
-        }
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1.25rem; }
+        .card { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; background: var(--bg); display: flex; flex-direction: column; transition: box-shadow 0.2s; }
+        .card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .card-top { display: flex; gap: 1rem; padding: 1rem; border-bottom: 1px solid var(--border); }
+        .card-img { width: 100px; height: 100px; object-fit: cover; border-radius: var(--radius); background: var(--surface); flex-shrink: 0; }
+        .card-avatar { width: 100px; height: 100px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; font-weight: 700; color: var(--primary); background: var(--primary-light); border-radius: var(--radius); flex-shrink: 0; }
+        .card-identity { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+        .card-name { font-weight: 700; font-size: 1.05rem; margin-bottom: 4px; }
+        .card-sub { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 2px; }
+        
+        .card-body { padding: 1rem; }
+        .data-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .data-item { font-size: 0.82rem; }
+        .data-label { color: var(--text-light); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.3px; }
+        .data-value { color: var(--text-main); font-weight: 500; }
+        .full-col { grid-column: 1 / -1; }
+        
+        .card-footer { padding: 0.75rem 1rem; border-top: 1px solid var(--border); margin-top: auto; }
+        
+        .badge { padding: 2px 8px; border-radius: 12px; font-size: 0.7rem; font-weight: 600; display: inline-block; text-align: center; }
+        .badge-m { background: #DBEAFE; color: #1E40AF; } .badge-f { background: #FCE7F3; color: #BE185D; }
+        .badge-pending { background: #FEF3C7; color: #92400E; } .badge-approved { background: #D1FAE5; color: #065F46; } .badge-rejected { background: #FEE2E2; color: #991B1B; }
 
-        /* === Avatar Fallback === */
-        .avatar-fallback {
-            width: 100%; height: 210px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-            font-weight: 800;
-            font-family: 'Playfair Display', serif;
-            letter-spacing: 1px;
-        }
+        .table-wrap { border: 1px solid var(--border); border-radius: var(--radius); overflow-x: auto; background: var(--bg); }
+        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        thead { background: var(--surface); }
+        th { text-align: left; padding: 10px 16px; font-size: 0.75rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; border-bottom: 1px solid var(--border); }
+        td { padding: 12px 16px; border-bottom: 1px solid var(--border); vertical-align: top; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: var(--surface); }
 
-        /* === Badges === */
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            padding: 3px 9px;
-            border-radius: 20px;
-            font-size: 0.68rem;
-            font-weight: 700;
-            letter-spacing: 0.03em;
-        }
-        .badge-male { background: #E0F2FE; color: #0369A1; }
-        .badge-female { background: #FCE7F3; color: #BE185D; }
+        .img-preview { width: 80px; height: 80px; object-fit: cover; margin-top: 8px; border-radius: var(--radius); border: 1px solid var(--border); display: none; }
+        .question-box { background: var(--surface); border: 1px solid var(--border); padding: 12px; border-radius: var(--radius); font-weight: 500; font-size: 0.9rem; margin-bottom: 8px; }
 
-        /* === Toast === */
-        .toast {
-            position: fixed;
-            top: 20px; right: 20px;
-            padding: 14px 20px;
-            border-radius: 14px;
-            color: white;
-            font-weight: 600;
-            font-family: 'DM Sans', sans-serif;
-            z-index: 9999;
-            animation: toastSlide 0.45s var(--ease);
-            max-width: 360px;
-            font-size: 0.86rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            box-shadow: 0 12px 36px rgba(0,0,0,0.18);
-        }
-        .toast-success { background: var(--primary); }
-        .toast-error { background: var(--danger); }
-        @keyframes toastSlide {
-            from { transform: translateX(110%) scale(0.92); opacity: 0; }
-            to { transform: translateX(0) scale(1); opacity: 1; }
-        }
-
-        /* === Loading === */
-        .loading-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(248,246,243,0.85);
-            backdrop-filter: blur(4px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 9998;
-        }
-        .loading-spinner {
-            width: 40px; height: 40px;
-            border: 3px solid var(--border);
-            border-top-color: var(--primary);
-            border-radius: 50%;
-            animation: spin 0.65s linear infinite;
-        }
+        .toast { position: fixed; top: 20px; right: 20px; padding: 12px 20px; border-radius: var(--radius); color: white; font-weight: 500; font-family: 'Inter', sans-serif; z-index: 10000; animation: slideIn 0.3s ease; max-width: 320px; font-size: 0.85rem; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .toast-success { background: var(--success); } .toast-error { background: var(--danger); }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .loading-overlay { position: fixed; inset: 0; background: rgba(255,255,255,0.8); display: flex; align-items: center; justify-content: center; z-index: 9998; }
+        .spinner { width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.6s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* === Card Stagger Animation === */
-        @keyframes cardPop {
-            from { opacity: 0; transform: translateY(20px) scale(0.97); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
+        .action-btns { display: flex; gap: 6px; flex-wrap: wrap; }
+        .sub-text { font-size: 0.75rem; color: var(--text-light); margin-top: 2px; }
+        .data-cell-line { margin-bottom: 4px; }
 
-        /* === Footer === */
-        .login-footer {
-            margin-top: 32px;
-            font-size: 0.7rem;
-            color: #C5C5CE;
-            text-align: center;
-            letter-spacing: 0.06em;
-        }
+        /* CSS untuk Modal Foto Besar */
+        .photo-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(4px); z-index: 10000; display: flex; align-items: center; justify-content: center; padding: 2rem; cursor: pointer; animation: slideIn 0.2s ease; }
+        .photo-modal-content { position: relative; max-width: 90vw; max-height: 90vh; cursor: default; }
+        .photo-modal-content img { max-width: 100%; max-height: 85vh; border-radius: var(--radius); box-shadow: 0 20px 50px rgba(0,0,0,0.3); object-fit: contain; background: white; }
+        .photo-modal-close { position: absolute; top: -12px; right: -12px; width: 36px; height: 36px; border-radius: 50%; background: white; border: none; font-size: 1.2rem; color: var(--text-main); cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.2); transition: all 0.2s; }
+        .photo-modal-close:hover { background: var(--danger); color: white; }
 
-        /* === Reduced Motion === */
-        @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after {
-                animation-duration: 0.01ms !important;
-                transition-duration: 0.01ms !important;
-            }
-        }
-
-        /* === Responsive === */
-        @media (max-width: 640px) {
-            body { padding: 0.5rem; padding-top: 0.75rem; align-items: flex-start; }
-            .app-container { padding: 1.5rem; border-radius: 20px; }
-            .dashboard-container { border-radius: 16px; }
-            .dashboard-header { padding: 1rem 1.25rem; }
-            .dashboard-header h3 { font-size: 1.15rem; }
-            .dashboard-content { padding: 1.25rem; }
-            .profile-grid { grid-template-columns: 1fr; }
-            .blob { opacity: 0.07; }
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); } .sidebar.open { transform: translateX(0); }
+            .overlay.open { display: block; } .main { margin-left: 0; }
+            .hamburger { display: block; } .main-content { padding: 1.25rem; }
+            .grid-2 { grid-template-columns: 1fr; } .card-grid { grid-template-columns: 1fr; }
+            .data-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Latar atmosfer bergerak -->
-    <div class="atmosphere" aria-hidden="true">
-        <div class="blob blob-1"></div>
-        <div class="blob blob-2"></div>
-        <div class="blob blob-3"></div>
+    <div id="login-view" class="auth-wrapper">
+        <div class="auth-card">
+            <div class="auth-header"><h1>SA<span>KINAH</span></h1><p>Bismillah, mulai perjalanan ta'arufmu</p></div>
+            <form onsubmit="event.preventDefault(); login();">
+                <div class="form-group"><label>Email</label><div class="input-wrapper"><i class="fas fa-envelope icon-left"></i><input type="email" id="loginEmail" placeholder="email@contoh.com" required></div></div>
+                <div class="form-group"><label>Password</label><div class="input-wrapper"><i class="fas fa-lock icon-left"></i><input type="password" id="loginPass" placeholder="Masukkan password" required></div></div>
+                <div style="text-align:right; margin-bottom:1.25rem;"><a class="link" onclick="showForgotPassword()">Lupa Password?</a></div>
+                <button type="submit" id="btnLogin" class="btn"><i class="fas fa-arrow-right"></i> Masuk</button>
+            </form>
+            <div class="link-muted" style="text-align:center; margin-top:1.5rem;">Belum punya akun? <a onclick="loadRegisterView()">Daftar</a></div>
+        </div>
     </div>
 
-    <!-- ==================== 1. LOGIN ==================== -->
-    <div id="login-view" class="app-container">
-        <div style="text-align:center; margin-bottom:2rem;">
-            <div class="crescent" aria-hidden="true"></div>
-            <div style="font-size:1.6rem; color:var(--accent); margin-bottom:6px;"><i class="fas fa-mosque"></i></div>
-            <h1 style="font-size:2.1rem; margin:0; letter-spacing:3px;">SAKINAH</h1>
-            <div class="gold-line" aria-hidden="true"></div>
-            <p style="font-size:0.9rem;">Bismillah, mulai perjalanan ta'arufmu</p>
+    <div id="register-view" class="auth-wrapper hidden">
+        <div class="auth-card">
+            <div class="auth-header"><h1>Daftar <span>Akun</span></h1><p>Isi data untuk membuat akun baru</p></div>
+            <form id="registerForm" onsubmit="handleRegister(event)">
+                <div class="form-group"><label>Email</label><div class="input-wrapper"><i class="fas fa-envelope icon-left"></i><input type="email" id="regEmail" placeholder="email@contoh.com" required></div></div>
+                <div class="form-group"><label>Password</label><div class="input-wrapper"><i class="fas fa-lock icon-left"></i><input type="password" id="regPass" placeholder="Min 6 karakter" required minlength="6"></div></div>
+                <div class="form-group"><label>Nama Lengkap</label><div class="input-wrapper"><i class="fas fa-user icon-left"></i><input type="text" id="regNama" placeholder="Nama sesuai identitas" required></div></div>
+                <div class="alert alert-info"><i class="fas fa-shield-alt"></i><div><b>Verifikasi Komunitas</b><div class="question-box" id="verifyQuestion">Memuat...</div><input type="hidden" id="regQuestionHidden"><div class="input-wrapper" style="margin-top:8px;"><i class="fas fa-key icon-left"></i><input type="text" id="regAnswer" placeholder="Jawaban" required></div></div></div>
+                <button type="submit" id="btnRegister" class="btn"><i class="fas fa-check"></i> Daftar</button>
+                <button type="button" onclick="showView('login-view')" class="btn btn-outline"><i class="fas fa-arrow-left"></i> Kembali</button>
+            </form>
         </div>
-
-        <div class="form-group">
-            <div class="input-icon-wrap">
-                <i class="fas fa-envelope"></i>
-                <input type="email" id="loginEmail" placeholder="Email" required>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="input-icon-wrap">
-                <i class="fas fa-lock"></i>
-                <input type="password" id="loginPass" placeholder="Password" required>
-            </div>
-        </div>
-        <button id="btnLogin" onclick="login()" class="btn btn-accent"><i class="fas fa-sign-in-alt"></i> Masuk</button>
-        <div style="margin-top:22px; text-align:center;">
-            <a onclick="showView('register-view')">Belum punya akun? Daftar</a>
-        </div>
-        <footer class="login-footer">&copy; 2026 SAKINAH &mdash; BarokahTeam</footer>
     </div>
 
-    <!-- ==================== 2. REGISTER ==================== -->
-    <div id="register-view" class="app-container hidden">
-        <div style="text-align:center; margin-bottom:1.5rem;">
-            <div style="font-size:1.3rem; color:var(--accent); margin-bottom:6px;"><i class="fas fa-mosque"></i></div>
-            <h2 style="font-size:1.4rem;">Buat Akun Baru</h2>
-            <div class="gold-line" aria-hidden="true"></div>
-            <p>Lengkapi profil nanti setelah login.</p>
+    <div id="app-shell" class="app-shell hidden">
+        <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header"><h2>SA<span>KINAH</span></h2></div>
+            <nav class="sidebar-nav" id="sidebarNav">
+                <div id="nav-personal">
+                    <a class="active" onclick="switchPage('home')" data-page="home"><i class="fas fa-home nav-icon"></i> Beranda</a>
+                    <a id="nav-search" onclick="handleLockedNav('search')" data-page="search"><i class="fas fa-search nav-icon"></i> Cari Jodoh <span class="lock-badge hidden" id="lock-search">Kunci</span></a>
+                    <a id="nav-status" onclick="handleLockedNav('status')" data-page="status"><i class="fas fa-heart nav-icon"></i> Status Ta'aruf <span class="lock-badge hidden" id="lock-status">Kunci</span></a>
+                    <a onclick="switchPage('profile')" data-page="profile"><i class="fas fa-user-edit nav-icon"></i> Edit Profil</a>
+                </div>
+                <div id="nav-admin" class="hidden">
+                    <a class="active" onclick="switchPage('admin-home')" data-page="admin-home"><i class="fas fa-tachometer-alt nav-icon"></i> Dashboard</a>
+                    <a onclick="switchPage('admin-users')" data-page="admin-users"><i class="fas fa-users nav-icon"></i> Data Peserta</a>
+                    <a onclick="switchPage('admin-taaruf')" data-page="admin-taaruf"><i class="fas fa-heart nav-icon"></i> Pengajuan Ta'aruf</a>
+                </div>
+                <div style="flex:1;"></div>
+                <a onclick="logout()" style="color:var(--danger);"><i class="fas fa-sign-out-alt nav-icon"></i> Keluar</a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="sidebar-user">
+                    <div class="sidebar-avatar" id="sidebarAvatar">?</div>
+                    <div class="sidebar-user-info"><div id="sidebarName">User</div><div id="sidebarRole">Personal</div></div>
+                </div>
+            </div>
+        </aside>
+
+        <div class="main">
+            <header class="main-header">
+                <div style="display:flex;align-items:center;gap:12px;"><button class="hamburger" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><h3 id="pageTitle">Beranda</h3></div>
+            </header>
+            
+            <div class="main-content">
+                <div id="page-home"><div class="alert alert-info"><i class="fas fa-info-circle"></i><div>Selamat datang! Lengkapi profil dan mulai cari jodoh melalui menu <b>Cari Jodoh</b>.</div></div></div>
+                <div id="page-search" class="hidden">
+                    <div class="search-wrap"><i class="fas fa-search"></i><input type="text" class="search-bar" id="searchInput" placeholder="Cari nama..." oninput="filterDashboard()"></div>
+                    <div id="dashboard-list" class="card-grid"></div>
+                </div>
+                <div id="page-status" class="hidden"><div id="status-content"></div></div>
+                
+                <div id="page-profile" class="hidden">
+                    <div class="alert alert-warning" id="profileAlert"><i class="fas fa-exclamation-triangle"></i><div>Lengkapi profil terlebih dahulu untuk membuka fitur Cari Jodoh dan Status Ta'aruf.</div></div>
+                    <form id="profileForm" onsubmit="handleUpdateProfile(event)">
+                        <div class="section-title">Data Pribadi</div>
+                        <div class="grid-2">
+                            <div class="form-group" style="grid-column:1/-1;"><label>Nama Lengkap</label><div class="input-wrapper"><i class="fas fa-user icon-left"></i><input type="text" id="upNama" required></div></div>
+                            <div class="form-group" style="grid-column:1/-1;"><label>Nama Orang Tua</label><div class="input-wrapper"><i class="fas fa-users icon-left"></i><input type="text" id="upOrtu" required></div></div>
+                            <div class="form-group" style="grid-column:1/-1;"><label>Tempat, Tanggal Lahir</label><div class="input-wrapper"><i class="fas fa-calendar icon-left"></i><input type="text" id="upTTL" required></div></div>
+                            <div class="form-group"><label>Jenis Kelamin</label><select id="upGender" required><option value="">-- Pilih --</option><option value="Laki-laki">Laki-laki</option><option value="Perempuan">Perempuan</option></select></div>
+                            <div class="form-group"><label>Anak Ke</label><div class="input-wrapper"><i class="fas fa-child icon-left"></i><input type="text" id="upAnakKe" required></div></div>
+                            <div class="form-group"><label>Suku</label><div class="input-wrapper"><i class="fas fa-globe-asia icon-left"></i><input type="text" id="upSuku" required></div></div>
+                            <div class="form-group"><label>Tinggi / Berat Badan</label><div class="input-wrapper"><i class="fas fa-ruler icon-left"></i><input type="text" id="upTB" required></div></div>
+                            <div class="form-group"><label>Status Menikah</label><select id="upMenikah" required><option value="">-- Pilih --</option><option value="Belum Menikah">Belum Menikah</option><option value="Janda/Duda">Janda/Duda</option></select></div>
+                        </div>
+                        <div class="section-title">Pendidikan & Pekerjaan</div>
+                        <div class="grid-2">
+                            <div class="form-group"><label>Pendidikan</label><div class="input-wrapper"><i class="fas fa-graduation-cap icon-left"></i><input type="text" id="upPendidikan" required></div></div>
+                            <div class="form-group"><label>Pekerjaan</label><div class="input-wrapper"><i class="fas fa-briefcase icon-left"></i><input type="text" id="upPekerjaan" required></div></div>
+                            <div class="form-group"><label>Hobi</label><div class="input-wrapper"><i class="fas fa-heart icon-left"></i><input type="text" id="upHobi" required></div></div>
+                            <div class="form-group"><label>Dapukan</label><div class="input-wrapper"><i class="fas fa-pray icon-left"></i><input type="text" id="upDapukan" required></div></div>
+                        </div>
+                        <div class="section-title">Wilayah</div>
+                        <div class="grid-2">
+                            <div class="form-group"><label>Daerah</label><select id="upDaerah" onchange="loadDesa()" required><option value="">-- Pilih --</option></select></div>
+                            <div class="form-group"><label>Desa</label><select id="upDesa" onchange="loadKelompok()" required><option value="">-- Pilih --</option></select></div>
+                            <div class="form-group"><label>Kelompok</label><select id="upKelompok" required><option value="">-- Pilih --</option></select></div>
+                        </div>
+                        <div class="section-title">Foto</div>
+                        <div class="form-group">
+                            <input type="file" id="upFoto" accept="image/*" onchange="previewFoto(event, 'upFotoPreview')">
+                            <img id="upFotoPreview" class="img-preview" src="" alt="Preview">
+                        </div>
+                        <button type="submit" id="btnSaveProfile" class="btn" style="margin-top:1rem;"><i class="fas fa-save"></i> Simpan Profil</button>
+                    </form>
+                </div>
+
+                <div id="page-admin-home" class="hidden"><div class="alert alert-info"><i class="fas fa-shield-alt"></i><div>Anda masuk sebagai <b id="adminRoleLabel">Admin</b> Wilayah <b id="adminScopeLabel">-</b>.</div></div></div>
+                
+                <div id="page-admin-users" class="hidden">
+                    <div class="search-wrap"><i class="fas fa-search"></i><input type="text" class="search-bar" id="adminSearchInput" placeholder="Cari peserta..." oninput="filterAdmin()"></div>
+                    <div class="table-wrap"><table><thead><tr><th>Peserta</th><th>Data Pribadi</th><th>Pekerjaan & Lainnya</th><th>Wilayah</th><th>Status</th></tr></thead><tbody id="admin-tbody"></tbody></table></div>
+                </div>
+
+                <div id="page-admin-taaruf" class="hidden">
+                    <div class="table-wrap"><table><thead><tr><th>Tanggal</th><th>Pelamar</th><th>Target</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="admin-taaruf-tbody"></tbody></table></div>
+                </div>
+            </div>
         </div>
-        <form id="registerForm" onsubmit="handleRegister(event)">
-            <div class="form-group">
-                <div class="input-icon-wrap"><i class="fas fa-envelope"></i><input type="email" id="regEmail" placeholder="Email" required></div>
-            </div>
-            <div class="form-group">
-                <div class="input-icon-wrap"><i class="fas fa-lock"></i><input type="password" id="regPass" placeholder="Password (min 6 karakter)" required minlength="6"></div>
-            </div>
-            <div class="form-group">
-                <div class="input-icon-wrap"><i class="fas fa-user"></i><input type="text" id="regNama" placeholder="Nama Lengkap" required></div>
-            </div>
-            <div class="info-box">
-                <label style="font-size:0.72rem;"><i class="fas fa-shield-alt"></i> Kode Komunitas</label>
-                <div class="input-icon-wrap" style="margin-top:6px;">
-                    <i class="fas fa-key"></i>
-                    <input type="text" id="regKode" placeholder="Masukkan kode komunitas" required>
-                </div>
-            </div>
-            <button type="submit" id="btnRegister" class="btn"><i class="fas fa-user-plus"></i> Daftar</button>
-            <button type="button" onclick="showView('login-view')" class="btn btn-outline"><i class="fas fa-arrow-left"></i> Kembali</button>
-        </form>
-    </div>
-
-    <!-- ==================== 3. COMPLETE PROFILE ==================== -->
-    <div id="complete-profile-view" class="app-container hidden" style="max-width:520px;">
-        <div style="text-align:center; margin-bottom:0.8rem;">
-            <div style="font-size:1.1rem; color:var(--accent); margin-bottom:4px;"><i class="fas fa-mosque"></i></div>
-            <h3 id="profileTitle" style="font-size:1.3rem;">Lengkapi Data Diri</h3>
-            <div class="gold-line" aria-hidden="true"></div>
-            <p>Data ini wajib diisi agar dapat mengakses fitur ta'aruf.</p>
-        </div>
-        <form id="profileForm" onsubmit="handleUpdateProfile(event)">
-            <div class="scrollable-form">
-                <div class="section-title">Data Pribadi</div>
-                <div class="form-group"><label>Nama Orang Tua</label><div class="input-icon-wrap"><i class="fas fa-users"></i><input type="text" id="upOrtu" required></div></div>
-                <div class="form-group"><label>Tempat, Tanggal Lahir</label><div class="input-icon-wrap"><i class="fas fa-calendar-alt"></i><input type="text" id="upTTL" placeholder="Contoh: Garut, 04 November 2003" required></div></div>
-                <div class="form-group">
-                    <label>Jenis Kelamin</label>
-                    <select id="upGender" required>
-                        <option value="">-- Pilih --</option>
-                        <option value="Laki-laki">Laki-laki</option>
-                        <option value="Perempuan">Perempuan</option>
-                    </select>
-                </div>
-                <div class="form-group"><label>Anak ke ... dari ... saudara</label><div class="input-icon-wrap"><i class="fas fa-child"></i><input type="text" id="upAnakKe" placeholder="Contoh: Anak ke 3 dari 4 bersaudara" required></div></div>
-                <div class="form-group"><label>Suku</label><div class="input-icon-wrap"><i class="fas fa-globe-asia"></i><input type="text" id="upSuku" required></div></div>
-                <div class="form-group"><label>Tinggi & Berat Badan</label><div class="input-icon-wrap"><i class="fas fa-ruler-vertical"></i><input type="text" id="upTB" placeholder="Contoh: 170 cm / 58 kg" required></div></div>
-                <div class="form-group">
-                    <label>Status Menikah</label>
-                    <select id="upMenikah" required>
-                        <option value="">-- Pilih --</option>
-                        <option value="Belum Menikah">Belum Menikah</option>
-                        <option value="Janda/Duda">Janda/Duda</option>
-                    </select>
-                </div>
-
-                <div class="section-title">Pendidikan & Pekerjaan</div>
-                <div class="form-group"><label>Pendidikan Terakhir</label><div class="input-icon-wrap"><i class="fas fa-graduation-cap"></i><input type="text" id="upPendidikan" placeholder="Contoh: S1 Teknik Informatika" required></div></div>
-                <div class="form-group"><label>Pekerjaan</label><div class="input-icon-wrap"><i class="fas fa-briefcase"></i><input type="text" id="upPekerjaan" required></div></div>
-                <div class="form-group"><label>Hobi</label><div class="input-icon-wrap"><i class="fas fa-heart"></i><input type="text" id="upHobi" required></div></div>
-                <div class="form-group"><label>Dapukan</label><div class="input-icon-wrap"><i class="fas fa-pray"></i><input type="text" id="upDapukan" required></div></div>
-
-                <div class="section-title">Wilayah</div>
-                <div class="form-group"><label>Daerah</label><select id="upDaerah" onchange="loadDesaOptions('up')" required><option value="">-- Pilih Daerah --</option></select></div>
-                <div class="form-group"><label>Desa</label><select id="upDesa" onchange="loadKelompokOptions('up')" required><option value="">-- Pilih Desa --</option></select></div>
-                <div class="form-group"><label>Kelompok</label><select id="upKelompok" required><option value="">-- Pilih Kelompok --</option></select></div>
-
-                <div class="section-title">Foto</div>
-                <div class="form-group">
-                    <input type="file" id="upFoto" accept="image/*">
-                    <div id="fotoPreview" style="margin-top:8px;"></div>
-                    <small style="color:var(--text-muted); margin-top:4px; display:block; font-size:0.74rem;">Maks 2MB, akan dikompres otomatis.</small>
-                </div>
-            </div>
-            <button type="submit" id="btnSaveProfile" class="btn btn-accent" style="margin-top:14px;"><i class="fas fa-check-circle"></i> Simpan Data Diri</button>
-        </form>
-    </div>
-
-    <!-- ==================== 4. DASHBOARD ==================== -->
-    <div id="dashboard-view" class="app-container dashboard-container hidden">
-        <header class="dashboard-header">
-            <div style="z-index:1;">
-                <h3><i class="fas fa-mosque" style="margin-right:8px;"></i>SAKINAH</h3>
-                <div class="header-sub">Cari jodoh dengan cara yang halal</div>
-            </div>
-            <div class="header-right">
-                <div style="text-align:right;">
-                    <div class="header-user-name" id="userName">User</div>
-                    <div class="header-user-role" id="userRole">Personal</div>
-                </div>
-                <div style="display:flex; gap:6px;">
-                    <button onclick="showEditProfile()" class="header-btn" aria-label="Edit profil"><i class="fas fa-user-edit"></i></button>
-                    <button onclick="logout()" class="header-btn header-btn-logout" aria-label="Keluar"><i class="fas fa-sign-out-alt"></i></button>
-                </div>
-            </div>
-        </header>
-        <main class="dashboard-content">
-            <div class="search-wrap">
-                <i class="fas fa-search"></i>
-                <input type="text" class="search-bar" id="searchInput" placeholder="Cari berdasarkan nama..." oninput="filterDashboard()">
-            </div>
-            <div id="dashboard-list" class="profile-grid"></div>
-        </main>
     </div>
 
     <script>
         const GAS_URL = "https://script.google.com/macros/s/AKfycbwTGFTatNOATbDYW6AM2-PCEK6gkAHwtDxLjgDRkFu0FaAgbsYcOyRdmccPbQX0SA61/exec";
-        let currentUser = null;
-        let masterData = { daerah: [], desa: {}, kelompok: {} };
-        let allDashboardUsers = [];
+        let currentUser = null; let masterData = { daerah: [], desa: {}, kelompok: {} }; let allUsers = []; let allTaarufRequests = [];
+        const adminRoles = ['Admin', 'Desa', 'Daerah', 'Super Admin'];
 
-        /* === Toast Notification === */
-        function showToast(message, type = 'success') {
-            const toast = document.createElement('div');
-            toast.className = `toast toast-${type}`;
-            const icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle';
-            toast.innerHTML = `<i class="fas ${icon}"></i> ${message}`;
-            document.body.appendChild(toast);
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                toast.style.transform = 'translateX(30px)';
-                toast.style.transition = 'all 0.3s ease';
-                setTimeout(() => toast.remove(), 300);
-            }, 3500);
-        }
+        function showToast(msg, type='success') { const t=document.createElement('div'); t.className=`toast toast-${type}`; t.innerHTML=`<i class="fas fa-${type==='success'?'check':'exclamation'}-circle"></i> ${msg}`; document.body.appendChild(t); setTimeout(()=>{t.style.opacity='0'; setTimeout(()=>t.remove(),300)}, 3000); }
+        function showLoading() { const o=document.createElement('div'); o.className='loading-overlay'; o.id='loadOv'; o.innerHTML='<div class="spinner"></div>'; document.body.appendChild(o); }
+        function hideLoading() { const el=document.getElementById('loadOv'); if(el) el.remove(); }
+        async function fetchGAS(action, params={}, method='GET', body=null) { let url=`${GAS_URL}?action=${action}`; try { if(method==='GET') { Object.keys(params).forEach(k=>url+=`&${k}=${encodeURIComponent(params[k])}`); return await (await fetch(url)).json(); } else { return await (await fetch(url, {method:'POST', headers:{'Content-Type':'text/plain'}, body:JSON.stringify({action,...body})})).json(); } } catch(e) { showToast('Gagal terhubung ke server','error'); return {status:'error'}; } }
+        function showView(id) { document.querySelectorAll('.auth-wrapper, .app-shell').forEach(el=>el.classList.add('hidden')); const t=document.getElementById(id); if(t) t.classList.remove('hidden'); }
+        function getPhotoUrl(url) { if(!url) return ''; const m=url.match(/\/d\/([a-zA-Z0-9_-]+)/); if(m) return `https://drive.google.com/thumbnail?id=${m[1]}&sz=w400`; return url.includes('thumbnail?id=')?url:url; }
+        function getInitials(n) { if(!n) return '?'; const p=n.trim().split(/\s+/); return p.length===1?p[0][0].toUpperCase():(p[0][0]+p[p.length-1][0]).toUpperCase(); }
+        function getAvatarColor(n) { let h=0; for(let i=0;i<(n||'').length;i++){h=n.charCodeAt(i)+((h<<5)-h);} return ['#4F46E5','#10B981','#F59E0B','#EF4444','#8B5CF6'][Math.abs(h)%5]; }
 
-        /* === Loading Overlay === */
-        function showLoading() {
-            const o = document.createElement('div');
-            o.className = 'loading-overlay';
-            o.id = 'loadingOverlay';
-            o.innerHTML = '<div class="loading-spinner"></div>';
-            document.body.appendChild(o);
-        }
-        function hideLoading() {
-            const el = document.getElementById('loadingOverlay');
-            if (el) el.remove();
-        }
-
-        /* === GAS Fetch Helper === */
-        async function fetchGAS(action, params = {}, method = 'GET', body = null) {
-            let url = `${GAS_URL}?action=${action}`;
-            try {
-                if (method === 'GET') {
-                    Object.keys(params).forEach(key => { url += `&${key}=${encodeURIComponent(params[key])}`; });
-                    return await (await fetch(url)).json();
-                } else {
-                    const requestBody = { action: action, ...body };
-                    return await (await fetch(url, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(requestBody) })).json();
-                }
-            } catch (e) {
-                console.error('Fetch error:', e);
-                showToast('Gagal terhubung ke server', 'error');
-                return { status: 'error', message: 'Koneksi gagal' };
-            }
-        }
-
-        /* === View Switching with Animation === */
-        function showView(id) {
-            document.querySelectorAll('.app-container').forEach(el => el.classList.add('hidden'));
-            const target = document.getElementById(id);
-            if (target) {
-                target.classList.remove('hidden');
-                target.style.animation = 'none';
-                target.offsetHeight; // reflow trigger
-                target.style.animation = 'viewEnter 0.5s cubic-bezier(0.16,1,0.3,1)';
-            }
-        }
-
-        /* === Register === */
-        async function handleRegister(e) {
-            e.preventDefault();
-            const btn = document.getElementById('btnRegister');
-            btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memproses...';
-            const res = await fetchGAS('register', {}, 'POST', {
-                email: document.getElementById('regEmail').value.trim(),
-                password: document.getElementById('regPass').value,
-                nama: document.getElementById('regNama').value.trim(),
-                kodeKomunitas: document.getElementById('regKode').value.trim()
-            });
-            if (res.status === 'success') {
-                showToast(res.message, 'success');
-                showView('login-view');
-                document.getElementById('registerForm').reset();
-            } else {
-                showToast(res.message || 'Registrasi gagal', 'error');
-            }
-            btn.disabled = false; btn.innerHTML = '<i class="fas fa-user-plus"></i> Daftar';
-        }
-
-        /* === Login === */
-        async function login() {
-            const btn = document.getElementById('btnLogin');
-            const email = document.getElementById('loginEmail').value.trim();
-            const password = document.getElementById('loginPass').value;
-            if (!email || !password) { showToast('Email dan password wajib diisi', 'error'); return; }
-            btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Masuk...';
-            const res = await fetchGAS('login', { email, password });
-            if (res.status === 'success') {
-                currentUser = res.user;
-                if (!currentUser.isComplete) {
-                    await loadMasterData();
-                    prefillProfileForm();
-                    showView('complete-profile-view');
-                } else {
-                    loadDashboard();
-                }
-            } else {
-                showToast(res.message || 'Login gagal', 'error');
-            }
-            btn.disabled = false; btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Masuk';
-        }
-
-        /* === Prefill Profile Form === */
-        function prefillProfileForm() {
-            if (!currentUser) return;
-            const fields = {
-                'upOrtu': currentUser.namaOrtu, 'upTTL': currentUser.ttl,
-                'upAnakKe': currentUser.anakKe, 'upSuku': currentUser.suku,
-                'upTB': currentUser.tbBerat, 'upPendidikan': currentUser.pendidikan,
-                'upPekerjaan': currentUser.pekerjaan, 'upHobi': currentUser.hobi,
-                'upDapukan': currentUser.dapukan
-            };
-            Object.keys(fields).forEach(id => {
-                const el = document.getElementById(id);
-                if (el && fields[id]) el.value = fields[id];
-            });
-            if (currentUser.gender) document.getElementById('upGender').value = currentUser.gender;
-            if (currentUser.menikah) document.getElementById('upMenikah').value = currentUser.menikah;
-            if (currentUser.daerah) {
-                document.getElementById('upDaerah').value = currentUser.daerah;
-                loadDesaOptions('up');
-                setTimeout(() => {
-                    if (currentUser.desa) {
-                        document.getElementById('upDesa').value = currentUser.desa;
-                        loadKelompokOptions('up');
-                        setTimeout(() => {
-                            if (currentUser.kelompok) document.getElementById('upKelompok').value = currentUser.kelompok;
-                        }, 100);
-                    }
-                }, 100);
-            }
-            if (currentUser.foto) {
-                document.getElementById('fotoPreview').innerHTML = `<img src="${getPhotoUrl(currentUser.foto)}" style="width:72px;height:72px;border-radius:12px;object-fit:cover;border:2px solid var(--primary-light);">`;
-            }
-        }
-
-        /* === Update Profile === */
-        async function handleUpdateProfile(e) {
-            e.preventDefault();
-            const btn = document.getElementById('btnSaveProfile');
-            btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
-            let fotoBase64 = null;
-            const fotoInput = document.getElementById('upFoto');
-            if (fotoInput.files && fotoInput.files[0]) {
-                if (fotoInput.files[0].size > 2 * 1024 * 1024) {
-                    showToast('Ukuran foto maksimal 2MB', 'error');
-                    btn.disabled = false; btn.innerHTML = '<i class="fas fa-check-circle"></i> Simpan Data Diri';
-                    return;
-                }
-                try { fotoBase64 = await compressImage(fotoInput.files[0], 600, 0.7); }
-                catch (err) {
-                    showToast('Gagal memproses foto', 'error');
-                    btn.disabled = false; btn.innerHTML = '<i class="fas fa-check-circle"></i> Simpan Data Diri';
-                    return;
-                }
-            }
-            const payload = {
-                email: currentUser.email, nama: currentUser.nama,
-                namaOrtu: document.getElementById('upOrtu').value.trim(),
-                ttl: document.getElementById('upTTL').value.trim(),
-                gender: document.getElementById('upGender').value,
-                anakKe: document.getElementById('upAnakKe').value.trim(),
-                suku: document.getElementById('upSuku').value.trim(),
-                tbBerat: document.getElementById('upTB').value.trim(),
-                menikah: document.getElementById('upMenikah').value,
-                pendidikan: document.getElementById('upPendidikan').value.trim(),
-                pekerjaan: document.getElementById('upPekerjaan').value.trim(),
-                hobi: document.getElementById('upHobi').value.trim(),
-                dapukan: document.getElementById('upDapukan').value.trim(),
-                daerah: document.getElementById('upDaerah').value,
-                desa: document.getElementById('upDesa').value,
-                kelompok: document.getElementById('upKelompok').value,
-                foto: fotoBase64
-            };
-            if (!payload.gender || !payload.daerah || !payload.desa || !payload.kelompok) {
-                showToast('Lengkapi semua field wajib', 'error');
-                btn.disabled = false; btn.innerHTML = '<i class="fas fa-check-circle"></i> Simpan Data Diri';
-                return;
-            }
-            const res = await fetchGAS('updateProfile', {}, 'POST', payload);
-            if (res.status === 'success') {
-                showToast(res.message, 'success');
-                currentUser.isComplete = true;
-                currentUser.gender = payload.gender;
-                currentUser.daerah = payload.daerah;
-                currentUser.desa = payload.desa;
-                currentUser.kelompok = payload.kelompok;
-                loadDashboard();
-            } else {
-                showToast(res.message || 'Gagal menyimpan', 'error');
-            }
-            btn.disabled = false; btn.innerHTML = '<i class="fas fa-check-circle"></i> Simpan Data Diri';
-        }
-
-        /* === Image Compression === */
-        function compressImage(file, maxWidth, quality) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const img = new Image();
-                    img.onload = () => {
-                        const canvas = document.createElement('canvas');
-                        let w = img.width, h = img.height;
-                        if (w > maxWidth) { h = Math.round((maxWidth / w) * h); w = maxWidth; }
-                        canvas.width = w; canvas.height = h;
-                        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-                        resolve(canvas.toDataURL('image/jpeg', quality).split(',')[1]);
-                    };
-                    img.onerror = reject;
-                    img.src = e.target.result;
-                };
-                reader.onerror = reject;
-                reader.readAsDataURL(file);
-            });
-        }
-
-        /* === Master Data === */
-        async function loadMasterData() {
-            const res = await fetchGAS('getMasterData');
-            if (res.status === 'success') { masterData = res.data; populateDaerah('up'); }
-            else { showToast('Gagal memuat data wilayah', 'error'); }
-        }
-        function populateDaerah(prefix) {
-            const s = document.getElementById(prefix + 'Daerah');
-            s.innerHTML = '<option value="">-- Pilih Daerah --</option>';
-            masterData.daerah.forEach(d => s.innerHTML += `<option value="${d}">${d}</option>`);
-        }
-        function loadDesaOptions(prefix) {
-            const daerah = document.getElementById(prefix + 'Daerah').value;
-            const s = document.getElementById(prefix + 'Desa');
-            const k = document.getElementById(prefix + 'Kelompok');
-            s.innerHTML = '<option value="">-- Pilih Desa --</option>';
-            k.innerHTML = '<option value="">-- Pilih Kelompok --</option>';
-            if (daerah && masterData.desa[daerah])
-                masterData.desa[daerah].forEach(d => s.innerHTML += `<option value="${d}">${d}</option>`);
-        }
-        function loadKelompokOptions(prefix) {
-            const desa = document.getElementById(prefix + 'Desa').value;
-            const k = document.getElementById(prefix + 'Kelompok');
-            k.innerHTML = '<option value="">-- Pilih Kelompok --</option>';
-            if (desa && masterData.kelompok[desa])
-                masterData.kelompok[desa].forEach(i => k.innerHTML += `<option value="${i}">${i}</option>`);
-        }
-
-        /* === Photo & Avatar Helpers === */
-        function getPhotoUrl(url) {
-            if (!url) return '';
-            const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
-            if (match) return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w400`;
-            if (url.includes('thumbnail?id=')) return url;
-            return url;
-        }
-        function getInitials(name) {
-            if (!name) return '?';
-            const parts = name.trim().split(/\s+/);
-            if (parts.length === 1) return parts[0][0].toUpperCase();
-            return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-        }
-        function getAvatarColor(name) {
-            let hash = 0;
-            for (let i = 0; i < (name || '').length; i++) { hash = name.charCodeAt(i) + ((hash << 5) - hash); }
-            const colors = ['#0B3D2E', '#C8A951', '#7C3AED', '#B45309', '#0E7490', '#6D28D9'];
-            return colors[Math.abs(hash) % colors.length];
-        }
-
-        /* === Dashboard === */
-        async function loadDashboard() {
-            showView('dashboard-view');
-            document.getElementById('userName').textContent = currentUser.nama || 'User';
-            document.getElementById('userRole').textContent = currentUser.role || 'Personal';
-            showLoading();
-            const res = await fetchGAS('getUsers', {
-                role: currentUser.role,
-                desa: currentUser.desa || '',
-                daerah: currentUser.daerah || '',
-                email: currentUser.email,
-                gender: currentUser.gender || ''
-            });
-            hideLoading();
-            const container = document.getElementById('dashboard-list');
-            if (res.status === 'success' && res.data && res.data.length > 0) {
-                allDashboardUsers = res.data;
-                renderDashboardCards(allDashboardUsers);
-            } else {
-                allDashboardUsers = [];
-                container.innerHTML = `
-                    <div style="grid-column:1/-1;text-align:center;padding:3.5rem 1rem;color:var(--text-muted);">
-                        <i class="fas fa-mosque" style="font-size:2.5rem;margin-bottom:1rem;display:block;opacity:0.15;"></i>
-                        <p style="font-size:0.95rem;">Belum ada peserta yang tersedia saat ini.</p>
-                    </div>`;
-            }
-        }
-
-        function renderDashboardCards(users) {
-            const container = document.getElementById('dashboard-list');
-            const searchTerm = (document.getElementById('searchInput')?.value || '').toLowerCase();
-            const filtered = users.filter(u => !searchTerm || (u.nama && u.nama.toLowerCase().includes(searchTerm)));
-            if (filtered.length === 0) {
-                container.innerHTML = `
-                    <div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--text-muted);">
-                        <i class="fas fa-search" style="font-size:2rem;margin-bottom:0.8rem;display:block;opacity:0.15;"></i>
-                        <p>Tidak ditemukan peserta yang cocok.</p>
-                    </div>`;
-                return;
-            }
-            container.innerHTML = filtered.map((u, i) => {
-                const photoSrc = u.foto ? getPhotoUrl(u.foto) : '';
-                const genderClass = u.gender === 'Perempuan' ? 'badge-female' : 'badge-male';
-                const genderIcon = u.gender === 'Perempuan' ? 'fa-venus' : 'fa-mars';
-                const canRequest = currentUser.role === 'Personal' && u.email !== currentUser.email;
-                const avatarColor = getAvatarColor(u.nama);
-                const delay = Math.min(i * 0.06, 0.6);
-                return `
-                <div class="card" style="animation: cardPop 0.45s ${delay}s var(--ease) backwards;">
-                    ${photoSrc
-                        ? `<img src="${photoSrc}" class="card-img-top" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"><div class="avatar-fallback" style="display:none;color:${avatarColor};background:linear-gradient(135deg,${avatarColor}18,${avatarColor}08);">${getInitials(u.nama)}</div>`
-                        : `<div class="avatar-fallback" style="color:${avatarColor};background:linear-gradient(135deg,${avatarColor}18,${avatarColor}08);">${getInitials(u.nama)}</div>`
-                    }
-                    <div class="card-body">
-                        <div class="card-top-row">
-                            <div class="card-name">${u.nama || '-'}</div>
-                            <span class="badge ${genderClass}"><i class="fas ${genderIcon}"></i> ${u.gender || '-'}</span>
-                        </div>
-                        <div class="card-detail"><i class="fas fa-briefcase"></i> ${u.pekerjaan || '-'}</div>
-                        <div class="card-detail"><i class="fas fa-graduation-cap"></i> ${u.pendidikan || '-'}</div>
-                        <div class="card-detail"><i class="fas fa-map-marker-alt"></i> ${u.daerah || '-'}${u.desa ? ' / ' + u.desa : ''}</div>
+        // Fungsi Modal Foto Besar
+        function openPhotoModal(url) {
+            const modalHtml = `
+                <div class="photo-modal-overlay" onclick="closePhotoModal(event)">
+                    <div class="photo-modal-content" onclick="event.stopPropagation()">
+                        <button class="photo-modal-close" onclick="closePhotoModal()"><i class="fas fa-times"></i></button>
+                        <img src="${url.replace('sz=w400', 'sz=w1200')}" alt="Foto Peserta">
                     </div>
-                    ${canRequest ? `<div class="card-footer"><button class="btn btn-accent btn-sm" style="width:100%;" onclick="requestTaaruf('${u.email}','${u.nama}')"><i class="fas fa-paper-plane"></i> Ajukan Ta'aruf</button></div>` : ''}
-                </div>`;
-            }).join('');
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+        }
+        function closePhotoModal(event) {
+            if(event && event.target !== event.currentTarget) return;
+            const modal = document.querySelector('.photo-modal-overlay');
+            if(modal) modal.remove();
         }
 
-        function filterDashboard() { renderDashboardCards(allDashboardUsers); }
-
-        /* === Request Ta'aruf === */
-        async function requestTaaruf(targetEmail, targetNama) {
-            if (!confirm(`Bismillah. Kirim pengajuan ta'aruf ke ${targetNama}?`)) return;
-            showLoading();
-            const res = await fetchGAS('requestTaaruf', {}, 'POST', {
-                pelamarEmail: currentUser.email,
-                targetEmail: targetEmail
-            });
-            hideLoading();
-            if (res.status === 'success') showToast(res.message, 'success');
-            else showToast(res.message || 'Gagal mengirim pengajuan', 'error');
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); document.getElementById('overlay').classList.toggle('open'); }
+        function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('overlay').classList.remove('open'); }
+        
+        function handleLockedNav(page) {
+            if (!currentUser.isComplete) { showToast('Lengkapi profil Anda terlebih dahulu.', 'error'); return; }
+            switchPage(page);
         }
 
-        /* === Edit Profile === */
-        async function showEditProfile() {
-            await loadMasterData();
-            prefillProfileForm();
-            document.getElementById('profileTitle').textContent = 'Edit Data Diri';
-            document.getElementById('btnSaveProfile').innerHTML = '<i class="fas fa-save"></i> Perbarui Data Diri';
-            document.getElementById('upFoto').removeAttribute('required');
-            showView('complete-profile-view');
+        function switchPage(page) {
+            document.querySelectorAll('.main-content > div').forEach(el => el.classList.add('hidden'));
+            const target = document.getElementById('page-' + page);
+            if(target) target.classList.remove('hidden');
+            document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
+            const activeLink = document.querySelector(`.sidebar-nav a[data-page="${page}"]`);
+            if(activeLink) activeLink.classList.add('active');
+
+            const titles = { 'home':'Beranda', 'search':'Cari Jodoh', 'status':'Status Ta\'aruf', 'profile':'Edit Profil', 'admin-home':'Dashboard Admin', 'admin-users':'Data Peserta', 'admin-taaruf':'Pengajuan Ta\'aruf' };
+            document.getElementById('pageTitle').textContent = titles[page] || '';
+            
+            if(page === 'search' && currentUser.isComplete) loadDashboard();
+            if(page === 'status' && currentUser.isComplete) loadMyTaarufStatus();
+            if(page === 'profile') prefillProfile();
+            if(page === 'admin-users') loadAdminUsers();
+            if(page === 'admin-taaruf') loadAdminTaaruf();
+            closeSidebar();
         }
 
-        /* === Logout === */
-        function logout() {
-            currentUser = null;
-            allDashboardUsers = [];
-            document.getElementById('loginEmail').value = '';
-            document.getElementById('loginPass').value = '';
-            document.getElementById('profileTitle').textContent = 'Lengkapi Data Diri';
-            document.getElementById('btnSaveProfile').innerHTML = '<i class="fas fa-check-circle"></i> Simpan Data Diri';
-            showView('login-view');
-        }
-
-        /* === Keyboard: Enter to Login === */
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
-                const loginView = document.getElementById('login-view');
-                if (!loginView.classList.contains('hidden') && (e.target.id === 'loginEmail' || e.target.id === 'loginPass')) {
-                    login();
-                }
+        function updateShell() {
+            if(!currentUser) return;
+            document.getElementById('sidebarName').textContent = currentUser.nama;
+            document.getElementById('sidebarRole').textContent = currentUser.role + (currentUser.scope && currentUser.scope !== 'All' ? ' '+currentUser.scope : '');
+            const av = document.getElementById('sidebarAvatar');
+            if(currentUser.foto) av.innerHTML = `<img src="${getPhotoUrl(currentUser.foto)}">`; else av.textContent = getInitials(currentUser.nama);
+            
+            const isAdmin = adminRoles.includes(currentUser.role);
+            if(isAdmin) { 
+                document.getElementById('nav-personal').classList.add('hidden'); 
+                document.getElementById('nav-admin').classList.remove('hidden'); 
+                document.getElementById('adminRoleLabel').textContent = currentUser.role;
+                document.getElementById('adminScopeLabel').textContent = currentUser.scope || 'All';
+            } else { 
+                document.getElementById('nav-personal').classList.remove('hidden'); 
+                document.getElementById('nav-admin').classList.add('hidden'); 
+                updateLockedMenus();
             }
-        });
+        }
+
+        function updateLockedMenus() {
+            if(!currentUser) return;
+            const isComplete = currentUser.isComplete;
+            document.getElementById('lock-search').classList.toggle('hidden', isComplete);
+            document.getElementById('nav-search').classList.toggle('locked', !isComplete);
+            document.getElementById('lock-status').classList.toggle('hidden', isComplete);
+            document.getElementById('nav-status').classList.toggle('locked', !isComplete);
+            document.getElementById('profileAlert').classList.toggle('hidden', isComplete);
+        }
+
+        function previewFoto(event, prevId) { 
+            const file = event.target.files[0]; const imgEl = document.getElementById(prevId);
+            if(file) { const r = new FileReader(); r.onload = e => { imgEl.src = e.target.result; imgEl.style.display = 'block'; }; r.readAsDataURL(file); } else { imgEl.style.display = 'none'; } 
+        }
+        function compressImage(file,mw,q){return new Promise((res,rej)=>{const r=new FileReader();r.onload=(e)=>{const img=new Image();img.onload=()=>{const c=document.createElement('canvas');let w=img.width,h=img.height;if(w>mw){h=Math.round((mw/w)*h);w=mw;}c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);res(c.toDataURL('image/jpeg',q).split(',')[1]);};img.onerror=rej;img.src=e.target.result;};r.onerror=rej;r.readAsDataURL(file);});}
+
+        function showForgotPassword() { const email = prompt("Masukkan email akun Anda:"); if(email) { fetchGAS('forgotPassword', {}, 'POST', {email: email}).then(res => { showToast(res.message, res.status); }); } }
+        async function loadRegisterView() { showView('register-view'); const res = await fetchGAS('getVerifyQuestion'); if(res.status==='success') { document.getElementById('verifyQuestion').innerText = res.question; document.getElementById('regQuestionHidden').value = res.question; } }
+        async function handleRegister(e) { e.preventDefault(); const btn=document.getElementById('btnRegister'); btn.disabled=true; btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Proses...'; const res=await fetchGAS('register',{},'POST',{ email:document.getElementById('regEmail').value.trim(), password:document.getElementById('regPass').value, nama:document.getElementById('regNama').value.trim(), question:document.getElementById('regQuestionHidden').value, answer:document.getElementById('regAnswer').value.trim() }); if(res.status==='success'){showToast(res.message); showView('login-view'); document.getElementById('registerForm').reset();} else{showToast(res.message,'error');} btn.disabled=false; btn.innerHTML='<i class="fas fa-check"></i> Daftar'; }
+
+        async function login() { 
+            const btn=document.getElementById('btnLogin'); const email=document.getElementById('loginEmail').value.trim(); const password=document.getElementById('loginPass').value; 
+            if(!email||!password){showToast('Isi email dan password','error');return;} 
+            btn.disabled=true; btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Masuk...'; 
+            const res=await fetchGAS('login',{email,password}); 
+            if(res.status==='success'){ 
+                currentUser=res.user; if(!currentUser.role) currentUser.role = 'Personal'; if(!currentUser.scope) currentUser.scope = '';
+                showToast(`Assalamu'alaikum, ${currentUser.nama}!`);
+                showView('app-shell'); updateShell(); 
+                const isAdmin = adminRoles.includes(currentUser.role);
+                if(isAdmin) { switchPage('admin-home'); } 
+                else { if(!currentUser.isComplete) { switchPage('profile'); showToast('Silakan lengkapi profil Anda terlebih dahulu.', 'error'); } else { switchPage('home'); } }
+            } else{showToast(res.message,'error');} 
+            btn.disabled=false; btn.innerHTML='<i class="fas fa-arrow-right"></i> Masuk'; 
+        }
+
+        async function loadMasterData(){if(masterData.daerah.length === 0){const res=await fetchGAS('getMasterData');if(res.status==='success'){masterData=res.data;}}}
+        function populateDaerah(){const s=document.getElementById('upDaerah');s.innerHTML='<option value="">-- Pilih Daerah --</option>';masterData.daerah.forEach(d=>s.innerHTML+=`<option value="${d}">${d}</option>`);}
+        function loadDesa(){const d=document.getElementById('upDaerah').value;const s=document.getElementById('upDesa');const k=document.getElementById('upKelompok');s.innerHTML='<option value="">-- Pilih --</option>';k.innerHTML='<option value="">-- Pilih --</option>';if(d&&masterData.desa[d])masterData.desa[d].forEach(i=>s.innerHTML+=`<option value="${i}">${i}</option>`);}
+        function loadKelompok(){const d=document.getElementById('upDesa').value;const k=document.getElementById('upKelompok');k.innerHTML='<option value="">-- Pilih --</option>';if(d&&masterData.kelompok[d])masterData.kelompok[d].forEach(i=>k.innerHTML+=`<option value="${i}">${i}</option>`);}
+        
+        async function prefillProfile() {
+            await loadMasterData(); populateDaerah();
+            if(!currentUser) return;
+            const map = {'upNama':currentUser.nama, 'upOrtu':currentUser.namaOrtu, 'upTTL':currentUser.ttl, 'upAnakKe':currentUser.anakKe, 'upSuku':currentUser.suku, 'upTB':currentUser.tbBerat, 'upPendidikan':currentUser.pendidikan, 'upPekerjaan':currentUser.pekerjaan, 'upHobi':currentUser.hobi, 'upDapukan':currentUser.dapukan};
+            Object.keys(map).forEach(id => { const el=document.getElementById(id); if(el&&map[id]) el.value=map[id]; });
+            if(currentUser.gender) document.getElementById('upGender').value=currentUser.gender;
+            if(currentUser.menikah) document.getElementById('upMenikah').value=currentUser.menikah;
+            if(currentUser.daerah) { document.getElementById('upDaerah').value=currentUser.daerah; loadDesa(); setTimeout(()=>{ if(currentUser.desa){document.getElementById('upDesa').value=currentUser.desa; loadKelompok(); setTimeout(()=>{if(currentUser.kelompok)document.getElementById('upKelompok').value=currentUser.kelompok;},100);}},100); }
+            const imgPrev = document.getElementById('upFotoPreview');
+            if(currentUser.foto) { imgPrev.src = getPhotoUrl(currentUser.foto); imgPrev.style.display = 'block'; } else { imgPrev.style.display = 'none'; }
+            updateLockedMenus();
+        }
+
+        async function handleUpdateProfile(e) {
+            e.preventDefault(); const btn = document.getElementById('btnSaveProfile');
+            btn.disabled=true; btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Simpan...';
+            let fotoBase64=null; const fotoInput=document.getElementById('upFoto');
+            if(fotoInput&&fotoInput.files&&fotoInput.files[0]){if(fotoInput.files[0].size>2*1024*1024){showToast('Maks 2MB','error');btn.disabled=false;return;} try{fotoBase64=await compressImage(fotoInput.files[0],600,0.7);}catch(err){showToast('Gagal proses foto','error');}}
+            const p={email:currentUser.email, nama:document.getElementById('upNama').value.trim()||currentUser.nama, namaOrtu:document.getElementById('upOrtu').value.trim(), ttl:document.getElementById('upTTL').value.trim(), gender:document.getElementById('upGender').value, anakKe:document.getElementById('upAnakKe').value.trim(), suku:document.getElementById('upSuku').value.trim(), tbBerat:document.getElementById('upTB').value.trim(), menikah:document.getElementById('upMenikah').value, pendidikan:document.getElementById('upPendidikan').value.trim(), pekerjaan:document.getElementById('upPekerjaan').value.trim(), hobi:document.getElementById('upHobi').value.trim(), dapukan:document.getElementById('upDapukan').value.trim(), daerah:document.getElementById('upDaerah').value, desa:document.getElementById('upDesa').value, kelompok:document.getElementById('upKelompok').value, foto:fotoBase64};
+            if(!p.gender||!p.daerah){showToast('Jenis Kelamin dan Daerah wajib diisi','error');btn.disabled=false;return;}
+            const res=await fetchGAS('updateProfile',{},'POST',p);
+            if(res.status==='success'){showToast(res.message);currentUser.isComplete=true;currentUser.gender=p.gender;currentUser.daerah=p.daerah;currentUser.desa=p.desa;currentUser.kelompok=p.kelompok;updateLockedMenus();}else{showToast(res.message,'error');}
+            btn.disabled=false; btn.innerHTML='<i class="fas fa-save"></i> Simpan';
+        }
+
+        // Personal - Cari Jodoh
+        async function loadDashboard(){const c=document.getElementById('dashboard-list');c.innerHTML='<div style="text-align:center;color:var(--text-muted);padding:2rem;"><i class="fas fa-spinner fa-spin"></i> Memuat...</div>';const res=await fetchGAS('getUsers',{role:'Personal',email:currentUser.email,gender:currentUser.gender||''});if(res.status==='success'&&res.data.length>0){allUsers=res.data;renderCards(allUsers);}else{allUsers=[];c.innerHTML='<div style="text-align:center;color:var(--text-muted);padding:2rem;">Belum ada peserta.</div>';}}
+        function renderCards(users){const c=document.getElementById('dashboard-list');const s=(document.getElementById('searchInput')?.value||'').toLowerCase();const f=users.filter(u=>!s||(u.nama&&u.nama.toLowerCase().includes(s)));if(f.length===0){c.innerHTML='<div style="text-align:center;color:var(--text-muted);padding:2rem;">Tidak ditemukan.</div>';return;} c.innerHTML=f.map(u=>{const ps=u.foto?getPhotoUrl(u.foto):'';const gc=u.gender==='Perempuan'?'badge-f':'badge-m';const ac=getAvatarColor(u.nama);return`<div class="card"><div class="card-top">${ps?`<img src="${ps}" class="card-img" style="cursor:pointer;" onclick="openPhotoModal('${ps}')">`:`<div class="card-avatar" style="background:${ac}15;color:${ac}">${getInitials(u.nama)}</div>`}<div class="card-identity"><div class="card-name">${u.nama} <span class="badge ${gc}" style="marginLeft:'8px'">${u.gender}</span></div><div class="card-sub"><i class="fas fa-briefcase" style="width:14px;text-align:center;margin-right:4px"></i> ${u.pekerjaan||'-'}</div><div class="card-sub"><i class="fas fa-graduation-cap" style="width:14px;text-align:center;margin-right:4px"></i> ${u.pendidikan||'-'}</div><div class="card-sub"><i class="fas fa-map-marker-alt" style="width:14px;text-align:center;margin-right:4px"></i> ${u.daerah||'-'}, ${u.desa||'-'}</div></div></div><div class="card-body"><div class="data-grid"><div class="data-item full-col"><div class="data-label">Nama Orang Tua</div><div class="data-value">${u.namaOrtu||'-'}</div></div><div class="data-item"><div class="data-label">TTL</div><div class="data-value">${u.ttl||'-'}</div></div><div class="data-item"><div class="data-label">Anak Ke</div><div class="data-value">${u.anakKe||'-'}</div></div><div class="data-item"><div class="data-label">Suku</div><div class="data-value">${u.suku||'-'}</div></div><div class="data-item"><div class="data-label">TB / BB</div><div class="data-value">${u.tbBerat||'-'}</div></div><div class="data-item"><div class="data-label">Status Menikah</div><div class="data-value">${u.menikah||'-'}</div></div><div class="data-item"><div class="data-label">Hobi</div><div class="data-value">${u.hobi||'-'}</div></div><div class="data-item"><div class="data-label">Dapukan</div><div class="data-value">${u.dapukan||'-'}</div></div><div class="data-item full-col"><div class="data-label">Kelompok</div><div class="data-value">${u.kelompok||'-'}</div></div></div></div><div class="card-footer"><button class="btn btn-sm" style="width:100%;" onclick="requestTaaruf('${u.email}','${u.nama.replace(/'/g,"\\'")}')"><i class="fas fa-paper-plane"></i> Ajukan Ta'aruf</button></div></div>`;}).join('');}
+        function filterDashboard(){renderCards(allUsers);}
+        async function requestTaaruf(email,nama){if(!confirm(`Kirim pengajuan ke ${nama}?`))return;showLoading();const res=await fetchGAS('requestTaaruf',{},'POST',{pelamarEmail:currentUser.email,targetEmail:email});hideLoading();showToast(res.message,res.status);}
+        async function loadMyTaarufStatus(){const el=document.getElementById('status-content');el.innerHTML='<div style="text-align:center;color:var(--text-muted);padding:2rem;"><i class="fas fa-spinner fa-spin"></i></div>';const res=await fetchGAS('getMyTaaruf',{email:currentUser.email});if(res.status==='success'&&res.data.length>0){el.innerHTML=res.data.map(r=>{const sc=r.status==='Pending'?'badge-pending':r.status==='Approved'?'badge-approved':'badge-rejected';return`<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--border);"><div><b>${r.targetNama}</b><br><small style="color:var(--text-muted)">${r.tanggal} • ${r.targetDaerah}, ${r.targetDesa}</small></div><span class="badge ${sc}">${r.status}</span></div>`;}).join('');}else{el.innerHTML='<div style="text-align:center;color:var(--text-muted);padding:2rem;">Belum ada pengajuan.</div>';}}
+
+        // Admin - Data Peserta (Dengan Foto Klikable)
+        async function loadAdminUsers(){const t=document.getElementById('admin-tbody');t.innerHTML='<tr><td colspan="5" style="text-align:center;color:var(--text-muted);"><i class="fas fa-spinner fa-spin"></i></td></tr>';const res=await fetchGAS('getUsers',{role:currentUser.role,email:currentUser.email,scope:currentUser.scope});if(res.status==='success'&&res.data.length>0){allUsers=res.data;renderAdminUsers(allUsers);}else{allUsers=[];t.innerHTML='<tr><td colspan="5" style="text-align:center;color:var(--text-muted);">Tidak ada data.</td></tr>';}}
+        
+        function renderAdminUsers(users){const s=(document.getElementById('adminSearchInput')?.value||'').toLowerCase();const f=users.filter(u=>!s||(u.nama&&u.nama.toLowerCase().includes(s)));const t=document.getElementById('admin-tbody');if(f.length===0){t.innerHTML='<tr><td colspan="5" style="text-align:center;">Tidak ditemukan.</td></tr>';return;} t.innerHTML=f.map(u=>{const ac=getAvatarColor(u.nama);const sc=u.isComplete?'badge-approved':'badge-pending';const st=u.isComplete?'Lengkap':'Belum';const ps=u.foto?getPhotoUrl(u.foto):'';return`<tr><td><div style="display:flex;align-items:center;gap:10px;">${ps?`<img src="${ps}" style="width:40px;height:40px;border-radius:50%;object-fit:cover;cursor:pointer;border:2px solid var(--border);transition:0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'" onclick="openPhotoModal('${ps}')">`:`<div style="width:40px;height:40px;border-radius:50%;background:${ac}15;color:${ac};display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;">${getInitials(u.nama)}</div>`}<div><div style="font-weight:600;">${u.nama}</div><div class="sub-text">${u.email}</div></div></div></td><td><div class="data-cell-line"><b>Ortu:</b> ${u.namaOrtu||'-'}</div><div class="data-cell-line"><b>TTL:</b> ${u.ttl||'-'}</div><div class="data-cell-line"><b>JK:</b> ${u.gender||'-'} | <b>Anak ke:</b> ${u.anakKe||'-'}</div><div class="data-cell-line"><b>Suku:</b> ${u.suku||'-'} | <b>TB/BB:</b> ${u.tbBerat||'-'}</div><div class="data-cell-line"><b>Status:</b> ${u.menikah||'-'}</div></td><td><div class="data-cell-line"><b>Pendidikan:</b> ${u.pendidikan||'-'}</div><div class="data-cell-line"><b>Pekerjaan:</b> ${u.pekerjaan||'-'}</div><div class="data-cell-line"><b>Hobi:</b> ${u.hobi||'-'}</div><div class="data-cell-line"><b>Dapukan:</b> ${u.dapukan||'-'}</div></td><td><div class="data-cell-line">${u.daerah||'-'}</div><div class="data-cell-line">${u.desa||'-'}</div><div class="data-cell-line">${u.kelompok||'-'}</div></td><td><span class="badge ${sc}">${st}</span></td></tr>`;}).join('');}
+        
+        function filterAdmin(){renderAdminUsers(allUsers);}
+
+        async function loadAdminTaaruf(){const t=document.getElementById('admin-taaruf-tbody');t.innerHTML='<tr><td colspan="5" style="text-align:center;color:var(--text-muted);"><i class="fas fa-spinner fa-spin"></i></td></tr>';const res=await fetchGAS('getAllTaaruf',{role:currentUser.role,scope:currentUser.scope});if(res.status==='success'&&res.data.length>0){allTaarufRequests=res.data;renderAdminTaaruf(allTaarufRequests);}else{t.innerHTML='<tr><td colspan="5" style="text-align:center;color:var(--text-muted);">Belum ada pengajuan.</td></tr>';}}
+        function renderAdminTaaruf(requests){const t=document.getElementById('admin-taaruf-tbody');if(requests.length===0){t.innerHTML='<tr><td colspan="5" style="text-align:center;">Tidak ada data.</td></tr>';return;} t.innerHTML=requests.map(r=>{const sc=r.status==='Pending'?'badge-pending':r.status==='Approved'?'badge-approved':'badge-rejected';let actions = r.status === 'Pending' ? `<div class="action-btns"><button class="btn btn-sm btn-success" onclick="updateStatus('${r.pelamarEmail}','${r.targetEmail}','Approved')"><i class="fas fa-check"></i> Setuju</button><button class="btn btn-sm btn-danger-sm" onclick="updateStatus('${r.pelamarEmail}','${r.targetEmail}','Rejected')"><i class="fas fa-times"></i> Tolak</button></div>` : '-'; return`<tr><td>${r.tanggal}</td><td><b>${r.pelamarNama}</b><div class="sub-text">${r.pelamarEmail}</div><div class="sub-text" style="color:var(--primary)">${r.pelamarDaerah}, ${r.pelamarDesa}</div></td><td><b>${r.targetNama}</b><div class="sub-text">${r.targetEmail}</div><div class="sub-text" style="color:var(--primary)">${r.targetDaerah}, ${r.targetDesa}</div></td><td><span class="badge ${sc}">${r.status}</span></td><td>${actions}</td></tr>`;}).join('');}
+        
+        async function updateStatus(pEmail, tEmail, newStatus) {
+            if(!confirm(`Ubah status menjadi ${newStatus}?`)) return;
+            showLoading();
+            const res = await fetchGAS('updateTaarufStatus', {}, 'POST', {pelamarEmail: pEmail, targetEmail: tEmail, newStatus: newStatus});
+            hideLoading();
+            if(res.status==='success'){showToast(res.message);loadAdminTaaruf();}else{showToast(res.message,'error');}
+        }
+
+        function logout(){currentUser=null;document.getElementById('loginEmail').value='';document.getElementById('loginPass').value='';showView('login-view');}
     </script>
 </body>
 </html>
