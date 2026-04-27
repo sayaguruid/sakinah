@@ -133,6 +133,7 @@
         .empty-state{text-align:center;color:var(--text-muted);padding:3rem 1rem}
         .empty-state i{font-size:2.5rem;margin-bottom:1rem;display:block;opacity:0.4}
         .empty-state p{font-size:0.9rem}
+        .empty-state .retry-btn{margin-top:1rem;display:inline-flex}
         .status-card{border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin-bottom:1rem;background:var(--bg);transition:box-shadow 0.2s}
         .status-card:hover{box-shadow:0 2px 8px rgba(0,0,0,0.04)}
         .status-card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;flex-wrap:wrap;gap:8px}
@@ -186,8 +187,6 @@
         .kegiatan-form-card{border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;margin-bottom:1.5rem;background:var(--surface)}
         .kegiatan-form-card h4{font-size:0.95rem;font-weight:700;margin-bottom:1rem;display:flex;align-items:center;gap:8px}
         .kegiatan-form-card h4 i{color:var(--primary)}
-
-        /* ===== PAGINATION ===== */
         .pagination-wrap{display:flex;justify-content:space-between;align-items:center;margin-top:1.5rem;padding:0.5rem 0;flex-wrap:wrap;gap:0.75rem}
         .pagination-info{font-size:0.82rem;color:var(--text-muted);white-space:nowrap}
         .pagination-info strong{color:var(--text-main);font-weight:600}
@@ -199,7 +198,6 @@
         .page-ellipsis{padding:0 4px;color:var(--text-light);font-size:0.85rem;letter-spacing:1px;user-select:none}
         .page-size-select{display:flex;align-items:center;gap:6px;font-size:0.82rem;color:var(--text-muted)}
         .page-size-select select{width:auto;padding:5px 28px 5px 8px;font-size:0.8rem;border-radius:6px;height:36px}
-
         @media(max-width:768px){
             .sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}
             .overlay.open{display:block}.main{margin-left:0}
@@ -377,6 +375,7 @@
 
 <script>
 var GAS_URL = "https://script.google.com/macros/s/AKfycbwTGFTatNOATbDYW6AM2-PCEK6gkAHwtDxLjgDRkFu0FaAgbsYcOyRdmccPbQX0SA61/exec";
+var FETCH_TIMEOUT = 35000;
 var currentUser = null;
 var masterData = { daerah: [], desa: {}, kelompok: {} };
 var allUsers = [];
@@ -386,7 +385,6 @@ var cachedTaarufTim = {};
 var cachedKegiatan = [];
 var adminRoles = ['Admin', 'Desa', 'Daerah', 'Super Admin'];
 
-/* ===== PAGINATION STATE ===== */
 var searchCurrentPage = 1;
 var searchPageSize = 6;
 var adminCurrentPage = 1;
@@ -403,14 +401,51 @@ function showToast(msg, type) {
 }
 function showLoading() { var o = document.createElement('div'); o.className = 'loading-overlay'; o.id = 'loadOv'; o.innerHTML = '<div class="spinner"></div>'; document.body.appendChild(o); }
 function hideLoading() { var el = document.getElementById('loadOv'); if (el) el.remove(); }
+
+/* ===== FETCH DENGAN TIMEOUT & CACHE BUSTING ===== */
 async function fetchGAS(action, params, method, body) {
     params = params || {}; method = method || 'GET'; body = body || null;
     var url = GAS_URL + '?action=' + action;
+    var controller = new AbortController();
+    var timeoutId = setTimeout(function () { controller.abort(); }, FETCH_TIMEOUT);
     try {
-        if (method === 'GET') { Object.keys(params).forEach(function (k) { url += '&' + k + '=' + encodeURIComponent(params[k]); }); return await (await fetch(url)).json(); }
-        else { return await (await fetch(url, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(Object.assign({ action: action }, body)) })).json(); }
-    } catch (e) { showToast('Gagal terhubung ke server', 'error'); return { status: 'error' }; }
+        if (method === 'GET') {
+            Object.keys(params).forEach(function (k) { url += '&' + k + '=' + encodeURIComponent(params[k]); });
+            url += '&_t=' + Date.now();
+            var resp = await fetch(url, { signal: controller.signal, cache: 'no-store' });
+            clearTimeout(timeoutId);
+            var text = await resp.text();
+            try { return JSON.parse(text); } catch (pe) {
+                console.error('JSON parse error:', text.substring(0, 200));
+                showToast('Respons server tidak valid', 'error');
+                return { status: 'error', message: 'Respons tidak valid' };
+            }
+        } else {
+            var resp = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain' },
+                body: JSON.stringify(Object.assign({ action: action }, body)),
+                signal: controller.signal
+            });
+            clearTimeout(timeoutId);
+            var text = await resp.text();
+            try { return JSON.parse(text); } catch (pe) {
+                console.error('JSON parse error:', text.substring(0, 200));
+                showToast('Respons server tidak valid', 'error');
+                return { status: 'error', message: 'Respons tidak valid' };
+            }
+        }
+    } catch (e) {
+        clearTimeout(timeoutId);
+        if (e.name === 'AbortError') {
+            showToast('Permintaan timeout, silakan coba lagi', 'error');
+        } else {
+            showToast('Gagal terhubung ke server', 'error');
+        }
+        return { status: 'error', message: e.message || 'Koneksi gagal' };
+    }
 }
+
 function showView(id) { document.querySelectorAll('.auth-wrapper, .app-shell').forEach(function (el) { el.classList.add('hidden'); }); var t = document.getElementById(id); if (t) t.classList.remove('hidden'); }
 function getPhotoUrl(url) { if (!url) return ''; var m = url.match(/\/d\/([a-zA-Z0-9_-]+)/); if (m) return 'https://drive.google.com/thumbnail?id=' + m[1] + '&sz=w400'; return url.indexOf('thumbnail?id=') !== -1 ? url : url; }
 function getInitials(n) { if (!n) return '?'; var p = n.trim().split(/\s+/); return p.length === 1 ? p[0][0].toUpperCase() : (p[0][0] + p[p.length - 1][0]).toUpperCase(); }
@@ -424,21 +459,11 @@ function handleLockedNav(page) { if (!currentUser.isComplete) { showToast('Lengk
 
 /* ===== PAGINATION HELPER ===== */
 function getPaginationRange(current, total) {
-    if (total <= 7) {
-        var arr = [];
-        for (var i = 1; i <= total; i++) arr.push(i);
-        return arr;
-    }
+    if (total <= 7) { var arr = []; for (var i = 1; i <= total; i++) arr.push(i); return arr; }
     var pages = [];
-    if (current <= 4) {
-        for (var i = 1; i <= 5; i++) pages.push(i);
-        pages.push('...', total);
-    } else if (current >= total - 3) {
-        pages.push(1, '...');
-        for (var i = total - 4; i <= total; i++) pages.push(i);
-    } else {
-        pages.push(1, '...', current - 1, current, current + 1, '...', total);
-    }
+    if (current <= 4) { for (var i = 1; i <= 5; i++) pages.push(i); pages.push('...', total); }
+    else if (current >= total - 3) { pages.push(1, '...'); for (var i = total - 4; i <= total; i++) pages.push(i); }
+    else { pages.push(1, '...', current - 1, current, current + 1, '...', total); }
     return pages;
 }
 
@@ -453,38 +478,17 @@ function generatePagination(containerId, currentPage, totalPages, totalItems, pa
     html += '<div class="pagination-buttons">';
     html += '<button class="page-btn" ' + (currentPage === 1 ? 'disabled' : '') + ' onclick="' + fnName + '(' + (currentPage - 1) + ')"><i class="fas fa-chevron-left"></i></button>';
     for (var i = 0; i < pages.length; i++) {
-        if (pages[i] === '...') {
-            html += '<span class="page-ellipsis">...</span>';
-        } else {
-            html += '<button class="page-btn ' + (pages[i] === currentPage ? 'active' : '') + '" onclick="' + fnName + '(' + pages[i] + ')">' + pages[i] + '</button>';
-        }
+        if (pages[i] === '...') { html += '<span class="page-ellipsis">...</span>'; }
+        else { html += '<button class="page-btn ' + (pages[i] === currentPage ? 'active' : '') + '" onclick="' + fnName + '(' + pages[i] + ')">' + pages[i] + '</button>'; }
     }
     html += '<button class="page-btn" ' + (currentPage === totalPages ? 'disabled' : '') + ' onclick="' + fnName + '(' + (currentPage + 1) + ')"><i class="fas fa-chevron-right"></i></button>';
     html += '</div></div>';
     container.innerHTML = html;
 }
 
-function goToSearchPage(page) {
-    searchCurrentPage = page;
-    renderCards(allUsers, searchIamInTaaruf);
-    var el = document.getElementById('dashboard-list');
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
-
-function goToAdminPage(page) {
-    adminCurrentPage = page;
-    renderAdminUsers(allUsers);
-    var el = document.getElementById('admin-tbody');
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
-
-function changeAdminPageSize() {
-    adminPageSize = parseInt(document.getElementById('adminPageSizeSelect').value) || 10;
-    adminCurrentPage = 1;
-    renderAdminUsers(allUsers);
-}
-
-/* ===== END PAGINATION HELPER ===== */
+function goToSearchPage(page) { searchCurrentPage = page; renderCards(allUsers, searchIamInTaaruf); document.getElementById('dashboard-list').scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+function goToAdminPage(page) { adminCurrentPage = page; renderAdminUsers(allUsers); document.getElementById('admin-tbody').scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+function changeAdminPageSize() { adminPageSize = parseInt(document.getElementById('adminPageSizeSelect').value) || 10; adminCurrentPage = 1; renderAdminUsers(allUsers); }
 
 function switchPage(page) {
     document.querySelectorAll('.main-content > div').forEach(function (el) { el.classList.add('hidden'); });
@@ -524,29 +528,30 @@ document.addEventListener('click', function (e) { var w = document.querySelector
 
 async function refreshNotifCount() {
     if (!currentUser) return;
-    var res = await fetchGAS('getNotifCount', { email: currentUser.email, role: currentUser.role, scope: currentUser.scope });
-    if (res.status === 'success') { var b = document.getElementById('bellBadge'); if (res.count > 0) { b.textContent = res.count; b.classList.remove('hidden'); } else { b.classList.add('hidden'); } }
+    try { var res = await fetchGAS('getNotifCount', { email: currentUser.email, role: currentUser.role, scope: currentUser.scope }); if (res.status === 'success') { var b = document.getElementById('bellBadge'); if (res.count > 0) { b.textContent = res.count; b.classList.remove('hidden'); } else { b.classList.add('hidden'); } } } catch (e) {}
 }
 
 async function loadNotifContent() {
     var el = document.getElementById('notif-list');
     el.innerHTML = '<div class="notif-empty"><div class="spinner" style="margin:0 auto 8px;width:20px;height:20px;border-width:2px"></div>Memuat...</div>';
-    var items = [];
-    var isAd = adminRoles.indexOf(currentUser.role) !== -1;
-    if (isAd) {
-        var res = await fetchGAS('getAllTaaruf', { role: currentUser.role, email: currentUser.email, scope: currentUser.scope });
-        if (res.status === 'success') { res.data.forEach(function (r) { if (r.status === 'Pending') items.push({ type: 'taaruf', text: '<strong>' + esc(r.pelamarNama) + '</strong> mengajukan ta\'aruf ke <strong>' + esc(r.targetNama) + '</strong>', time: r.tanggal }); }); }
-    } else {
-        var res = await fetchGAS('getMyTaaruf', { email: currentUser.email });
-        if (res.status === 'success') { res.data.forEach(function (r) { var role = r.isPelamar ? 'Pengajuan Anda ke' : 'Mengajukan Anda'; items.push({ type: 'taaruf', text: role + ' <strong>' + esc(r.otherNama) + '</strong> &mdash; Status: <strong>' + r.status + '</strong>', time: r.tanggal }); }); }
-    }
-    if (cachedKegiatan.length > 0) { cachedKegiatan.slice(0, 3).forEach(function (k) { items.push({ type: 'kegiatan', text: '<strong>' + esc(k.judul) + '</strong>', time: k.tanggal }); }); }
-    if (items.length === 0) { el.innerHTML = '<div class="notif-empty"><i class="fas fa-bell-slash" style="font-size:1.5rem;margin-bottom:8px;display:block;opacity:0.4"></i>Tidak ada pemberitahuan</div>'; return; }
-    el.innerHTML = items.map(function (it) {
-        var iconCls = it.type === 'taaruf' ? 'taaruf' : 'kegiatan';
-        var iconName = it.type === 'taaruf' ? 'fa-heart' : 'fa-bullhorn';
-        return '<div class="notif-item"><div class="notif-icon ' + iconCls + '"><i class="fas ' + iconName + '"></i></div><div class="notif-text">' + it.text + '<div class="notif-time"><i class="far fa-clock"></i> ' + it.time + '</div></div></div>';
-    }).join('');
+    try {
+        var items = [];
+        var isAd = adminRoles.indexOf(currentUser.role) !== -1;
+        if (isAd) {
+            var res = await fetchGAS('getAllTaaruf', { role: currentUser.role, email: currentUser.email, scope: currentUser.scope });
+            if (res.status === 'success') { res.data.forEach(function (r) { if (r.status === 'Pending') items.push({ type: 'taaruf', text: '<strong>' + esc(r.pelamarNama) + '</strong> mengajukan ta\'aruf ke <strong>' + esc(r.targetNama) + '</strong>', time: r.tanggal }); }); }
+        } else {
+            var res = await fetchGAS('getMyTaaruf', { email: currentUser.email });
+            if (res.status === 'success') { res.data.forEach(function (r) { var role = r.isPelamar ? 'Pengajuan Anda ke' : 'Mengajukan Anda'; items.push({ type: 'taaruf', text: role + ' <strong>' + esc(r.otherNama) + '</strong> &mdash; Status: <strong>' + r.status + '</strong>', time: r.tanggal }); }); }
+        }
+        if (cachedKegiatan.length > 0) { cachedKegiatan.slice(0, 3).forEach(function (k) { items.push({ type: 'kegiatan', text: '<strong>' + esc(k.judul) + '</strong>', time: k.tanggal }); }); }
+        if (items.length === 0) { el.innerHTML = '<div class="notif-empty"><i class="fas fa-bell-slash" style="font-size:1.5rem;margin-bottom:8px;display:block;opacity:0.4"></i>Tidak ada pemberitahuan</div>'; return; }
+        el.innerHTML = items.map(function (it) {
+            var iconCls = it.type === 'taaruf' ? 'taaruf' : 'kegiatan';
+            var iconName = it.type === 'taaruf' ? 'fa-heart' : 'fa-bullhorn';
+            return '<div class="notif-item"><div class="notif-icon ' + iconCls + '"><i class="fas ' + iconName + '"></i></div><div class="notif-text">' + it.text + '<div class="notif-time"><i class="far fa-clock"></i> ' + it.time + '</div></div></div>';
+        }).join('');
+    } catch (e) { el.innerHTML = '<div class="notif-empty">Gagal memuat pemberitahuan</div>'; }
 }
 
 /* ========== VERIFIKASI MODAL ========== */
@@ -569,13 +574,7 @@ async function submitVerifyAndRegister() {
     var answer = document.getElementById('modalAnswer').value.trim();
     if (!answer) { showToast('Masukkan jawaban', 'error'); return; }
     var btn = document.getElementById('btnVerifySubmit'); btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Proses...';
-    var res = await fetchGAS('register', {}, 'POST', {
-        email: document.getElementById('regEmail').value.trim(),
-        password: document.getElementById('regPass').value,
-        nama: document.getElementById('regNama').value.trim(),
-        question: document.getElementById('modalQuestionHidden').value,
-        answer: answer
-    });
+    var res = await fetchGAS('register', {}, 'POST', { email: document.getElementById('regEmail').value.trim(), password: document.getElementById('regPass').value, nama: document.getElementById('regNama').value.trim(), question: document.getElementById('modalQuestionHidden').value, answer: answer });
     if (res.status === 'success') { showToast(res.message); closeVerifyModal(); showView('login-view'); document.getElementById('registerForm').reset(); }
     else { showToast(res.message, 'error'); }
     btn.disabled = false; btn.innerHTML = '<i class="fas fa-check"></i> Verifikasi & Daftar';
@@ -597,7 +596,7 @@ async function login() {
         var isAd = adminRoles.indexOf(currentUser.role) !== -1;
         if (isAd) { switchPage('admin-home'); }
         else { if (!currentUser.isComplete) { switchPage('profile'); showToast('Silakan lengkapi profil Anda terlebih dahulu.', 'error'); } else { switchPage('home'); } }
-    } else { showToast(res.message, 'error'); }
+    } else { showToast(res.message || 'Login gagal', 'error'); }
     btn.disabled = false; btn.innerHTML = '<i class="fas fa-arrow-right"></i> Masuk';
 }
 function logout() { currentUser = null; cachedKegiatan = []; document.getElementById('loginEmail').value = ''; document.getElementById('loginPass').value = ''; showView('login-view'); }
@@ -629,14 +628,14 @@ async function handleUpdateProfile(e) {
     if (!p.gender || !p.daerah) { showToast('Jenis Kelamin dan Daerah wajib diisi', 'error'); btn.disabled = false; btn.innerHTML = '<i class="fas fa-save"></i> Simpan Profil'; return; }
     var res = await fetchGAS('updateProfile', {}, 'POST', p);
     if (res.status === 'success') { showToast(res.message); currentUser.isComplete = true; currentUser.gender = p.gender; currentUser.daerah = p.daerah; currentUser.desa = p.desa; currentUser.kelompok = p.kelompok; currentUser.kriteriaPasangan = p.kriteriaPasangan; updateLockedMenus(); }
-    else { showToast(res.message, 'error'); }
+    else { showToast(res.message || 'Gagal menyimpan', 'error'); }
     btn.disabled = false; btn.innerHTML = '<i class="fas fa-save"></i> Simpan Profil';
 }
 
 /* ========== TIM TAARUF ========== */
 async function getTaarufTim(daerah) { var key = (daerah || '').toLowerCase(); if (cachedTaarufTim[key]) return cachedTaarufTim[key]; var res = await fetchGAS('getTaarufTim', { daerah: key }); if (res.status === 'success') { cachedTaarufTim[key] = res.data; return res.data; } return []; }
 
-/* ========== CARI JODOH (DENGAN PAGINATION) ========== */
+/* ========== CARI JODOH (DENGAN PAGINATION + ERROR HANDLING) ========== */
 async function loadDashboard() {
     var c = document.getElementById('dashboard-list');
     var pg = document.getElementById('dashboard-pagination');
@@ -645,7 +644,14 @@ async function loadDashboard() {
     searchCurrentPage = 1;
 
     var res = await fetchGAS('getUsers', { role: 'Personal', email: currentUser.email, gender: currentUser.gender || '' });
-    if (res.status === 'success' && res.data.length > 0) {
+
+    if (res.status === 'error') {
+        c.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle" style="color:var(--warning)"></i><p>Gagal memuat data peserta.</p><button class="btn btn-sm retry-btn" onclick="loadDashboard()"><i class="fas fa-redo"></i> Coba Lagi</button></div>';
+        pg.innerHTML = '';
+        return;
+    }
+
+    if (res.status === 'success' && res.data && res.data.length > 0) {
         allUsers = res.data;
         searchIamInTaaruf = !!res.iamInTaaruf;
         var bl = document.getElementById('search-taaruf-blocked');
@@ -654,7 +660,7 @@ async function loadDashboard() {
         renderCards(allUsers, searchIamInTaaruf);
     } else {
         allUsers = [];
-        searchIamInTaaruf = !!res.iamInTaaruf;
+        searchIamInTaaruf = !!(res && res.iamInTaaruf);
         var bl = document.getElementById('search-taaruf-blocked');
         if (searchIamInTaaruf) { bl.classList.remove('hidden'); bl.innerHTML = '<div class="alert alert-warning"><i class="fas fa-heart"></i><div>Anda sedang dalam proses ta\'aruf. Tidak ada peserta lain yang tersedia saat ini.</div></div>'; }
         else { bl.classList.add('hidden'); bl.innerHTML = ''; }
@@ -668,19 +674,11 @@ function renderCards(users, iamInTaaruf) {
     var pg = document.getElementById('dashboard-pagination');
     var s = (document.getElementById('searchInput') ? document.getElementById('searchInput').value : '').toLowerCase();
     var filtered = users.filter(function (u) { return !s || (u.nama && u.nama.toLowerCase().indexOf(s) !== -1); });
-
     var totalPages = Math.max(1, Math.ceil(filtered.length / searchPageSize));
     if (searchCurrentPage > totalPages) searchCurrentPage = totalPages;
-
     var start = (searchCurrentPage - 1) * searchPageSize;
     var pageItems = filtered.slice(start, start + searchPageSize);
-
-    if (filtered.length === 0) {
-        c.innerHTML = '<div class="empty-state"><i class="fas fa-search"></i><p>Tidak ditemukan.</p></div>';
-        pg.innerHTML = '';
-        return;
-    }
-
+    if (filtered.length === 0) { c.innerHTML = '<div class="empty-state"><i class="fas fa-search"></i><p>Tidak ditemukan.</p></div>'; pg.innerHTML = ''; return; }
     c.innerHTML = pageItems.map(function (u) {
         var ps = u.foto ? getPhotoUrl(u.foto) : '';
         var gc = u.gender === 'Perempuan' ? 'badge-f' : 'badge-m';
@@ -690,14 +688,10 @@ function renderCards(users, iamInTaaruf) {
         var ph = ps ? '<img src="' + ps + '" class="card-img" style="cursor:pointer" onclick="openPhotoModal(\'' + ps + '\')">' : '<div class="card-avatar" style="background:' + ac + '15;color:' + ac + '">' + getInitials(u.nama) + '</div>';
         return '<div class="card"><div class="card-top">' + ph + '<div class="card-identity"><div class="card-name">' + esc(u.nama) + ' <span class="badge ' + gc + '">' + u.gender + '</span></div><div class="card-sub"><i class="fas fa-briefcase" style="width:14px;text-align:center;margin-right:4px"></i> ' + (u.pekerjaan || '-') + '</div><div class="card-sub"><i class="fas fa-graduation-cap" style="width:14px;text-align:center;margin-right:4px"></i> ' + (u.pendidikan || '-') + '</div><div class="card-sub"><i class="fas fa-map-marker-alt" style="width:14px;text-align:center;margin-right:4px"></i> ' + (u.daerah || '-') + ', ' + (u.desa || '-') + '</div></div></div><div class="card-body"><div class="data-grid"><div class="data-item full-col"><div class="data-label">Nama Orang Tua</div><div class="data-value">' + esc(u.namaOrtu) + '</div></div><div class="data-item"><div class="data-label">TTL</div><div class="data-value">' + esc(u.ttl) + '</div></div><div class="data-item"><div class="data-label">Anak Ke</div><div class="data-value">' + esc(u.anakKe) + '</div></div><div class="data-item"><div class="data-label">Suku</div><div class="data-value">' + esc(u.suku) + '</div></div><div class="data-item"><div class="data-label">TB / BB</div><div class="data-value">' + esc(u.tbBerat) + '</div></div><div class="data-item"><div class="data-label">Status Menikah</div><div class="data-value">' + esc(u.menikah) + '</div></div><div class="data-item"><div class="data-label">Hobi</div><div class="data-value">' + esc(u.hobi) + '</div></div><div class="data-item"><div class="data-label">Dapukan</div><div class="data-value">' + esc(u.dapukan) + '</div></div><div class="data-item full-col"><div class="data-label">Kelompok</div><div class="data-value">' + esc(u.kelompok) + '</div></div></div>' + krHtml + '</div><div class="card-footer"><button class="btn btn-sm btn-wa" style="width:100%" ' + dis + ' onclick="requestTaaruf(\'' + u.email + '\',\'' + esc(u.nama) + '\',\'' + esc(u.daerah) + '\')"><i class="fab fa-whatsapp"></i> Ajukan Ta\'aruf</button></div></div>';
     }).join('');
-
     generatePagination('dashboard-pagination', searchCurrentPage, totalPages, filtered.length, searchPageSize, 'goToSearchPage');
 }
 
-function filterDashboard() {
-    searchCurrentPage = 1;
-    renderCards(allUsers, searchIamInTaaruf);
-}
+function filterDashboard() { searchCurrentPage = 1; renderCards(allUsers, searchIamInTaaruf); }
 
 async function requestTaaruf(email, nama, daerah) {
     showLoading();
@@ -713,10 +707,8 @@ async function requestTaaruf(email, nama, daerah) {
             showToast('Pengajuan dicatat! Silakan hubungi tim ta\'aruf via WhatsApp.');
             window.open(waUrl, '_blank');
         } else { showToast('Pengajuan terkirim! Namun belum ada tim ta\'aruf untuk daerah ini.', 'error'); }
-        searchIamInTaaruf = true;
-        renderCards(allUsers, true);
-        refreshNotifCount();
-    } else { showToast(res.message, 'error'); }
+        searchIamInTaaruf = true; renderCards(allUsers, true); refreshNotifCount();
+    } else { showToast(res.message || 'Gagal mengajukan', 'error'); }
 }
 
 /* ========== STATUS TAARUF ========== */
@@ -724,50 +716,27 @@ async function loadMyTaarufStatus() {
     var el = document.getElementById('status-content');
     el.innerHTML = '<div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>Memuat status...</p></div>';
     var res = await fetchGAS('getMyTaaruf', { email: currentUser.email });
-    if (res.status === 'success' && res.data.length > 0) {
+    if (res.status !== 'success') { el.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle" style="color:var(--warning)"></i><p>Gagal memuat status.</p><button class="btn btn-sm retry-btn" onclick="loadMyTaarufStatus()"><i class="fas fa-redo"></i> Coba Lagi</button></div>'; return; }
+    if (res.data && res.data.length > 0) {
         el.innerHTML = res.data.map(function (r) {
             var bc = 'badge-pending';
-            if (r.status === 'Sedang Taaruf') bc = 'badge-taaruf';
-            else if (r.status === 'Sedang Proses') bc = 'badge-proses';
-            else if (r.status === 'Sudah Menikah') bc = 'badge-menikah';
-            else if (r.status === 'Approved') bc = 'badge-approved';
-            else if (r.status === 'Rejected') bc = 'badge-rejected';
+            if (r.status === 'Sedang Taaruf') bc = 'badge-taaruf'; else if (r.status === 'Sedang Proses') bc = 'badge-proses'; else if (r.status === 'Sudah Menikah') bc = 'badge-menikah'; else if (r.status === 'Approved') bc = 'badge-approved'; else if (r.status === 'Rejected') bc = 'badge-rejected';
             var roleText = r.isPelamar ? 'Anda mengajukan' : 'Mengajukan Anda';
             var statusDesc = '';
-            if (r.status === 'Pending') statusDesc = 'Menunggu konfirmasi tim ta\'aruf.';
-            else if (r.status === 'Sedang Taaruf') statusDesc = 'Sedang dalam proses ta\'aruf.';
-            else if (r.status === 'Sedang Proses') statusDesc = 'Proses ta\'aruf sedang berlanjut.';
-            else if (r.status === 'Sudah Menikah') statusDesc = 'Alhamdulillah, proses telah selesai.';
-            else if (r.status === 'Rejected') statusDesc = 'Pengajuan tidak dapat dilanjutkan.';
+            if (r.status === 'Pending') statusDesc = 'Menunggu konfirmasi tim ta\'aruf.'; else if (r.status === 'Sedang Taaruf') statusDesc = 'Sedang dalam proses ta\'aruf.'; else if (r.status === 'Sedang Proses') statusDesc = 'Proses ta\'aruf sedang berlanjut.'; else if (r.status === 'Sudah Menikah') statusDesc = 'Alhamdulillah, proses telah selesai.'; else if (r.status === 'Rejected') statusDesc = 'Pengajuan tidak dapat dilanjutkan.';
             return '<div class="status-card"><div class="status-card-header"><div class="status-card-title">' + esc(r.otherNama) + '</div><span class="badge ' + bc + '">' + r.status + '</span></div><div class="status-card-meta"><i class="fas fa-info-circle"></i> ' + roleText + '<br><i class="fas fa-calendar"></i> ' + r.tanggal + '<br><i class="fas fa-map-marker-alt"></i> ' + esc(r.otherDaerah) + ', ' + esc(r.otherDesa) + '<br><i class="fas fa-users"></i> Kelompok target: ' + esc(r.otherKelompok) + '<br><i class="fas fa-user-tag"></i> Kelompok Anda: ' + esc(r.myKelompok) + '<br><div style="margin-top:6px;color:var(--text-main);font-weight:500;font-size:0.82rem">' + statusDesc + '</div></div></div>';
         }).join('');
     } else { el.innerHTML = '<div class="empty-state"><i class="fas fa-heart"></i><p>Belum ada pengajuan ta\'aruf.</p></div>'; }
 }
 
 /* ========== KEGIATAN ========== */
-async function loadKegiatanCache() { var res = await fetchGAS('getKegiatan'); if (res.status === 'success') cachedKegiatan = res.data; }
-
+async function loadKegiatanCache() { try { var res = await fetchGAS('getKegiatan'); if (res.status === 'success') cachedKegiatan = res.data || []; } catch (e) {} }
 function renderKegiatanCards(data) {
-    if (data.length === 0) return '<div class="empty-state"><i class="fas fa-bullhorn"></i><p>Belum ada informasi kegiatan.</p></div>';
-    return data.map(function (k) {
-        var imgHtml = k.foto ? '<img src="' + getPhotoUrl(k.foto) + '" onclick="openPhotoModal(\'' + getPhotoUrl(k.foto) + '\')" alt="Foto Kegiatan">' : '';
-        return '<div class="kegiatan-card">' + imgHtml + '<div class="kegiatan-card-body"><div class="kegiatan-card-title">' + esc(k.judul) + '</div><div class="kegiatan-card-content">' + esc(k.isi) + '</div></div><div class="kegiatan-card-footer"><span><i class="far fa-clock"></i> ' + k.tanggal + '</span><span><i class="far fa-user"></i> ' + esc(k.postedBy) + '</span></div></div>';
-    }).join('');
+    if (!data || data.length === 0) return '<div class="empty-state"><i class="fas fa-bullhorn"></i><p>Belum ada informasi kegiatan.</p></div>';
+    return data.map(function (k) { var imgHtml = k.foto ? '<img src="' + getPhotoUrl(k.foto) + '" onclick="openPhotoModal(\'' + getPhotoUrl(k.foto) + '\')" alt="Foto Kegiatan">' : ''; return '<div class="kegiatan-card">' + imgHtml + '<div class="kegiatan-card-body"><div class="kegiatan-card-title">' + esc(k.judul) + '</div><div class="kegiatan-card-content">' + esc(k.isi) + '</div></div><div class="kegiatan-card-footer"><span><i class="far fa-clock"></i> ' + k.tanggal + '</span><span><i class="far fa-user"></i> ' + esc(k.postedBy) + '</span></div></div>'; }).join('');
 }
-
-async function loadKegiatanPage() {
-    var el = document.getElementById('kegiatan-list');
-    el.innerHTML = '<div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>Memuat kegiatan...</p></div>';
-    await loadKegiatanCache();
-    el.innerHTML = renderKegiatanCards(cachedKegiatan);
-}
-
-async function loadAdminKegiatan() {
-    var el = document.getElementById('admin-kegiatan-list');
-    el.innerHTML = '<div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>Memuat...</p></div>';
-    await loadKegiatanCache();
-    el.innerHTML = renderKegiatanCards(cachedKegiatan);
-}
+async function loadKegiatanPage() { var el = document.getElementById('kegiatan-list'); el.innerHTML = '<div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>Memuat kegiatan...</p></div>'; await loadKegiatanCache(); el.innerHTML = renderKegiatanCards(cachedKegiatan); }
+async function loadAdminKegiatan() { var el = document.getElementById('admin-kegiatan-list'); el.innerHTML = '<div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>Memuat...</p></div>'; await loadKegiatanCache(); el.innerHTML = renderKegiatanCards(cachedKegiatan); }
 
 async function handleAddKegiatan(e) {
     e.preventDefault(); var btn = document.getElementById('btnAddKg'); btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Publikasi...';
@@ -775,20 +744,20 @@ async function handleAddKegiatan(e) {
     if (fotoInput && fotoInput.files && fotoInput.files[0]) { if (fotoInput.files[0].size > 3 * 1024 * 1024) { showToast('Ukuran foto maks 3MB', 'error'); btn.disabled = false; btn.innerHTML = '<i class="fas fa-paper-plane"></i> Publikasikan'; return; } try { fotoBase64 = await compressImage(fotoInput.files[0], 800, 0.75); } catch (err) { showToast('Gagal proses foto', 'error'); btn.disabled = false; btn.innerHTML = '<i class="fas fa-paper-plane"></i> Publikasikan'; return; } }
     var res = await fetchGAS('addKegiatan', {}, 'POST', { judul: document.getElementById('kgJudul').value.trim(), isi: document.getElementById('kgIsi').value.trim(), foto: fotoBase64, postedBy: currentUser.nama });
     if (res.status === 'success') { showToast(res.message); document.getElementById('kegiatanForm').reset(); document.getElementById('kgFotoPreview').style.display = 'none'; cachedKegiatan = []; loadAdminKegiatan(); }
-    else { showToast(res.message, 'error'); }
+    else { showToast(res.message || 'Gagal mempublikasikan', 'error'); }
     btn.disabled = false; btn.innerHTML = '<i class="fas fa-paper-plane"></i> Publikasikan';
 }
 
-/* ========== ADMIN - DATA PESERTA (DENGAN PAGINATION) ========== */
+/* ========== ADMIN - DATA PESERTA (DENGAN PAGINATION + ERROR HANDLING) ========== */
 async function loadAdminUsers() {
     var t = document.getElementById('admin-tbody');
     var pg = document.getElementById('admin-users-pagination');
     t.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-muted)"><i class="fas fa-spinner fa-spin"></i></td></tr>';
     pg.innerHTML = '';
     adminCurrentPage = 1;
-
     var res = await fetchGAS('getUsers', { role: currentUser.role, email: currentUser.email, scope: currentUser.scope });
-    if (res.status === 'success' && res.data.length > 0) { allUsers = res.data; renderAdminUsers(allUsers); }
+    if (res.status === 'error') { t.innerHTML = '<tr><td colspan="5" style="text-align:center"><i class="fas fa-exclamation-triangle" style="color:var(--warning);margin-right:8px"></i>Gagal memuat data. <a class="link" onclick="loadAdminUsers()">Coba Lagi</a></td></tr>'; pg.innerHTML = ''; return; }
+    if (res.status === 'success' && res.data && res.data.length > 0) { allUsers = res.data; renderAdminUsers(allUsers); }
     else { allUsers = []; t.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-muted)">Tidak ada data.</td></tr>'; pg.innerHTML = ''; }
 }
 
@@ -797,19 +766,11 @@ function renderAdminUsers(users) {
     var pg = document.getElementById('admin-users-pagination');
     var s = (document.getElementById('adminSearchInput') ? document.getElementById('adminSearchInput').value : '').toLowerCase();
     var filtered = users.filter(function (u) { return !s || (u.nama && u.nama.toLowerCase().indexOf(s) !== -1); });
-
     var totalPages = Math.max(1, Math.ceil(filtered.length / adminPageSize));
     if (adminCurrentPage > totalPages) adminCurrentPage = totalPages;
-
     var start = (adminCurrentPage - 1) * adminPageSize;
     var pageItems = filtered.slice(start, start + adminPageSize);
-
-    if (filtered.length === 0) {
-        t.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-muted)">Tidak ditemukan.</td></tr>';
-        pg.innerHTML = '';
-        return;
-    }
-
+    if (filtered.length === 0) { t.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-muted)">Tidak ditemukan.</td></tr>'; pg.innerHTML = ''; return; }
     t.innerHTML = pageItems.map(function (u) {
         var ac = getAvatarColor(u.nama); var sc = u.isComplete ? 'badge-approved' : 'badge-pending'; var st = u.isComplete ? 'Lengkap' : 'Belum';
         var ps = u.foto ? getPhotoUrl(u.foto) : '';
@@ -817,41 +778,21 @@ function renderAdminUsers(users) {
         var photoBlock = ps ? '<img src="' + ps + '" style="width:40px;height:40px;border-radius:50%;object-fit:cover;cursor:pointer;border:2px solid var(--border);transition:0.2s" onmouseover="this.style.transform=\'scale(1.1)\'" onmouseout="this.style.transform=\'scale(1)\'" onclick="openPhotoModal(\'' + ps + '\')">' : '<div style="width:40px;height:40px;border-radius:50%;background:' + ac + '15;color:' + ac + ';display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700">' + getInitials(u.nama) + '</div>';
         return '<tr><td><div style="display:flex;align-items:center;gap:10px">' + photoBlock + '<div><div style="font-weight:600">' + esc(u.nama) + '</div><div class="sub-text">' + esc(u.email) + '</div></div></div></td><td><div class="data-cell-line"><b>Ortu:</b> ' + esc(u.namaOrtu) + '</div><div class="data-cell-line"><b>TTL:</b> ' + esc(u.ttl) + '</div><div class="data-cell-line"><b>JK:</b> ' + esc(u.gender) + ' | <b>Anak ke:</b> ' + esc(u.anakKe) + '</div><div class="data-cell-line"><b>Suku:</b> ' + esc(u.suku) + ' | <b>TB/BB:</b> ' + esc(u.tbBerat) + '</div><div class="data-cell-line"><b>Status:</b> ' + esc(u.menikah) + '</div></td><td><div class="data-cell-line"><b>Pendidikan:</b> ' + esc(u.pendidikan) + '</div><div class="data-cell-line"><b>Pekerjaan:</b> ' + esc(u.pekerjaan) + '</div><div class="data-cell-line"><b>Hobi:</b> ' + esc(u.hobi) + '</div><div class="data-cell-line"><b>Dapukan:</b> ' + esc(u.dapukan) + '</div>' + kr + '</td><td><div class="data-cell-line">' + esc(u.daerah) + '</div><div class="data-cell-line">' + esc(u.desa) + '</div><div class="data-cell-line">' + esc(u.kelompok) + '</div></td><td><span class="badge ' + sc + '">' + st + '</span></td></tr>';
     }).join('');
-
     generatePagination('admin-users-pagination', adminCurrentPage, totalPages, filtered.length, adminPageSize, 'goToAdminPage');
 }
-
-function filterAdmin() {
-    adminCurrentPage = 1;
-    renderAdminUsers(allUsers);
-}
+function filterAdmin() { adminCurrentPage = 1; renderAdminUsers(allUsers); }
 
 /* ========== ADMIN - PENGAJUAN TAARUF ========== */
 async function loadAdminTaaruf() {
     var t = document.getElementById('admin-taaruf-tbody');
     t.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-muted)"><i class="fas fa-spinner fa-spin"></i></td></tr>';
     var res = await fetchGAS('getAllTaaruf', { role: currentUser.role, email: currentUser.email, scope: currentUser.scope });
-    if (res.status === 'success' && res.data.length > 0) { allTaarufRequests = res.data; renderAdminTaaruf(allTaarufRequests); }
+    if (res.status !== 'success') { t.innerHTML = '<tr><td colspan="5" style="text-align:center"><i class="fas fa-exclamation-triangle" style="color:var(--warning);margin-right:8px"></i>Gagal memuat. <a class="link" onclick="loadAdminTaaruf()">Coba Lagi</a></td></tr>'; return; }
+    if (res.data && res.data.length > 0) { allTaarufRequests = res.data; renderAdminTaaruf(allTaarufRequests); }
     else { allTaarufRequests = []; t.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-muted)">Belum ada pengajuan.</td></tr>'; }
 }
-
-function filterTaaruf(btn, filter) {
-    currentTaarufFilter = filter;
-    document.querySelectorAll('#taarufFilterTabs .filter-tab').forEach(function (b) { b.classList.remove('active'); });
-    btn.classList.add('active');
-    renderAdminTaaruf(allTaarufRequests);
-}
-
-function getBadgeClass(status) {
-    if (status === 'Pending') return 'badge-pending';
-    if (status === 'Sedang Taaruf') return 'badge-taaruf';
-    if (status === 'Sedang Proses') return 'badge-proses';
-    if (status === 'Sudah Menikah') return 'badge-menikah';
-    if (status === 'Rejected') return 'badge-rejected';
-    if (status === 'Approved') return 'badge-approved';
-    return 'badge-pending';
-}
-
+function filterTaaruf(btn, filter) { currentTaarufFilter = filter; document.querySelectorAll('#taarufFilterTabs .filter-tab').forEach(function (b) { b.classList.remove('active'); }); btn.classList.add('active'); renderAdminTaaruf(allTaarufRequests); }
+function getBadgeClass(status) { if (status === 'Pending') return 'badge-pending'; if (status === 'Sedang Taaruf') return 'badge-taaruf'; if (status === 'Sedang Proses') return 'badge-proses'; if (status === 'Sudah Menikah') return 'badge-menikah'; if (status === 'Rejected') return 'badge-rejected'; if (status === 'Approved') return 'badge-approved'; return 'badge-pending'; }
 function getActionButtons(status, pEmail, tEmail) {
     if (status === 'Pending') return '<div class="action-btns"><button class="btn btn-sm btn-info-sm" onclick="updateTaarufStatus(\'' + pEmail + '\',\'' + tEmail + '\',\'Sedang Taaruf\')"><i class="fas fa-heart"></i> Sedang Taaruf</button><button class="btn btn-sm btn-danger-sm" onclick="updateTaarufStatus(\'' + pEmail + '\',\'' + tEmail + '\',\'Rejected\')"><i class="fas fa-times"></i> Tolak</button></div>';
     if (status === 'Sedang Taaruf') return '<div class="action-btns"><button class="btn btn-sm btn-warning-sm" onclick="updateTaarufStatus(\'' + pEmail + '\',\'' + tEmail + '\',\'Sedang Proses\')"><i class="fas fa-spinner"></i> Sedang Proses</button><button class="btn btn-sm btn-danger-sm" onclick="updateTaarufStatus(\'' + pEmail + '\',\'' + tEmail + '\',\'Rejected\')"><i class="fas fa-times"></i> Tolak</button></div>';
@@ -860,24 +801,19 @@ function getActionButtons(status, pEmail, tEmail) {
     if (status === 'Rejected') return '<span style="font-size:0.8rem;color:var(--danger);font-weight:500">Ditolak</span>';
     return '-';
 }
-
 function renderAdminTaaruf(requests) {
     var t = document.getElementById('admin-taaruf-tbody');
     var f = currentTaarufFilter ? requests.filter(function (r) { return r.status === currentTaarufFilter; }) : requests;
     if (f.length === 0) { t.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-muted)">Tidak ada data untuk filter ini.</td></tr>'; return; }
-    t.innerHTML = f.map(function (r) {
-        var bc = getBadgeClass(r.status); var actions = getActionButtons(r.status, r.pelamarEmail, r.targetEmail);
-        return '<tr><td style="white-space:nowrap">' + r.tanggal + '</td><td><b>' + esc(r.pelamarNama) + '</b><div class="sub-text">' + esc(r.pelamarEmail) + '</div><div class="sub-text" style="color:var(--primary)">' + esc(r.pelamarDaerah) + ', ' + esc(r.pelamarDesa) + '</div><div class="sub-text"><i class="fas fa-users" style="width:12px"></i> ' + esc(r.pelamarKelompok) + '</div></td><td><b>' + esc(r.targetNama) + '</b><div class="sub-text">' + esc(r.targetEmail) + '</div><div class="sub-text" style="color:var(--primary)">' + esc(r.targetDaerah) + ', ' + esc(r.targetDesa) + '</div><div class="sub-text"><i class="fas fa-users" style="width:12px"></i> ' + esc(r.targetKelompok) + '</div></td><td><span class="badge ' + bc + '">' + r.status + '</span></td><td>' + actions + '</td></tr>';
-    }).join('');
+    t.innerHTML = f.map(function (r) { var bc = getBadgeClass(r.status); var actions = getActionButtons(r.status, r.pelamarEmail, r.targetEmail); return '<tr><td style="white-space:nowrap">' + r.tanggal + '</td><td><b>' + esc(r.pelamarNama) + '</b><div class="sub-text">' + esc(r.pelamarEmail) + '</div><div class="sub-text" style="color:var(--primary)">' + esc(r.pelamarDaerah) + ', ' + esc(r.pelamarDesa) + '</div><div class="sub-text"><i class="fas fa-users" style="width:12px"></i> ' + esc(r.pelamarKelompok) + '</div></td><td><b>' + esc(r.targetNama) + '</b><div class="sub-text">' + esc(r.targetEmail) + '</div><div class="sub-text" style="color:var(--primary)">' + esc(r.targetDaerah) + ', ' + esc(r.targetDesa) + '</div><div class="sub-text"><i class="fas fa-users" style="width:12px"></i> ' + esc(r.targetKelompok) + '</div></td><td><span class="badge ' + bc + '">' + r.status + '</span></td><td>' + actions + '</td></tr>'; }).join('');
 }
-
 async function updateTaarufStatus(pEmail, tEmail, newStatus) {
     if (!confirm('Ubah status menjadi "' + newStatus + '"?')) return;
     showLoading();
     var res = await fetchGAS('updateTaarufStatus', {}, 'POST', { pelamarEmail: pEmail, targetEmail: tEmail, newStatus: newStatus });
     hideLoading();
     if (res.status === 'success') { showToast(res.message); loadAdminTaaruf(); refreshNotifCount(); }
-    else { showToast(res.message, 'error'); }
+    else { showToast(res.message || 'Gagal update', 'error'); }
 }
 </script>
 </body>
