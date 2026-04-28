@@ -70,6 +70,8 @@
         .btn-wa{background:linear-gradient(135deg,#1EBE57,#25D366);box-shadow:0 4px 12px rgba(37,211,102,0.25)}
         .btn-info-sm{background:linear-gradient(135deg,#2563EB,#3B82F6);box-shadow:0 4px 12px rgba(59,130,246,0.25)}
         .btn-gold{background:linear-gradient(135deg,var(--gold-500),var(--gold-400));color:var(--green-900);box-shadow:0 4px 12px rgba(212,168,67,0.25)}
+        .btn-ghost{background:transparent;border:2px solid var(--border-light);color:var(--text-muted);box-shadow:none;margin-top:0}
+        .btn-ghost:hover{background:#F3F4F6;border-color:#D1D5DB;box-shadow:none;transform:none}
         .link{color:var(--green-700);font-size:0.82rem;font-weight:600;cursor:pointer;text-decoration:none;transition:color 0.2s}
         .link:hover{color:var(--green-500)}
         .link-muted{color:var(--text-muted);font-size:0.82rem}
@@ -116,14 +118,11 @@
         .search-bar::placeholder{color:var(--text-light)}
         .search-wrap{position:relative}
         .search-wrap i{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--text-light)}
-
-        /* ===== FILTER SELECTS ROW ===== */
         .filter-selects-row{display:flex;gap:0.75rem;margin-bottom:1rem;flex-wrap:wrap}
         .filter-select-group{flex:1;min-width:150px}
         .filter-select-group label{display:block;font-size:0.68rem;font-weight:800;margin-bottom:4px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px}
         .filter-select-group select{width:100%;padding:9px 30px 9px 12px;border:2px solid var(--border-light);border-radius:8px;font-size:0.82rem;background:white;color:var(--text-main);appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;cursor:pointer;transition:all 0.2s;font-family:'Plus Jakarta Sans',sans-serif;min-height:40px}
         .filter-select-group select:focus{border-color:var(--green-500);box-shadow:0 0 0 3px rgba(21,184,114,0.1)}
-
         .card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:1.1rem}
         .card{border:1px solid var(--border-light);border-radius:16px;overflow:hidden;background:white;display:flex;flex-direction:column;transition:all 0.3s;box-shadow:0 1px 3px rgba(0,0,0,0.04)}
         .card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.08);border-color:var(--green-400)}
@@ -289,7 +288,7 @@
         .chart-empty{font-size:0.8rem;color:var(--text-light);text-align:center;padding:1rem}
 
         /* ===== MOBILE CARDS ===== */
-        .am-card{background:white;border:1px solid var(--border-light);border-radius:14px;margin-bottom:10px;overflow:hidden;transition:border-color 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.04)}
+        .am-card{background:white;border:1px solid var(--border-light);border-radius:14px;margin-bottom:10px;overflow:hidden;transition:border-color 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.04);content-visibility:auto;contain-intrinsic-size:0 320px}
         .am-card:active{border-color:var(--green-400)}
         .am-header{display:flex;align-items:center;gap:10px;padding:12px;border-bottom:1px solid #F3F4F6}
         .am-header-photo{width:48px;height:48px;border-radius:12px;object-fit:cover;border:2px solid #D1FAE5;cursor:pointer;flex-shrink:0}
@@ -317,13 +316,51 @@
         .am-taaruf-person-label.am-pelamar{color:var(--gold-500)}
         .am-taaruf-person-label.am-target{color:var(--green-700)}
         .am-taaruf-person-row{display:flex;align-items:center;gap:8px}
-        .am-taaruf-person-photo{width:38px;height:38px;border-radius:9px;object-fit:cover;cursor:pointer;flex-shrink:0}
+        .am-taaruf-person-photo{width:38px;height:38px;border-radius:9px;object-fit:cover;cursor:pointer;flex-shrink:0;background:#F3F4F6}
         .am-taaruf-person-ph{width:38px;height:38px;border-radius:9px;flex-shrink:0;background:var(--green-50);color:var(--green-600);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.72rem}
         .am-taaruf-person-name{font-weight:700;font-size:0.82rem;color:var(--text-dark);line-height:1.3}
         .am-taaruf-person-detail{font-size:0.68rem;color:var(--text-muted);line-height:1.45}
         .am-taaruf-arrow{text-align:center;padding:2px 0;color:var(--green-600);font-size:0.9rem}
-        .am-taaruf-actions{padding:10px 12px;border-top:1px solid #F3F4F6}
-        .am-taaruf-actions .action-btns{justify-content:flex-end}
+        .am-taaruf-actions{padding:10px 12px;border-top:1px solid #F3F4F6;display:flex;flex-direction:column;gap:8px}
+
+        /* ===== STATUS CHANGE MODAL ===== */
+        .sc-modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.35);backdrop-filter:blur(6px);z-index:9500;display:flex;align-items:flex-end;justify-content:center;padding:0;animation:scFadeIn .2s ease}
+        @keyframes scFadeIn{from{opacity:0}to{opacity:1}}
+        .sc-modal-sheet{background:white;border-radius:20px 20px 0 0;width:100%;max-width:480px;max-height:92vh;overflow-y:auto;-webkit-overflow-scrolling:touch;animation:scSlideUp .3s cubic-bezier(.32,.72,0,1);box-shadow:0 -8px 40px rgba(0,0,0,0.15)}
+        @keyframes scSlideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+        @media(min-width:600px){
+            .sc-modal-bg{align-items:center;padding:1.5rem}
+            .sc-modal-sheet{border-radius:20px;max-height:85vh;animation:scScaleIn .25s cubic-bezier(.32,.72,0,1)}
+            @keyframes scScaleIn{from{transform:scale(.92);opacity:0}to{transform:scale(1);opacity:1}}
+        }
+        .sc-modal-handle{width:36px;height:4px;border-radius:4px;background:#D1D5DB;margin:10px auto 0}
+        @media(min-width:600px){.sc-modal-handle{display:none}}
+        .sc-modal-body{padding:20px 20px 28px}
+        .sc-modal-icon{width:56px;height:56px;border-radius:16px;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-size:1.4rem}
+        .sc-modal-icon.sc-info{background:#EFF6FF;color:#2563EB}
+        .sc-modal-icon.sc-warning{background:var(--gold-50);color:#D97706}
+        .sc-modal-icon.sc-danger{background:var(--danger-light);color:#DC2626}
+        .sc-modal-icon.sc-success{background:var(--success-light);color:#059669}
+        .sc-modal-title{text-align:center;font-size:1.05rem;font-weight:800;color:var(--text-dark);margin-bottom:6px}
+        .sc-modal-desc{text-align:center;font-size:0.82rem;color:var(--text-muted);line-height:1.65;margin-bottom:16px}
+        .sc-flow{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:18px;flex-wrap:nowrap}
+        .sc-flow-badge{padding:6px 16px;border-radius:24px;font-size:0.78rem;font-weight:700;white-space:nowrap}
+        .sc-flow-arrow{color:var(--text-light);font-size:1.1rem;flex-shrink:0}
+        .sc-people{display:flex;flex-direction:column;gap:10px;margin-bottom:18px}
+        .sc-person{display:flex;align-items:center;gap:10px;padding:10px;background:#F9FAFB;border:1px solid var(--border-light);border-radius:12px}
+        .sc-person-photo{width:42px;height:42px;border-radius:11px;object-fit:cover;border:2px solid #D1FAE5;flex-shrink:0;background:#F3F4F6}
+        .sc-person-ph{width:42px;height:42px;border-radius:11px;flex-shrink:0;background:var(--green-50);color:var(--green-600);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.78rem;border:2px solid #D1FAE5}
+        .sc-person-info{flex:1;min-width:0}
+        .sc-person-label{font-size:0.6rem;font-weight:800;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-light);margin-bottom:2px}
+        .sc-person-name{font-weight:700;font-size:0.88rem;color:var(--text-dark);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+        .sc-person-sub{font-size:0.7rem;color:var(--text-muted)}
+        .sc-modal-actions{display:flex;flex-direction:column;gap:8px}
+        .sc-modal-actions .btn{min-height:48px;font-size:0.88rem;border-radius:12px}
+        .sc-modal-actions .btn-ghost{min-height:44px;font-size:0.84rem;border-radius:12px}
+
+        /* ===== LAZY IMG ===== */
+        .lazy-img{opacity:0;transition:opacity .3s ease}
+        .lazy-img.loaded{opacity:1}
 
         /* ===== RESPONSIVE ===== */
         @media(max-width:768px){
@@ -336,7 +373,8 @@
             .grid-2{grid-template-columns:1fr}
             .card-grid{grid-template-columns:1fr}
             .data-grid{grid-template-columns:1fr 1fr}
-            .filter-tabs{gap:3px;overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;padding-bottom:4px}
+            .filter-tabs{gap:3px;overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;padding-bottom:4px;scrollbar-width:none}
+            .filter-tabs::-webkit-scrollbar{display:none}
             .filter-tab{padding:5px 10px;font-size:0.7rem;min-height:32px;flex-shrink:0}
             .notif-panel{width:calc(100vw - 1.5rem);right:-0.25rem;max-height:70vh}
             .pagination-wrap{flex-direction:column;align-items:stretch;text-align:center}
@@ -365,35 +403,18 @@
             .chart-row-label{width:75px;min-width:75px;font-size:0.68rem}
             #page-admin-users .table-wrap,#page-admin-taaruf .table-wrap{display:none!important}
             .admin-mobile-list{display:block}
-            .am-taaruf-actions .action-btns{
-        flex-direction:column;
-        gap:8px;
-    }
-    .am-taaruf-actions .action-btns .btn-sm{
-        width:100%;
-        min-height:46px;
-        justify-content:center;
-        font-size:0.82rem;
-        padding:10px 14px;
-        border-radius:10px;
-    }
-    .am-taaruf-actions .action-btns .btn-sm i{
-        font-size:0.9rem;
-    }
-    .am-taaruf-actions .action-btns span{
-        width:100%;
-        text-align:center;
-        padding:8px 0;
-        font-size:0.84rem;
-    }
-    .am-taaruf-person-detail{
-        padding-left:0 !important;
-        margin-top:6px !important;
-    }
-    .am-taaruf-person-row{
-        flex-wrap:wrap;
-    }
-}
+            .am-taaruf-actions .btn-sm{
+                width:100%;min-height:46px;justify-content:center;font-size:0.82rem;padding:10px 14px;border-radius:10px;
+            }
+            .am-taaruf-actions .btn-sm i{font-size:0.9rem}
+            .am-taaruf-actions .btn-sm span{width:100%;text-align:center;padding:8px 0;font-size:0.84rem}
+            .am-taaruf-person-detail{padding-left:0!important;margin-top:6px!important}
+            .am-taaruf-person-row{flex-wrap:wrap}
+            .sc-modal-body{padding:16px 16px 24px}
+            .sc-modal-title{font-size:0.98rem}
+            .sc-person{padding:8px}
+            .sc-person-photo,.sc-person-ph{width:36px;height:36px;border-radius:9px}
+            .sc-person-name{font-size:0.82rem}
         }
         @media(max-width:380px){
             .data-grid{grid-template-columns:1fr}
@@ -462,6 +483,14 @@
             <button type="button" onclick="closeVerifyModal()" class="btn btn-outline" style="margin-top:0"><i class="fas fa-times"></i> Batal</button>
             <button type="button" id="btnVerifySubmit" onclick="submitVerifyAndRegister()" class="btn"><i class="fas fa-check"></i> Verifikasi & Daftar</button>
         </div>
+    </div>
+</div>
+
+<!-- ===== STATUS CHANGE MODAL (bottom sheet) ===== -->
+<div id="sc-modal" class="sc-modal-bg hidden" onclick="closeScModal(event)">
+    <div class="sc-modal-sheet" onclick="event.stopPropagation()">
+        <div class="sc-modal-handle"></div>
+        <div class="sc-modal-body" id="sc-modal-body"></div>
     </div>
 </div>
 
@@ -541,7 +570,7 @@
                         <div class="filter-select-group"><label>Desa</label><select id="searchFilterDesa" onchange="onSearchFilterDesaChange()"><option value="">Semua Desa</option></select></div>
                         <div class="filter-select-group"><label>Kelompok</label><select id="searchFilterKelompok" onchange="filterCardsWithFilters()"><option value="">Semua Kelompok</option></select></div>
                     </div>
-                    <div class="search-wrap"><i class="fas fa-search"></i><input type="text" class="search-bar" id="searchInput" placeholder="Cari nama..." oninput="filterCardsWithFilters()" autocomplete="off"></div>
+                    <div class="search-wrap"><i class="fas fa-search"></i><input type="text" class="search-bar" id="searchInput" placeholder="Cari nama..." oninput="debounceFilterCards()" autocomplete="off"></div>
                 </div>
                 <div id="dashboard-list" class="card-grid"></div>
                 <div id="dashboard-pagination"></div>
@@ -614,7 +643,7 @@
                     <div class="filter-select-group"><label>Kelompok</label><select id="adminFilterKelompok" onchange="filterAdminWithFilters()"><option value="">Semua Kelompok</option></select></div>
                 </div>
                 <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.6rem;margin-bottom:1.1rem">
-                    <div class="search-wrap" style="margin-bottom:0;flex:1;min-width:180px;max-width:360px"><i class="fas fa-search"></i><input type="text" class="search-bar" id="adminSearchInput" placeholder="Cari peserta..." oninput="filterAdminWithFilters()" autocomplete="off"></div>
+                    <div class="search-wrap" style="margin-bottom:0;flex:1;min-width:180px;max-width:360px"><i class="fas fa-search"></i><input type="text" class="search-bar" id="adminSearchInput" placeholder="Cari peserta..." oninput="debounceFilterAdmin()" autocomplete="off"></div>
                     <div class="page-size-select"><label>Tampilkan:</label><select id="adminPageSizeSelect" onchange="changeAdminPageSize()"><option value="5">5</option><option value="10" selected>10</option><option value="20">20</option><option value="50">50</option></select></div>
                 </div>
                 <div class="table-wrap"><table><thead><tr><th style="min-width:200px">Peserta</th><th>Data Pribadi</th><th>Pekerjaan & Lainnya</th><th>Wilayah</th><th>Status</th></tr></thead><tbody id="admin-tbody"></tbody></table></div>
@@ -622,9 +651,10 @@
                 <div id="admin-users-pagination"></div>
             </div>
 
-            <!-- ADMIN TAARUF -->
+            <!-- ADMIN TAARUF (optimized) -->
             <div id="page-admin-taaruf" class="hidden">
-                <div class="filter-tabs" id="taarufFilterTabs">
+                <!-- Sticky filter tabs -->
+                <div class="filter-tabs" id="taarufFilterTabs" style="position:sticky;top:52px;z-index:40;background:var(--bg-page);padding:8px 0;margin-bottom:0.6rem">
                     <button class="filter-tab active" onclick="filterTaaruf(this,'')">Semua</button>
                     <button class="filter-tab" onclick="filterTaaruf(this,'Pending')">Belum Diterima</button>
                     <button class="filter-tab" onclick="filterTaaruf(this,'Sedang Taaruf')">Sedang Taaruf</button>
@@ -632,8 +662,14 @@
                     <button class="filter-tab" onclick="filterTaaruf(this,'Sudah Menikah')">Sudah Menikah</button>
                     <button class="filter-tab" onclick="filterTaaruf(this,'Rejected')">Ditolak</button>
                 </div>
+                <!-- Summary badges -->
+                <div id="taaruf-summary" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1rem"></div>
+                <!-- Desktop table -->
                 <div class="table-wrap taaruf-table-wrap"><table><thead><tr><th>Tanggal</th><th>Pelamar</th><th>Target</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="admin-taaruf-tbody"></tbody></table></div>
+                <!-- Mobile list -->
                 <div id="admin-taaruf-mobile" class="admin-mobile-list"></div>
+                <!-- Pagination -->
+                <div id="admin-taaruf-pagination"></div>
             </div>
 
             <!-- ADMIN KEGIATAN -->
@@ -655,17 +691,47 @@
 </div>
 
 <script>
+/* ===== KONFIGURASI ===== */
 var GAS_URL="https://script.google.com/macros/s/AKfycbwTGFTatNOATbDYW6AM2-PCEK6gkAHwtDxLjgDRkFu0FaAgbsYcOyRdmccPbQX0SA61/exec";
 var FETCH_TIMEOUT=30000,currentUser=null,masterData={daerah:[],desa:{},kelompok:{}},allUsers=[],allTaarufRequests=[],currentTaarufFilter='',cachedTaarufTim={},cachedKegiatan=[],adminRoles=['Admin','Desa','Daerah','Super Admin'];
-var searchCurrentPage=1,searchPageSize=6,adminCurrentPage=1,adminPageSize=10,searchIamInTaaruf=false;
+var searchCurrentPage=1,searchPageSize=6,adminCurrentPage=1,adminPageSize=10,taarufCurrentPage=1,taarufPageSize=8,searchIamInTaaruf=false;
 var userPhotoMap={};
+var debounceTimers={};
+
+/* ===== DEBOUNCE ===== */
+function debounce(key,fn,ms){ms=ms||250;clearTimeout(debounceTimers[key]);debounceTimers[key]=setTimeout(fn,ms)}
+function debounceFilterCards(){debounce('filterCards',function(){searchCurrentPage=1;renderCards(allUsers)},200)}
+function debounceFilterAdmin(){debounce('filterAdmin',function(){adminCurrentPage=1;renderAdminUsers(allUsers)},200)}
+
+/* ===== INTERSECTION OBSERVER (lazy load gambar) ===== */
+var lazyObserver=null;
+function initLazyObserver(){
+    if(lazyObserver)return;
+    if(!('IntersectionObserver' in window))return;
+    lazyObserver=new IntersectionObserver(function(entries){
+        for(var i=0;i<entries.length;i++){
+            if(entries[i].isIntersecting){
+                var img=entries[i].target;
+                if(img.dataset.src){
+                    img.src=img.dataset.src;
+                    img.removeAttribute('data-src');
+                    img.classList.add('loaded');
+                }
+                lazyObserver.unobserve(img);
+            }
+        }
+    },{rootMargin:'100px'});
+}
+function observeLazyImg(el){
+    if(!lazyObserver){el.src=el.dataset.src;el.classList.add('loaded');return}
+    lazyObserver.observe(el);
+}
 
 /* ===== WATERMARK ===== */
 function generateWatermarkBg(){
     if(!currentUser)return '';
     var text=(currentUser.email||currentUser.nama||'')+' — DILINDUNGI —';
-    var escaped=text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/'/g,'&#39;');
-    var svg='<svg xmlns="http://www.w3.org/2000/svg" width="300" height="180"><text x="150" y="90" transform="rotate(-28 150 90)" font-size="11" fill="rgba(0,0,0,0.035)" font-family="Arial,sans-serif" text-anchor="middle" font-weight="bold">'+escaped+'</text></svg>';
+    var svg='<svg xmlns="http://www.w3.org/2000/svg" width="300" height="180"><text x="150" y="90" transform="rotate(-28 150 90)" font-size="11" fill="rgba(0,0,0,0.035)" font-family="Arial,sans-serif" text-anchor="middle" font-weight="bold">'+text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</text></svg>';
     return 'url("data:image/svg+xml,'+encodeURIComponent(svg)+'")';
 }
 function showWatermark(){if(!currentUser)return;var wm=document.getElementById('watermark-layer');if(!wm){wm=document.createElement('div');wm.id='watermark-layer';document.body.appendChild(wm)}wm.style.backgroundImage=generateWatermarkBg();wm.classList.remove('hidden')}
@@ -718,6 +784,7 @@ function getPaginationRange(c,t){if(t<=7){var a=[];for(var i=1;i<=t;i++)a.push(i
 function generatePagination(cid,cp,tp,ti,ps,fn){var c=document.getElementById(cid);if(tp<=1||ti===0){c.innerHTML='';return}var si=(cp-1)*ps+1,ei=Math.min(cp*ps,ti),pg=getPaginationRange(cp,tp);var h='<div class="pagination-wrap"><div class="pagination-info">Menampilkan <strong>'+si+' - '+ei+'</strong> dari <strong>'+ti+'</strong></div><div class="pagination-buttons">';h+='<button class="page-btn" '+(cp===1?'disabled':'')+' onclick="'+fn+'('+(cp-1)+')"><i class="fas fa-chevron-left"></i></button>';for(var i=0;i<pg.length;i++){if(pg[i]==='...')h+='<span class="page-ellipsis">...</span>';else h+='<button class="page-btn '+(pg[i]===cp?'active':'')+'" onclick="'+fn+'('+pg[i]+')">'+pg[i]+'</button>'}h+='<button class="page-btn" '+(cp===tp?'disabled':'')+' onclick="'+fn+'('+(cp+1)+')"><i class="fas fa-chevron-right"></i></button></div></div>';c.innerHTML=h}
 function goToSearchPage(p){searchCurrentPage=p;renderCards(allUsers);document.getElementById('dashboard-list').scrollIntoView({behavior:'smooth',block:'start'})}
 function goToAdminPage(p){adminCurrentPage=p;renderAdminUsers(allUsers);document.getElementById('admin-users-pagination').scrollIntoView({behavior:'smooth',block:'start'})}
+function goToTaarufPage(p){taarufCurrentPage=p;renderAdminTaaruf(allTaarufRequests);document.getElementById('admin-taaruf-pagination').scrollIntoView({behavior:'smooth',block:'start'})}
 function changeAdminPageSize(){adminPageSize=parseInt(document.getElementById('adminPageSizeSelect').value)||10;adminCurrentPage=1;renderAdminUsers(allUsers)}
 
 /* ===== NAVIGASI ===== */
@@ -799,7 +866,7 @@ async function login(){
     var res=await fetchGAS('login',{email:email,password:password});
     if(res.status==='success'){
         currentUser=res.user;if(!currentUser.role)currentUser.role='Personal';if(!currentUser.scope)currentUser.scope='';
-        showToast("Assalamu'alaikum, "+currentUser.nama+"!");showView('app-shell');updateShell();refreshNotifCount();loadKegiatanCache();
+        showToast("Assalamu'alaikum, "+currentUser.nama+"!");showView('app-shell');updateShell();initLazyObserver();refreshNotifCount();loadKegiatanCache();
         if(adminRoles.indexOf(currentUser.role)!==-1)switchPage('admin-home');
         else{if(!currentUser.isComplete){switchPage('profile');showToast('Silakan lengkapi profil Anda terlebih dahulu.','error')}else switchPage('home')}
     }else{showToast(res.message||'Login gagal','error')}
@@ -811,32 +878,10 @@ function logout(){currentUser=null;cachedKegiatan=[];userPhotoMap={};hideWaterma
 async function loadMasterData(){if(masterData.daerah.length===0){var res=await fetchGAS('getMasterData');if(res.status==='success')masterData=res.data}}
 function populateDaerahSelect(selectId,placeholder){var s=document.getElementById(selectId);s.innerHTML='<option value="">'+(placeholder||'Semua Daerah')+'</option>';masterData.daerah.forEach(function(d){s.innerHTML+='<option value="'+d+'">'+d+'</option>'})}
 function populateFilterDaerah(selectId){populateDaerahSelect(selectId,'Semua Daerah')}
-function onSearchFilterDaerahChange(){
-    var d=document.getElementById('searchFilterDaerah').value;
-    var s=document.getElementById('searchFilterDesa');var k=document.getElementById('searchFilterKelompok');
-    s.innerHTML='<option value="">Semua Desa</option>';k.innerHTML='<option value="">Semua Kelompok</option>';
-    if(d&&masterData.desa[d])masterData.desa[d].forEach(function(i){s.innerHTML+='<option value="'+i+'">'+i+'</option>'});
-    filterCardsWithFilters();
-}
-function onSearchFilterDesaChange(){
-    var d=document.getElementById('searchFilterDesa').value;var k=document.getElementById('searchFilterKelompok');
-    k.innerHTML='<option value="">Semua Kelompok</option>';
-    if(d&&masterData.kelompok[d])masterData.kelompok[d].forEach(function(i){k.innerHTML+='<option value="'+i+'">'+i+'</option>'});
-    filterCardsWithFilters();
-}
-function onAdminFilterDaerahChange(){
-    var d=document.getElementById('adminFilterDaerah').value;
-    var s=document.getElementById('adminFilterDesa');var k=document.getElementById('adminFilterKelompok');
-    s.innerHTML='<option value="">Semua Desa</option>';k.innerHTML='<option value="">Semua Kelompok</option>';
-    if(d&&masterData.desa[d])masterData.desa[d].forEach(function(i){s.innerHTML+='<option value="'+i+'">'+i+'</option>'});
-    filterAdminWithFilters();
-}
-function onAdminFilterDesaChange(){
-    var d=document.getElementById('adminFilterDesa').value;var k=document.getElementById('adminFilterKelompok');
-    k.innerHTML='<option value="">Semua Kelompok</option>';
-    if(d&&masterData.kelompok[d])masterData.kelompok[d].forEach(function(i){k.innerHTML+='<option value="'+i+'">'+i+'</option>'});
-    filterAdminWithFilters();
-}
+function onSearchFilterDaerahChange(){var d=document.getElementById('searchFilterDaerah').value;var s=document.getElementById('searchFilterDesa');var k=document.getElementById('searchFilterKelompok');s.innerHTML='<option value="">Semua Desa</option>';k.innerHTML='<option value="">Semua Kelompok</option>';if(d&&masterData.desa[d])masterData.desa[d].forEach(function(i){s.innerHTML+='<option value="'+i+'">'+i+'</option>'});filterCardsWithFilters()}
+function onSearchFilterDesaChange(){var d=document.getElementById('searchFilterDesa').value;var k=document.getElementById('searchFilterKelompok');k.innerHTML='<option value="">Semua Kelompok</option>';if(d&&masterData.kelompok[d])masterData.kelompok[d].forEach(function(i){k.innerHTML+='<option value="'+i+'">'+i+'</option>'});filterCardsWithFilters()}
+function onAdminFilterDaerahChange(){var d=document.getElementById('adminFilterDaerah').value;var s=document.getElementById('adminFilterDesa');var k=document.getElementById('adminFilterKelompok');s.innerHTML='<option value="">Semua Desa</option>';k.innerHTML='<option value="">Semua Kelompok</option>';if(d&&masterData.desa[d])masterData.desa[d].forEach(function(i){s.innerHTML+='<option value="'+i+'">'+i+'</option>'});filterAdminWithFilters()}
+function onAdminFilterDesaChange(){var d=document.getElementById('adminFilterDesa').value;var k=document.getElementById('adminFilterKelompok');k.innerHTML='<option value="">Semua Kelompok</option>';if(d&&masterData.kelompok[d])masterData.kelompok[d].forEach(function(i){k.innerHTML+='<option value="'+i+'">'+i+'</option>'});filterAdminWithFilters()}
 function populateDaerah(){var s=document.getElementById('upDaerah');s.innerHTML='<option value="">-- Pilih Daerah --</option>';masterData.daerah.forEach(function(d){s.innerHTML+='<option value="'+d+'">'+d+'</option>'})}
 function loadDesa(){var d=document.getElementById('upDaerah').value;var s=document.getElementById('upDesa');var k=document.getElementById('upKelompok');s.innerHTML='<option value="">-- Pilih --</option>';k.innerHTML='<option value="">-- Pilih --</option>';if(d&&masterData.desa[d])masterData.desa[d].forEach(function(i){s.innerHTML+='<option value="'+i+'">'+i+'</option>'})}
 function loadKelompok(){var d=document.getElementById('upDesa').value;var k=document.getElementById('upKelompok');k.innerHTML='<option value="">-- Pilih --</option>';if(d&&masterData.kelompok[d])masterData.kelompok[d].forEach(function(i){k.innerHTML+='<option value="'+i+'">'+i+'</option>'})}
@@ -872,22 +917,15 @@ async function loadDashboard(){
     c.innerHTML='';pg.innerHTML='';bl.innerHTML='';bl.classList.add('hidden');fa.classList.add('hidden');sw.classList.add('hidden');
     c.innerHTML='<div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>Memuat status ta\'aruf...</p></div>';
     searchCurrentPage=1;showWatermark();
-
-    /* Muat master data untuk filter */
-    await loadMasterData();
-    populateFilterDaerah('searchFilterDaerah');
-
+    await loadMasterData();populateFilterDaerah('searchFilterDaerah');
     var taarufRes=await fetchGAS('getMyTaaruf',{email:currentUser.email});
     var activeTaaruf=null;
-    if(taarufRes.status==='success'&&taarufRes.data&&taarufRes.data.length>0){
-        activeTaaruf=taarufRes.data.find(function(r){return r.status==='Pending'||r.status==='Sedang Taaruf'||r.status==='Sedang Proses'});
-    }
+    if(taarufRes.status==='success'&&taarufRes.data&&taarufRes.data.length>0){activeTaaruf=taarufRes.data.find(function(r){return r.status==='Pending'||r.status==='Sedang Taaruf'||r.status==='Sedang Proses'})}
     if(activeTaaruf){
         allUsers=[];searchIamInTaaruf=true;c.innerHTML='';pg.innerHTML='';fa.classList.add('hidden');sw.classList.add('hidden');bl.classList.remove('hidden');
         bl.innerHTML='<div class="taaruf-blocked-banner"><div class="blocked-icon"><i class="fas fa-heart"></i></div><div class="blocked-title">Anda Sedang dalam Proses Ta\'aruf</div><div class="blocked-desc">Pengajuan ta\'aruf Anda kepada <b>'+esc(activeTaaruf.otherNama)+'</b> saat ini berstatus <b>'+activeTaaruf.status+'</b>.<br><br>Daftar peserta <b>tidak dapat ditampilkan</b> selama proses ta\'aruf berlangsung.<br><br>Daftar peserta akan kembali tersedia jika pengajuan <b>ditolak</b>.<br>Silakan cek status di menu <b>Status Ta\'aruf</b>.</div></div>';
         hideWatermark();return;
     }
-
     searchIamInTaaruf=false;sw.classList.remove('hidden');fa.classList.remove('hidden');
     c.innerHTML='<div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>Memuat data peserta...</p></div>';
     var res=await fetchGAS('getUsers',{role:'Personal',email:currentUser.email,gender:currentUser.gender||''});
@@ -895,21 +933,13 @@ async function loadDashboard(){
     if(res.status==='success'&&res.data&&res.data.length>0){allUsers=res.data;renderCards(allUsers)}
     else{allUsers=[];c.innerHTML='<div class="empty-state"><i class="fas fa-user-friends"></i><p>Belum ada peserta yang tersedia.</p></div>';pg.innerHTML='';hideWatermark()}
 }
-
 function getCardFilteredList(){
     var s=(document.getElementById('searchInput')?document.getElementById('searchInput').value:'').toLowerCase();
     var fd=(document.getElementById('searchFilterDaerah')?document.getElementById('searchFilterDaerah').value:'');
     var fv=(document.getElementById('searchFilterDesa')?document.getElementById('searchFilterDesa').value:'');
     var fk=(document.getElementById('searchFilterKelompok')?document.getElementById('searchFilterKelompok').value:'');
-    return allUsers.filter(function(u){
-        if(s&&(u.nama&&u.nama.toLowerCase().indexOf(s)===-1))return false;
-        if(fd&&u.daerah!==fd)return false;
-        if(fv&&u.desa!==fv)return false;
-        if(fk&&u.kelompok!==fk)return false;
-        return true;
-    });
+    return allUsers.filter(function(u){if(s&&(u.nama&&u.nama.toLowerCase().indexOf(s)===-1))return false;if(fd&&u.daerah!==fd)return false;if(fv&&u.desa!==fv)return false;if(fk&&u.kelompok!==fk)return false;return true});
 }
-
 function renderCards(users){
     var c=document.getElementById('dashboard-list'),pg=document.getElementById('dashboard-pagination');
     var filtered=getCardFilteredList();
@@ -921,13 +951,15 @@ function renderCards(users){
         var ps=u.foto?getPhotoUrl(u.foto):'';
         var gc=u.gender==='Perempuan'?'badge-f':'badge-m';
         var krHtml=u.kriteriaPasangan?'<div class="kriteria-box"><div class="kriteria-label">Kriteria Pasangan</div>'+esc(u.kriteriaPasangan)+'</div>':'';
-        var ph=ps?'<img src="'+ps+'" class="card-img" loading="lazy" decoding="async" style="cursor:pointer" onclick="openPhotoModal(\''+ps+'\')">':'<div class="card-avatar">'+getInitials(u.nama)+'</div>';
+        if(ps){var ph='<img data-src="'+ps+'" class="card-img lazy-img" style="cursor:pointer" onclick="openPhotoModal(\''+ps+'\')" alt="'+esc(u.nama)+'">'}
+        else{var ph='<div class="card-avatar">'+getInitials(u.nama)+'</div>'}
         return '<div class="card"><div class="card-top">'+ph+'<div class="card-identity"><div class="card-name">'+esc(u.nama)+' <span class="badge '+gc+'">'+u.gender+'</span></div><div class="card-sub"><i class="fas fa-briefcase"></i> '+(u.pekerjaan||'-')+'</div><div class="card-sub"><i class="fas fa-graduation-cap"></i> '+(u.pendidikan||'-')+'</div><div class="card-sub"><i class="fas fa-map-marker-alt"></i> '+(u.daerah||'-')+', '+(u.desa||'-')+'</div></div></div><div class="card-body"><div class="data-grid"><div class="data-item full-col"><div class="data-label">Nama Orang Tua</div><div class="data-value">'+esc(u.namaOrtu)+'</div></div><div class="data-item"><div class="data-label">TTL</div><div class="data-value">'+esc(u.ttl)+'</div></div><div class="data-item"><div class="data-label">Anak Ke</div><div class="data-value">'+esc(u.anakKe)+'</div></div><div class="data-item"><div class="data-label">Suku</div><div class="data-value">'+esc(u.suku)+'</div></div><div class="data-item"><div class="data-label">TB / BB</div><div class="data-value">'+esc(u.tbBerat)+'</div></div><div class="data-item"><div class="data-label">Status Menikah</div><div class="data-value">'+esc(u.menikah)+'</div></div><div class="data-item"><div class="data-label">Hobi</div><div class="data-value">'+esc(u.hobi)+'</div></div><div class="data-item"><div class="data-label">Dapukan</div><div class="data-value">'+esc(u.dapukan)+'</div></div><div class="data-item full-col"><div class="data-label">Kelompok</div><div class="data-value">'+esc(u.kelompok)+'</div></div></div>'+krHtml+'</div><div class="card-footer"><button class="btn btn-sm btn-wa" style="width:100%" onclick="requestTaaruf(\''+u.email+'\',\''+esc(u.nama)+'\',\''+esc(u.daerah)+'\')"><i class="fab fa-whatsapp"></i> Ajukan Ta\'aruf</button></div></div>'
     }).join('');
+    /* Observe lazy images */
+    c.querySelectorAll('.lazy-img').forEach(observeLazyImg);
     generatePagination('dashboard-pagination',searchCurrentPage,totalPages,filtered.length,searchPageSize,'goToSearchPage');
 }
 function filterCardsWithFilters(){searchCurrentPage=1;renderCards(allUsers)}
-
 async function requestTaaruf(email,nama,daerah){
     showLoading();
     var res=await fetchGAS('requestTaaruf',{},'POST',{pelamarEmail:currentUser.email,targetEmail:email});
@@ -954,8 +986,7 @@ async function loadMyTaarufStatus(){
         var statusDesc={'Pending':'Menunggu konfirmasi tim pernikahan.','Sedang Taaruf':'Sedang dalam proses ta\'aruf.','Sedang Proses':'Proses ta\'aruf sedang berlanjut.','Sudah Menikah':'Alhamdulillah, proses telah selesai.','Rejected':'Pengajuan ditolak. Anda dapat kembali melihat daftar peserta di menu Temukan Pasangan.'};
         el.innerHTML=res.data.map(function(r){
             var bc='badge-pending';if(r.status==='Sedang Taaruf')bc='badge-taaruf';else if(r.status==='Sedang Proses')bc='badge-proses';else if(r.status==='Sudah Menikah')bc='badge-menikah';else if(r.status==='Rejected')bc='badge-rejected';
-            var roleText=r.isPelamar?'Anda mengajukan':'Mengajukan Anda';
-            return '<div class="status-card"><div class="status-card-header"><div class="status-card-title">'+esc(r.otherNama)+'</div><span class="badge '+bc+'">'+r.status+'</span></div><div class="status-card-meta"><i class="fas fa-info-circle"></i> '+roleText+'<br><i class="fas fa-calendar"></i> '+r.tanggal+'<br><i class="fas fa-map-marker-alt"></i> '+esc(r.otherDaerah)+', '+esc(r.otherDesa)+'<br><i class="fas fa-users"></i> Kelompok target: '+esc(r.otherKelompok)+'<br><i class="fas fa-user-tag"></i> Kelompok Anda: '+esc(r.myKelompok)+'<br><div style="margin-top:6px;color:'+(r.status==='Rejected'?'#DC2626':'var(--green-700)')+';font-weight:600;font-size:0.8rem">'+(statusDesc[r.status]||'')+'</div></div></div>'
+            return '<div class="status-card"><div class="status-card-header"><div class="status-card-title">'+esc(r.otherNama)+'</div><span class="badge '+bc+'">'+r.status+'</span></div><div class="status-card-meta"><i class="fas fa-info-circle"></i> '+(r.isPelamar?'Anda mengajukan':'Mengajukan Anda')+'<br><i class="fas fa-calendar"></i> '+r.tanggal+'<br><i class="fas fa-map-marker-alt"></i> '+esc(r.otherDaerah)+', '+esc(r.otherDesa)+'<br><i class="fas fa-users"></i> Kelompok target: '+esc(r.otherKelompok)+'<br><i class="fas fa-user-tag"></i> Kelompok Anda: '+esc(r.myKelompok)+'<br><div style="margin-top:6px;color:'+(r.status==='Rejected'?'#DC2626':'var(--green-700)')+';font-weight:600;font-size:0.8rem">'+(statusDesc[r.status]||'')+'</div></div></div>'
         }).join('');
     }else{el.innerHTML='<div class="empty-state"><i class="fas fa-heart"></i><p>Belum ada pengajuan ta\'aruf.</p></div>'}
 }
@@ -964,10 +995,7 @@ async function loadMyTaarufStatus(){
 async function loadKegiatanCache(){try{var res=await fetchGAS('getKegiatan');if(res.status==='success')cachedKegiatan=res.data||[]}catch(e){}}
 function renderKegiatanCards(data){
     if(!data||data.length===0)return '<div class="empty-state"><i class="fas fa-bullhorn"></i><p>Belum ada informasi kegiatan.</p></div>';
-    return data.map(function(k){
-        var imgHtml=k.foto?'<img src="'+getPhotoUrl(k.foto)+'" loading="lazy" decoding="async" onclick="openPhotoModal(\''+getPhotoUrl(k.foto)+'\')" alt="Foto Kegiatan">':'';
-        return '<div class="kegiatan-card">'+imgHtml+'<div class="kegiatan-card-body"><div class="kegiatan-card-title">'+esc(k.judul)+'</div><div class="kegiatan-card-content">'+esc(k.isi)+'</div></div><div class="kegiatan-card-footer"><span><i class="far fa-clock"></i> '+k.tanggal+'</span><span><i class="far fa-user"></i> '+esc(k.postedBy)+'</span></div></div>'
-    }).join('');
+    return data.map(function(k){var imgHtml=k.foto?'<img src="'+getPhotoUrl(k.foto)+'" loading="lazy" decoding="async" onclick="openPhotoModal(\''+getPhotoUrl(k.foto)+'\')" alt="Foto Kegiatan">':'';return '<div class="kegiatan-card">'+imgHtml+'<div class="kegiatan-card-body"><div class="kegiatan-card-title">'+esc(k.judul)+'</div><div class="kegiatan-card-content">'+esc(k.isi)+'</div></div><div class="kegiatan-card-footer"><span><i class="far fa-clock"></i> '+k.tanggal+'</span><span><i class="far fa-user"></i> '+esc(k.postedBy)+'</span></div></div>'}).join('');
 }
 async function loadKegiatanPage(){var el=document.getElementById('kegiatan-list');el.innerHTML='<div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>Memuat kegiatan...</p></div>';await loadKegiatanCache();el.innerHTML=renderKegiatanCards(cachedKegiatan)}
 async function loadAdminKegiatan(){var el=document.getElementById('admin-kegiatan-list');el.innerHTML='<div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>Memuat...</p></div>';await loadKegiatanCache();el.innerHTML=renderKegiatanCards(cachedKegiatan)}
@@ -994,58 +1022,35 @@ async function loadAdminStats(){
     adminStatsUsers=[];
     try{var res=await fetchGAS('getUsers',{role:currentUser.role,email:currentUser.email,scope:currentUser.scope});if(res.status==='success'){adminStatsUsers=res.data||[];document.getElementById('statAdminPeserta').textContent=adminStatsUsers.length}}catch(e){}
     try{var res2=await fetchGAS('getAllTaaruf',{role:currentUser.role,email:currentUser.email,scope:currentUser.scope});if(res2.status==='success'){var d=res2.data||[];document.getElementById('statAdminPending').textContent=d.filter(function(r){return r.status==='Pending'}).length;document.getElementById('statAdminProses').textContent=d.filter(function(r){return r.status==='Sedang Taaruf'||r.status==='Sedang Proses'}).length;document.getElementById('statAdminMenikah').textContent=d.filter(function(r){return r.status==='Sudah Menikah'}).length}}catch(e){}
-    await loadMasterData();
-    renderAdminCharts(adminStatsUsers);
+    await loadMasterData();renderAdminCharts(adminStatsUsers);
 }
-
-/* ===== BAR CHART HELPER ===== */
 var chartColors=['#059669','#2563EB','#D97706','#DC2626','#7C3AED','#DB2777','#0891B2','#65A30D','#EA580C','#4F46E5','#BE185D','#0D9488','#CA8A04','#9333EA','#E11D48'];
 function buildBarChart(title,icon,data,maxBars){
     if(!data||data.length===0)return '<div class="chart-card"><div class="chart-card-title"><i class="fas '+icon+'"></i> '+title+'</div><div class="chart-empty">Belum ada data</div></div>';
     if(maxBars)data=data.slice(0,maxBars);
-    var maxVal=0;data.forEach(function(d){if(d.count>maxVal)maxVal=d.count});
-    maxVal=Math.max(maxVal,1);
+    var maxVal=0;data.forEach(function(d){if(d.count>maxVal)maxVal=d.count});maxVal=Math.max(maxVal,1);
     var html='<div class="chart-card"><div class="chart-card-title"><i class="fas '+icon+'"></i> '+title+'</div><div class="chart-bars">';
-    data.forEach(function(d,i){
-        var pct=Math.round((d.count/maxVal)*100);
-        var color=chartColors[i%chartColors.length];
-        html+='<div class="chart-row"><div class="chart-row-label" title="'+esc(d.label)+'">'+esc(d.label)+'</div><div class="chart-row-bar"><div class="chart-row-fill" style="width:'+pct+'%;background:'+color+'" title="'+d.count+' peserta"></div></div><div class="chart-row-count">'+d.count+'</div></div>';
-    });
-    html+='</div></div>';
-    return html;
+    data.forEach(function(d,i){var pct=Math.round((d.count/maxVal)*100);var color=chartColors[i%chartColors.length];html+='<div class="chart-row"><div class="chart-row-label" title="'+esc(d.label)+'">'+esc(d.label)+'</div><div class="chart-row-bar"><div class="chart-row-fill" style="width:'+pct+'%;background:'+color+'" title="'+d.count+' peserta"></div></div><div class="chart-row-count">'+d.count+'</div></div>'});
+    html+='</div></div>';return html;
 }
 
 function renderAdminCharts(users){
     var el=document.getElementById('admin-stats-charts');
-    if(!users||users.length===0){el.innerHTML='<div class="empty-state"><i class="fas fa-chart-bar"></i><p>Belum ada data peserta untuk ditampilkan statistik.</p></div>';return}
-
-    /* 1. Jenis Kelamin */
-    var genderMap={};
-    users.forEach(function(u){var g=u.gender||'Tidak diisi';genderMap[g]=(genderMap[g]||0)+1});
-    var genderData=Object.keys(genderMap).map(function(k){return{label:k,count:genderMap[k]}}).sort(function(a,b){return b.count-a.count});
-
-    /* 2. Daerah */
-    var daerahMap={};
-    users.forEach(function(u){var d=u.daerah||'Tidak diisi';daerahMap[d]=(daerahMap[d]||0)+1});
-    var daerahData=Object.keys(daerahMap).map(function(k){return{label:k,count:daerahMap[k]}}).sort(function(a,b){return b.count-a.count});
-
-    /* 3. Desa */
-    var desaMap={};
-    users.forEach(function(u){var d=u.desa||'Tidak diisi';desaMap[d]=(desaMap[d]||0)+1});
-    var desaData=Object.keys(desaMap).map(function(k){return{label:k,count:desaMap[k]}}).sort(function(a,b){return b.count-a.count});
-
-    /* 4. Kelompok */
-    var kelompokMap={};
-    users.forEach(function(u){var k=u.kelompok||'Tidak diisi';kelompokMap[k]=(kelompokMap[k]||0)+1});
-    var kelompokData=Object.keys(kelompokMap).map(function(k){return{label:k,count:kelompokMap[k]}}).sort(function(a,b){return b.count-a.count});
-
+    if(!users||users.length===0){el.innerHTML='<div class="empty-state"><i class="fas fa-chart-bar"></i><p>Belum ada data peserta.</p></div>';return}
+    var genderMap={},daerahMap={},desaMap={},kelompokMap={};
+    users.forEach(function(u){
+        var g=u.gender||'Tidak diisi';genderMap[g]=(genderMap[g]||0)+1;
+        var d=u.daerah||'Tidak diisi';daerahMap[d]=(daerahMap[d]||0)+1;
+        var s=u.desa||'Tidak diisi';desaMap[s]=(desaMap[s]||0)+1;
+        var k=u.kelompok||'Tidak diisi';kelompokMap[k]=(kelompokMap[k]||0)+1;
+    });
+    function sortMap(m){return Object.keys(m).map(function(k){return{label:k,count:m[k]}}).sort(function(a,b){return b.count-a.count})}
     var html='<div class="charts-grid">';
-    html+=buildBarChart('Jenis Kelamin','fa-venus-mars',genderData,10);
-    html+=buildBarChart('Berdasarkan Daerah','fa-map-marker-alt',daerahData,15);
-    html+=buildBarChart('Berdasarkan Desa','fa-home',desaData,20);
-    html+=buildBarChart('Berdasarkan Kelompok','fa-users',kelompokData,20);
-    html+='</div>';
-    el.innerHTML=html;
+    html+=buildBarChart('Jenis Kelamin','fa-venus-mars',sortMap(genderMap),10);
+    html+=buildBarChart('Berdasarkan Daerah','fa-map-marker-alt',sortMap(daerahMap),15);
+    html+=buildBarChart('Berdasarkan Desa','fa-home',sortMap(desaMap),20);
+    html+=buildBarChart('Berdasarkan Kelompok','fa-users',sortMap(kelompokMap),20);
+    html+='</div>';el.innerHTML=html;
 }
 
 /* ===== ADMIN DATA PESERTA ===== */
@@ -1054,18 +1059,14 @@ async function loadAdminUsers(){
     t.innerHTML='<tr><td colspan="5" style="text-align:center"><i class="fas fa-spinner fa-spin"></i></td></tr>';
     m.innerHTML='<div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>Memuat...</p></div>';
     pg.innerHTML='';adminCurrentPage=1;
-
-    await loadMasterData();
-    populateFilterDaerah('adminFilterDaerah');
-
+    await loadMasterData();populateFilterDaerah('adminFilterDaerah');
     var res=await fetchGAS('getUsers',{role:currentUser.role,email:currentUser.email,scope:currentUser.scope});
-    if(res.status==='error'){t.innerHTML='<tr><td colspan="5" style="text-align:center"><i class="fas fa-exclamation-triangle" style="color:var(--gold-500);margin-right:8px"></i>Gagal memuat data. <a class="link" onclick="loadAdminUsers()">Coba Lagi</a></td></tr>';m.innerHTML=t.innerHTML;return}
+    if(res.status==='error'){t.innerHTML='<tr><td colspan="5" style="text-align:center"><i class="fas fa-exclamation-triangle" style="color:var(--gold-500);margin-right:8px"></i>Gagal memuat data. <a class="link" onclick="loadAdminUsers()">Coba Lagi</a></td></tr>';m.innerHTML='';return}
     if(res.status==='success'&&res.data&&res.data.length>0){
-        allUsers=res.data;
-        userPhotoMap={};
+        allUsers=res.data;userPhotoMap={};
         allUsers.forEach(function(u){if(u.foto&&u.email)userPhotoMap[u.email]=getPhotoUrl(u.foto)});
         renderAdminUsers(allUsers);
-    }else{allUsers=[];userPhotoMap={};var msg='<tr><td colspan="5" style="text-align:center;color:var(--text-muted)">Tidak ada data.</td></tr>';t.innerHTML=msg;m.innerHTML='<div class="empty-state"><i class="fas fa-users"></i><p>Tidak ada data.</p></div>'}
+    }else{allUsers=[];userPhotoMap={};t.innerHTML='<tr><td colspan="5" style="text-align:center;color:var(--text-muted)">Tidak ada data.</td></tr>';m.innerHTML='<div class="empty-state"><i class="fas fa-users"></i><p>Tidak ada data.</p></div>'}
 }
 
 function getAdminFilteredList(){
@@ -1073,13 +1074,7 @@ function getAdminFilteredList(){
     var fd=(document.getElementById('adminFilterDaerah')?document.getElementById('adminFilterDaerah').value:'');
     var fv=(document.getElementById('adminFilterDesa')?document.getElementById('adminFilterDesa').value:'');
     var fk=(document.getElementById('adminFilterKelompok')?document.getElementById('adminFilterKelompok').value:'');
-    return allUsers.filter(function(u){
-        if(s&&(u.nama&&u.nama.toLowerCase().indexOf(s)===-1))return false;
-        if(fd&&u.daerah!==fd)return false;
-        if(fv&&u.desa!==fv)return false;
-        if(fk&&u.kelompok!==fk)return false;
-        return true;
-    });
+    return allUsers.filter(function(u){if(s&&(u.nama&&u.nama.toLowerCase().indexOf(s)===-1))return false;if(fd&&u.daerah!==fd)return false;if(fv&&u.desa!==fv)return false;if(fk&&u.kelompok!==fk)return false;return true});
 }
 
 function renderAdminUsers(users){
@@ -1088,132 +1083,290 @@ function renderAdminUsers(users){
     var totalPages=Math.max(1,Math.ceil(filtered.length/adminPageSize));
     if(adminCurrentPage>totalPages)adminCurrentPage=totalPages;
     var start=(adminCurrentPage-1)*adminPageSize,pageItems=filtered.slice(start,start+adminPageSize);
-    if(filtered.length===0){
-        t.innerHTML='<tr><td colspan="5" style="text-align:center;color:var(--text-muted)">Tidak ditemukan.</td></tr>';
-        m.innerHTML='<div class="empty-state"><i class="fas fa-search"></i><p>Tidak ditemukan.</p></div>';
-        pg.innerHTML='';return;
-    }
+    if(filtered.length===0){t.innerHTML='<tr><td colspan="5" style="text-align:center;color:var(--text-muted)">Tidak ditemukan.</td></tr>';m.innerHTML='<div class="empty-state"><i class="fas fa-search"></i><p>Tidak ditemukan.</p></div>';pg.innerHTML='';return}
     t.innerHTML=pageItems.map(function(u){
         var sc=u.isComplete?'badge-approved':'badge-pending';var st=u.isComplete?'Lengkap':'Belum';
         var ps=u.foto?getPhotoUrl(u.foto):'';
         var kr=u.kriteriaPasangan?'<div class="data-cell-line" style="margin-top:3px"><b style="color:var(--gold-500)">Kriteria:</b> <span style="font-size:0.74rem;color:var(--text-muted)">'+esc(u.kriteriaPasangan).substring(0,70)+(u.kriteriaPasangan.length>70?'...':'')+'</span></div>':'';
-        var photoBlock=ps?'<div class="admin-photo-cell"><img src="'+ps+'" class="admin-photo" loading="lazy" decoding="async" onclick="openPhotoModal(\''+ps+'\')" title="Klik untuk memperbesar"></div>':'<div class="admin-photo-cell"><div class="admin-photo-placeholder">'+getInitials(u.nama)+'</div></div>';
+        var photoBlock=ps?'<div class="admin-photo-cell"><img data-src="'+ps+'" class="admin-photo lazy-img" onclick="openPhotoModal(\''+ps+'\')" title="Klik untuk memperbesar"></div>':'<div class="admin-photo-cell"><div class="admin-photo-placeholder">'+getInitials(u.nama)+'</div></div>';
         return '<tr><td><div style="display:flex;align-items:center;gap:10px">'+photoBlock+'<div><div style="font-weight:700;color:var(--text-dark)">'+esc(u.nama)+'</div><div class="sub-text">'+esc(u.email)+'</div><div style="margin-top:2px"><span class="badge '+(u.gender==='Perempuan'?'badge-f':'badge-m')+'">'+esc(u.gender||'-')+'</span></div></div></div></td><td><div class="data-cell-line"><b>Ortu:</b> '+esc(u.namaOrtu)+'</div><div class="data-cell-line"><b>TTL:</b> '+esc(u.ttl)+'</div><div class="data-cell-line"><b>Anak ke:</b> '+esc(u.anakKe)+'</div><div class="data-cell-line"><b>Suku:</b> '+esc(u.suku)+' | <b>TB/BB:</b> '+esc(u.tbBerat)+'</div><div class="data-cell-line"><b>Status:</b> '+esc(u.menikah)+'</div></td><td><div class="data-cell-line"><b>Pendidikan:</b> '+esc(u.pendidikan)+'</div><div class="data-cell-line"><b>Pekerjaan:</b> '+esc(u.pekerjaan)+'</div><div class="data-cell-line"><b>Hobi:</b> '+esc(u.hobi)+'</div><div class="data-cell-line"><b>Dapukan:</b> '+esc(u.dapukan)+'</div>'+kr+'</td><td><div class="data-cell-line">'+esc(u.daerah)+'</div><div class="data-cell-line">'+esc(u.desa)+'</div><div class="data-cell-line">'+esc(u.kelompok)+'</div></td><td><span class="badge '+sc+'">'+st+'</span></td></tr>'
     }).join('');
+    t.querySelectorAll('.lazy-img').forEach(observeLazyImg);
 
     m.innerHTML=pageItems.map(function(u){
         var ps=u.foto?getPhotoUrl(u.foto):'';
         var sc=u.isComplete?'badge-approved':'badge-pending';var st=u.isComplete?'Lengkap':'Belum';
         var gc=u.gender==='Perempuan'?'badge-f':'badge-m';
         var kr=u.kriteriaPasangan?'<div class="am-kriteria"><b>Kriteria Pasangan</b><br>'+esc(u.kriteriaPasangan)+'</div>':'';
-        var photoHtml=ps?'<img src="'+ps+'" class="am-header-photo" loading="lazy" decoding="async" onclick="openPhotoModal(\''+ps+'\')">':'<div class="am-header-ph">'+getInitials(u.nama)+'</div>';
+        var photoHtml=ps?'<img data-src="'+ps+'" class="am-header-photo lazy-img" onclick="openPhotoModal(\''+ps+'\')">':'<div class="am-header-ph">'+getInitials(u.nama)+'</div>';
         return '<div class="am-card"><div class="am-header">'+photoHtml+'<div class="am-header-info"><div class="am-header-name">'+esc(u.nama)+'</div><div class="am-header-email">'+esc(u.email)+'</div><div class="am-header-badges"><span class="badge '+gc+'">'+esc(u.gender||'-')+'</span><span class="badge '+sc+'">'+st+'</span></div></div></div><div class="am-section"><div class="am-section-title">Data Pribadi</div><div class="am-data-grid"><div class="am-data-item"><div class="am-label">Orang Tua</div><div class="am-value">'+esc(u.namaOrtu)+'</div></div><div class="am-data-item"><div class="am-label">TTL</div><div class="am-value">'+esc(u.ttl)+'</div></div><div class="am-data-item"><div class="am-label">Anak Ke</div><div class="am-value">'+esc(u.anakKe)+'</div></div><div class="am-data-item"><div class="am-label">Suku</div><div class="am-value">'+esc(u.suku)+'</div></div><div class="am-data-item"><div class="am-label">TB / BB</div><div class="am-value">'+esc(u.tbBerat)+'</div></div><div class="am-data-item"><div class="am-label">Status</div><div class="am-value">'+esc(u.menikah)+'</div></div></div></div><div class="am-section"><div class="am-section-title">Pekerjaan & Lainnya</div><div class="am-data-grid"><div class="am-data-item"><div class="am-label">Pendidikan</div><div class="am-value">'+esc(u.pendidikan)+'</div></div><div class="am-data-item"><div class="am-label">Pekerjaan</div><div class="am-value">'+esc(u.pekerjaan)+'</div></div><div class="am-data-item"><div class="am-label">Hobi</div><div class="am-value">'+esc(u.hobi)+'</div></div><div class="am-data-item"><div class="am-label">Dapukan</div><div class="am-value">'+esc(u.dapukan)+'</div></div></div>'+kr+'</div><div class="am-section"><div class="am-section-title">Wilayah</div><div class="am-data-grid"><div class="am-data-item"><div class="am-label">Daerah</div><div class="am-value">'+esc(u.daerah)+'</div></div><div class="am-data-item"><div class="am-label">Desa</div><div class="am-value">'+esc(u.desa)+'</div></div><div class="am-data-item am-full"><div class="am-label">Kelompok</div><div class="am-value">'+esc(u.kelompok)+'</div></div></div></div></div>';
     }).join('');
+    m.querySelectorAll('.lazy-img').forEach(observeLazyImg);
 
     generatePagination('admin-users-pagination',adminCurrentPage,totalPages,filtered.length,adminPageSize,'goToAdminPage');
 }
 function filterAdminWithFilters(){adminCurrentPage=1;renderAdminUsers(allUsers)}
 
-/* ===== ADMIN TAARUF ===== */
-async function loadAdminTaaruf(){
-    var t=document.getElementById('admin-taaruf-tbody'),m=document.getElementById('admin-taaruf-mobile');
-    t.innerHTML='<tr><td colspan="5" style="text-align:center"><i class="fas fa-spinner fa-spin"></i></td></tr>';
-    m.innerHTML='<div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>Memuat...</p></div>';
-    if(Object.keys(userPhotoMap).length===0){try{var usersRes=await fetchGAS('getUsers',{role:currentUser.role,email:currentUser.email,scope:currentUser.scope});if(usersRes.status==='success'&&usersRes.data){userPhotoMap={};usersRes.data.forEach(function(u){if(u.foto&&u.email)userPhotoMap[u.email]=getPhotoUrl(u.foto)})}}catch(e){}}
-    var res=await fetchGAS('getAllTaaruf',{role:currentUser.role,email:currentUser.email,scope:currentUser.scope});
-    if(res.status!=='success'){t.innerHTML='<tr><td colspan="5" style="text-align:center"><i class="fas fa-exclamation-triangle" style="color:var(--gold-500);margin-right:8px"></i>Gagal memuat. <a class="link" onclick="loadAdminTaaruf()">Coba Lagi</a></td></tr>';m.innerHTML=t.innerHTML;return}
-    if(res.data&&res.data.length>0){allTaarufRequests=res.data;renderAdminTaaruf(allTaarufRequests)}
-    else{allTaarufRequests=[];t.innerHTML='<tr><td colspan="5" style="text-align:center;color:var(--text-muted)">Belum ada pengajuan.</td></tr>';m.innerHTML='<div class="empty-state"><i class="fas fa-heart"></i><p>Belum ada pengajuan.</p></div>'}
+/* ================================================================
+   ADMIN TAARUF — Optimized dengan Pagination + Bottom Sheet Modal
+   ================================================================ */
+
+/* Konfigurasi pesan per status */
+var statusMessages={
+    'Sedang Taaruf':{
+        icon:'fa-heart',iconClass:'sc-info',
+        title:'Mulai Proses Ta\'aruf',
+        desc:'Pengajuan ta\'aruf akan diterima dan status diubah menjadi <b>Sedang Ta\'aruf</b>. Pastikan kedua pihak sudah dikonfirmasi.',
+        btnClass:'btn-info-sm',btnIcon:'fa-heart',btnText:'Ya, Mulai Ta\'aruf'
+    },
+    'Sedang Proses':{
+        icon:'fa-spinner',iconClass:'sc-warning',
+        title:'Ubah ke Sedang Proses',
+        desc:'Status akan diubah menjadi <b>Sedang Proses</b>. Biasanya setelah proses ta\'aruf berlanjut ke tahap selanjutnya.',
+        btnClass:'btn-warning-sm',btnIcon:'fa-spinner',btnText:'Ya, Ubah Status'
+    },
+    'Sudah Menikah':{
+        icon:'fa-ring',iconClass:'sc-success',
+        title:'Ubah ke Sudah Menikah',
+        desc:'Status akan diubah menjadi <b>Sudah Menikah</b>. Tindakan ini menandakan proses ta\'aruf telah selesai hingga akad nikah.',
+        btnClass:'btn-success',btnIcon:'fa-ring',btnText:'Ya, Sudah Menikah'
+    },
+    'Rejected':{
+        icon:'fa-times-circle',iconClass:'sc-danger',
+        title:'Tolak Pengajuan',
+        desc:'Pengajuan ta\'aruf ini akan <b>ditolak</b>. Pelamar dapat kembali melihat daftar peserta setelah ditolak.',
+        btnClass:'btn-danger-sm',btnIcon:'fa-times',btnText:'Ya, Tolak Pengajuan'
+    }
+};
+
+function getBadgeClass(status){
+    var m={'Pending':'badge-pending','Sedang Taaruf':'badge-taaruf','Sedang Proses':'badge-proses','Sudah Menikah':'badge-menikah','Rejected':'badge-rejected','Approved':'badge-approved'};
+    return m[status]||'badge-pending';
 }
-function filterTaaruf(btn,filter){currentTaarufFilter=filter;document.querySelectorAll('#taarufFilterTabs .filter-tab').forEach(function(b){b.classList.remove('active')});btn.classList.add('active');renderAdminTaaruf(allTaarufRequests)}
-function getBadgeClass(status){var m={'Pending':'badge-pending','Sedang Taaruf':'badge-taaruf','Sedang Proses':'badge-proses','Sudah Menikah':'badge-menikah','Rejected':'badge-rejected','Approved':'badge-approved'};return m[status]||'badge-pending'}
+
+/* Render summary badges di atas daftar */
+function renderTaarufSummary(requests){
+    var el=document.getElementById('taaruf-summary');
+    var counts={Pending:0,'Sedang Taaruf':0,'Sedang Proses':0,'Sudah Menikah':0,Rejected:0};
+    requests.forEach(function(r){if(counts.hasOwnProperty(r.status))counts[r.status]++});
+    var items=[
+        {label:'Pending',count:counts.Pending,badge:'badge-pending'},
+        {label:'Taaruf',count:counts['Sedang Taaruf'],badge:'badge-taaruf'},
+        {label:'Proses',count:counts['Sedang Proses'],badge:'badge-proses'},
+        {label:'Menikah',count:counts['Sudah Menikah'],badge:'badge-menikah'},
+        {label:'Ditolak',count:counts.Rejected,badge:'badge-rejected'}
+    ];
+    el.innerHTML=items.map(function(it){return '<span class="badge '+it.badge+'" style="font-size:0.72rem;padding:4px 12px">'+it.label+': <b>'+it.count+'</b></span>'}).join('');
+}
+
+/* Filter tab handler */
+function filterTaaruf(btn,filter){
+    currentTaarufFilter=filter;taarufCurrentPage=1;
+    document.querySelectorAll('#taarufFilterTabs .filter-tab').forEach(function(b){b.classList.remove('active')});
+    btn.classList.add('active');
+    renderAdminTaaruf(allTaarufRequests);
+}
+
+/* Desktop table action buttons */
 function getActionButtons(status,pEmail,tEmail){
-    if(status==='Pending')return '<div class="action-btns"><button class="btn btn-sm btn-info-sm" onclick="updateTaarufStatus(\''+pEmail+'\',\''+tEmail+'\',\'Sedang Taaruf\')"><i class="fas fa-heart"></i> Taaruf</button><button class="btn btn-sm btn-danger-sm" onclick="updateTaarufStatus(\''+pEmail+'\',\''+tEmail+'\',\'Rejected\')"><i class="fas fa-times"></i> Tolak</button></div>';
-    if(status==='Sedang Taaruf')return '<div class="action-btns"><button class="btn btn-sm btn-warning-sm" onclick="updateTaarufStatus(\''+pEmail+'\',\''+tEmail+'\',\'Sedang Proses\')"><i class="fas fa-spinner"></i> Proses</button><button class="btn btn-sm btn-danger-sm" onclick="updateTaarufStatus(\''+pEmail+'\',\''+tEmail+'\',\'Rejected\')"><i class="fas fa-times"></i> Tolak</button></div>';
-    if(status==='Sedang Proses')return '<div class="action-btns"><button class="btn btn-sm btn-success" onclick="updateTaarufStatus(\''+pEmail+'\',\''+tEmail+'\',\'Sudah Menikah\')"><i class="fas fa-ring"></i> Menikah</button><button class="btn btn-sm btn-danger-sm" onclick="updateTaarufStatus(\''+pEmail+'\',\''+tEmail+'\',\'Rejected\')"><i class="fas fa-times"></i> Tolak</button></div>';
+    if(status==='Pending')return '<div class="action-btns"><button class="btn btn-sm btn-info-sm" onclick="openScModal(\''+pEmail+'\',\''+tEmail+'\',\'Sedang Taaruf\')"><i class="fas fa-heart"></i> Taaruf</button><button class="btn btn-sm btn-danger-sm" onclick="openScModal(\''+pEmail+'\',\''+tEmail+'\',\'Rejected\')"><i class="fas fa-times"></i> Tolak</button></div>';
+    if(status==='Sedang Taaruf')return '<div class="action-btns"><button class="btn btn-sm btn-warning-sm" onclick="openScModal(\''+pEmail+'\',\''+tEmail+'\',\'Sedang Proses\')"><i class="fas fa-spinner"></i> Proses</button><button class="btn btn-sm btn-danger-sm" onclick="openScModal(\''+pEmail+'\',\''+tEmail+'\',\'Rejected\')"><i class="fas fa-times"></i> Tolak</button></div>';
+    if(status==='Sedang Proses')return '<div class="action-btns"><button class="btn btn-sm btn-success" onclick="openScModal(\''+pEmail+'\',\''+tEmail+'\',\'Sudah Menikah\')"><i class="fas fa-ring"></i> Menikah</button><button class="btn btn-sm btn-danger-sm" onclick="openScModal(\''+pEmail+'\',\''+tEmail+'\',\'Rejected\')"><i class="fas fa-times"></i> Tolak</button></div>';
     if(status==='Sudah Menikah')return '<span style="font-size:0.78rem;color:var(--green-700);font-weight:700"><i class="fas fa-check-circle"></i> Selesai</span>';
     if(status==='Rejected')return '<span style="font-size:0.78rem;color:#DC2626;font-weight:500">Ditolak</span>';
-    return '-'
+    return '-';
 }
+
+/* Mobile card action buttons */
 function getMobileActionButtons(status,pEmail,tEmail){
-    if(status==='Pending')return '<button class="btn btn-sm btn-info-sm" style="width:100%;min-height:46px;justify-content:center;font-size:0.84rem;border-radius:10px" onclick="updateTaarufStatus(\''+pEmail+'\',\''+tEmail+'\',\'Sedang Taaruf\')"><i class="fas fa-heart"></i> Terima & Mulai Ta\'aruf</button><button class="btn btn-sm btn-danger-sm" style="width:100%;min-height:46px;justify-content:center;font-size:0.84rem;border-radius:10px" onclick="updateTaarufStatus(\''+pEmail+'\',\''+tEmail+'\',\'Rejected\')"><i class="fas fa-times"></i> Tolak Pengajuan</button>';
-    if(status==='Sedang Taaruf')return '<button class="btn btn-sm btn-warning-sm" style="width:100%;min-height:46px;justify-content:center;font-size:0.84rem;border-radius:10px" onclick="updateTaarufStatus(\''+pEmail+'\',\''+tEmail+'\',\'Sedang Proses\')"><i class="fas fa-spinner"></i> Ubah ke Sedang Proses</button><button class="btn btn-sm btn-danger-sm" style="width:100%;min-height:46px;justify-content:center;font-size:0.84rem;border-radius:10px" onclick="updateTaarufStatus(\''+pEmail+'\',\''+tEmail+'\',\'Rejected\')"><i class="fas fa-times"></i> Tolak</button>';
-    if(status==='Sedang Proses')return '<button class="btn btn-sm btn-success" style="width:100%;min-height:46px;justify-content:center;font-size:0.84rem;border-radius:10px" onclick="updateTaarufStatus(\''+pEmail+'\',\''+tEmail+'\',\'Sudah Menikah\')"><i class="fas fa-ring"></i> Ubah ke Sudah Menikah</button><button class="btn btn-sm btn-danger-sm" style="width:100%;min-height:46px;justify-content:center;font-size:0.84rem;border-radius:10px" onclick="updateTaarufStatus(\''+pEmail+'\',\''+tEmail+'\',\'Rejected\')"><i class="fas fa-times"></i> Tolak</button>';
+    if(status==='Pending')return '<button class="btn btn-sm btn-info-sm" style="width:100%;min-height:46px;justify-content:center;font-size:0.84rem;border-radius:10px" onclick="openScModal(\''+pEmail+'\',\''+tEmail+'\',\'Sedang Taaruf\')"><i class="fas fa-heart"></i> Terima & Mulai Ta\'aruf</button><button class="btn btn-sm btn-danger-sm" style="width:100%;min-height:46px;justify-content:center;font-size:0.84rem;border-radius:10px" onclick="openScModal(\''+pEmail+'\',\''+tEmail+'\',\'Rejected\')"><i class="fas fa-times"></i> Tolak Pengajuan</button>';
+    if(status==='Sedang Taaruf')return '<button class="btn btn-sm btn-warning-sm" style="width:100%;min-height:46px;justify-content:center;font-size:0.84rem;border-radius:10px" onclick="openScModal(\''+pEmail+'\',\''+tEmail+'\',\'Sedang Proses\')"><i class="fas fa-spinner"></i> Ubah ke Sedang Proses</button><button class="btn btn-sm btn-danger-sm" style="width:100%;min-height:46px;justify-content:center;font-size:0.84rem;border-radius:10px" onclick="openScModal(\''+pEmail+'\',\''+tEmail+'\',\'Rejected\')"><i class="fas fa-times"></i> Tolak</button>';
+    if(status==='Sedang Proses')return '<button class="btn btn-sm btn-success" style="width:100%;min-height:46px;justify-content:center;font-size:0.84rem;border-radius:10px" onclick="openScModal(\''+pEmail+'\',\''+tEmail+'\',\'Sudah Menikah\')"><i class="fas fa-ring"></i> Ubah ke Sudah Menikah</button><button class="btn btn-sm btn-danger-sm" style="width:100%;min-height:46px;justify-content:center;font-size:0.84rem;border-radius:10px" onclick="openScModal(\''+pEmail+'\',\''+tEmail+'\',\'Rejected\')"><i class="fas fa-times"></i> Tolak</button>';
     if(status==='Sudah Menikah')return '<div style="width:100%;text-align:center;padding:10px 0;color:var(--green-700);font-weight:700;font-size:0.88rem"><i class="fas fa-check-circle"></i> Alhamdulillah, Sudah Menikah</div>';
     if(status==='Rejected')return '<div style="width:100%;text-align:center;padding:10px 0;color:#DC2626;font-weight:600;font-size:0.84rem"><i class="fas fa-times-circle"></i> Pengajuan Ditolak</div>';
-    return '-'
+    return '-';
 }
-function buildTaarufPhotoCell(email,nama){
+
+/* Foto helper untuk desktop table */
+function buildTaarufPhotoCell(email,nama,size){
     var ps=userPhotoMap[email]||'';
-    if(ps)return '<div class="admin-photo-cell" style="margin-bottom:4px"><img src="'+ps+'" class="admin-photo admin-photo-sm" loading="lazy" decoding="async" onclick="openPhotoModal(\''+ps+'\')" title="Klik untuk memperbesar"></div>';
-    return '<div class="admin-photo-cell" style="margin-bottom:4px"><div class="admin-photo-placeholder admin-photo-placeholder-sm">'+getInitials(nama)+'</div></div>';
+    var cls=size==='sm'?'admin-photo-sm':'admin-photo';
+    var phCls=size==='sm'?'admin-photo-placeholder-sm':'admin-photo-placeholder';
+    if(ps)return '<div class="admin-photo-cell" style="margin-bottom:4px"><img data-src="'+ps+'" class="'+cls+' lazy-img" onclick="openPhotoModal(\''+ps+'\')" title="Klik untuk memperbesar"></div>';
+    return '<div class="admin-photo-cell" style="margin-bottom:4px"><div class="'+phCls+'">'+getInitials(nama)+'</div></div>';
 }
+
+/* Foto helper untuk mobile card */
 function buildTaarufMobilePhoto(email,nama){
     var ps=userPhotoMap[email]||'';
-    if(ps)return '<img src="'+ps+'" class="am-taaruf-person-photo" loading="lazy" decoding="async" onclick="openPhotoModal(\''+ps+'\')">';
+    if(ps)return '<img data-src="'+ps+'" class="am-taaruf-person-photo lazy-img" onclick="openPhotoModal(\''+ps+'\')" style="background:#F3F4F6">';
     return '<div class="am-taaruf-person-ph">'+getInitials(nama)+'</div>';
 }
-function renderAdminTaaruf(requests){
-    var t=document.getElementById('admin-taaruf-tbody'),m=document.getElementById('admin-taaruf-mobile');
-    var f=currentTaarufFilter?requests.filter(function(r){return r.status===currentTaarufFilter}):requests;
-    if(f.length===0){t.innerHTML='<tr><td colspan="5" style="text-align:center;color:var(--text-muted)">Tidak ada data untuk filter ini.</td></tr>';m.innerHTML='<div class="empty-state"><i class="fas fa-filter"></i><p>Tidak ada data untuk filter ini.</p></div>';return}
 
-    /* ===== DESKTOP: tetap pakai tabel + tombol inline ===== */
-    t.innerHTML=f.map(function(r){
-        var pelamarPhoto=buildTaarufPhotoCell(r.pelamarEmail,r.pelamarNama);
-        var targetPhoto=buildTaarufPhotoCell(r.targetEmail,r.targetNama);
-        return '<tr><td style="white-space:nowrap">'+r.tanggal+'</td><td>'+pelamarPhoto+'<b style="color:var(--text-dark)">'+esc(r.pelamarNama)+'</b><div class="sub-text">'+esc(r.pelamarEmail)+'</div><div class="sub-text" style="color:var(--green-700)">'+esc(r.pelamarDaerah)+', '+esc(r.pelamarDesa)+'</div><div class="sub-text"><i class="fas fa-users" style="width:12px"></i> '+esc(r.pelamarKelompok)+'</div></td><td>'+targetPhoto+'<b style="color:var(--text-dark)">'+esc(r.targetNama)+'</b><div class="sub-text">'+esc(r.targetEmail)+'</div><div class="sub-text" style="color:var(--green-700)">'+esc(r.targetDaerah)+', '+esc(r.targetDesa)+'</div><div class="sub-text"><i class="fas fa-users" style="width:12px"></i> '+esc(r.targetKelompok)+'</div></td><td><span class="badge '+getBadgeClass(r.status)+'">'+r.status+'</span></td><td>'+getActionButtons(r.status,r.pelamarEmail,r.targetEmail)+'</td></tr>'
-    }).join('');
-
-    /* ===== MOBILE: pakai kartu + tombol full-width besar ===== */
-    m.innerHTML=f.map(function(r){
-        var pelamarPhoto=buildTaarufMobilePhoto(r.pelamarEmail,r.pelamarNama);
-        var targetPhoto=buildTaarufMobilePhoto(r.targetEmail,r.targetNama);
-        var mobileActionHtml=getMobileActionButtons(r.status,r.pelamarEmail,r.targetEmail);
-        return '<div class="am-card">'
-            +'<div class="am-taaruf-header">'
-            +'<div class="am-taaruf-date"><i class="far fa-calendar"></i> '+r.tanggal+'</div>'
-            +'<span class="badge '+getBadgeClass(r.status)+'">'+r.status+'</span>'
-            +'</div>'
-            +'<div class="am-taaruf-people">'
-            /* Pelamar */
-            +'<div class="am-taaruf-person">'
-            +'<div class="am-taaruf-person-label am-pelamar"><i class="fas fa-paper-plane"></i> Pelamar</div>'
-            +'<div class="am-taaruf-person-row">'+pelamarPhoto
-            +'<div style="flex:1;min-width:0">'
-            +'<div class="am-taaruf-person-name">'+esc(r.pelamarNama)+'</div>'
-            +'<div class="am-taaruf-person-detail">'+esc(r.pelamarDaerah)+', '+esc(r.pelamarDesa)
-            +' &middot; <i class="fas fa-users" style="font-size:0.6rem"></i> '+esc(r.pelamarKelompok)
-            +'<br><span style="font-size:0.62rem;color:var(--text-light)">'+esc(r.pelamarEmail)+'</span></div>'
-            +'</div></div>'
-            /* Arrow */
-            +'<div class="am-taaruf-arrow"><i class="fas fa-arrow-down"></i></div>'
-            /* Target */
-            +'<div class="am-taaruf-person">'
-            +'<div class="am-taaruf-person-label am-target"><i class="fas fa-bullseye"></i> Target</div>'
-            +'<div class="am-taaruf-person-row">'+targetPhoto
-            +'<div style="flex:1;min-width:0">'
-            +'<div class="am-taaruf-person-name">'+esc(r.targetNama)+'</div>'
-            +'<div class="am-taaruf-person-detail">'+esc(r.targetDaerah)+', '+esc(r.targetDesa)
-            +' &middot; <i class="fas fa-users" style="font-size:0.6rem"></i> '+esc(r.targetKelompok)
-            +'<br><span style="font-size:0.62rem;color:var(--text-light)">'+esc(r.targetEmail)+'</span></div>'
-            +'</div></div>'
-            +'</div>'
-            /* Aksi — tombol full-width, vertikal */
-            +'<div class="am-taaruf-actions" style="display:flex;flex-direction:column;gap:8px">'
-            +mobileActionHtml
-            +'</div>'
-            +'</div>';
-    }).join('');
+/* Foto helper untuk modal konfirmasi */
+function buildScPersonPhoto(email,nama){
+    var ps=userPhotoMap[email]||'';
+    if(ps)return '<img src="'+ps+'" class="sc-person-photo" loading="lazy">';
+    return '<div class="sc-person-ph">'+getInitials(nama)+'</div>';
 }
-async function updateTaarufStatus(pEmail,tEmail,newStatus){
-    if(!confirm('Ubah status menjadi "'+newStatus+'"?'))return;
+
+/* ===== STATUS CHANGE MODAL (Bottom Sheet) ===== */
+function openScModal(pEmail,tEmail,newStatus){
+    var cfg=statusMessages[newStatus];
+    if(!cfg)return;
+    /* Cari data pengajuan dari cache */
+    var req=allTaarufRequests.find(function(r){return r.pelamarEmail===pEmail&&r.targetEmail===tEmail});
+    if(!req)return;
+
+    var body=document.getElementById('sc-modal-body');
+    var oldBadge='<span class="sc-flow-badge badge '+getBadgeClass(req.status)+'">'+req.status+'</span>';
+    var newBadge='<span class="sc-flow-badge badge '+getBadgeClass(newStatus)+'">'+newStatus+'</span>';
+
+    body.innerHTML=''
+        +'<div class="sc-modal-icon '+cfg.iconClass+'"><i class="fas '+cfg.icon+'"></i></div>'
+        +'<div class="sc-modal-title">'+cfg.title+'</div>'
+        +'<div class="sc-modal-desc">'+cfg.desc+'</div>'
+        /* Alur perubahan status */
+        +'<div class="sc-flow">'+oldBadge+'<i class="fas fa-arrow-right sc-flow-arrow"></i>'+newBadge+'</div>'
+        /* Info pelamar & target */
+        +'<div class="sc-people">'
+            +'<div class="sc-person">'
+                +buildScPersonPhoto(req.pelamarEmail,req.pelamarNama)
+                +'<div class="sc-person-info">'
+                    +'<div class="sc-person-label" style="color:var(--gold-500)"><i class="fas fa-paper-plane"></i> Pelamar</div>'
+                    +'<div class="sc-person-name">'+esc(req.pelamarNama)+'</div>'
+                    +'<div class="sc-person-sub">'+esc(req.pelamarDaerah)+', '+esc(req.pelamarDesa)+' &middot; '+esc(req.pelamarKelompok)+'</div>'
+                +'</div>'
+            +'</div>'
+            +'<div class="sc-person">'
+                +buildScPersonPhoto(req.targetEmail,req.targetNama)
+                +'<div class="sc-person-info">'
+                    +'<div class="sc-person-label" style="color:var(--green-700)"><i class="fas fa-bullseye"></i> Target</div>'
+                    +'<div class="sc-person-name">'+esc(req.targetNama)+'</div>'
+                    +'<div class="sc-person-sub">'+esc(req.targetDaerah)+', '+esc(req.targetDesa)+' &middot; '+esc(req.targetKelompok)+'</div>'
+                +'</div>'
+            +'</div>'
+        +'</div>'
+        /* Tombol aksi */
+        +'<div class="sc-modal-actions">'
+            +'<button class="btn '+cfg.btnClass+'" onclick="confirmScModal(\''+esc(pEmail)+'\',\''+esc(tEmail)+'\',\''+newStatus+'\')"><i class="fas '+cfg.btnIcon+'"></i> '+cfg.btnText+'</button>'
+            +'<button class="btn btn-ghost" onclick="closeScModal()"><i class="fas fa-arrow-left"></i> Batal</button>'
+        +'</div>';
+
+    document.getElementById('sc-modal').classList.remove('hidden');
+    document.body.style.overflow='hidden';
+}
+
+function closeScModal(event){
+    if(event&&event.target!==event.currentTarget)return;
+    document.getElementById('sc-modal').classList.add('hidden');
+    document.body.style.overflow='';
+}
+
+async function confirmScModal(pEmail,tEmail,newStatus){
+    document.getElementById('sc-modal').classList.add('hidden');
+    document.body.style.overflow='';
     showLoading();
     var res=await fetchGAS('updateTaarufStatus',{},'POST',{pelamarEmail:pEmail,targetEmail:tEmail,newStatus:newStatus});
     hideLoading();
     if(res.status==='success'){showToast(res.message);loadAdminTaaruf();refreshNotifCount()}
     else{showToast(res.message||'Gagal update','error')}
 }
+
+/* ===== LOAD & RENDER ADMIN TAARUF (dengan pagination) ===== */
+async function loadAdminTaaruf(){
+    var t=document.getElementById('admin-taaruf-tbody'),m=document.getElementById('admin-taaruf-mobile'),pg=document.getElementById('admin-taaruf-pagination');
+    t.innerHTML='<tr><td colspan="5" style="text-align:center"><i class="fas fa-spinner fa-spin"></i></td></tr>';
+    m.innerHTML='<div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>Memuat...</p></div>';
+    pg.innerHTML='';taarufCurrentPage=1;
+
+    /* Muat foto peserta jika belum ada cache */
+    if(Object.keys(userPhotoMap).length===0){
+        try{var usersRes=await fetchGAS('getUsers',{role:currentUser.role,email:currentUser.email,scope:currentUser.scope});
+        if(usersRes.status==='success'&&usersRes.data){userPhotoMap={};usersRes.data.forEach(function(u){if(u.foto&&u.email)userPhotoMap[u.email]=getPhotoUrl(u.foto)})}}catch(e){}
+    }
+
+    var res=await fetchGAS('getAllTaaruf',{role:currentUser.role,email:currentUser.email,scope:currentUser.scope});
+    if(res.status!=='success'){t.innerHTML='<tr><td colspan="5" style="text-align:center"><i class="fas fa-exclamation-triangle" style="color:var(--gold-500);margin-right:8px"></i>Gagal memuat. <a class="link" onclick="loadAdminTaaruf()">Coba Lagi</a></td></tr>';m.innerHTML='';return}
+    if(res.data&&res.data.length>0){allTaarufRequests=res.data;renderTaarufSummary(allTaarufRequests);renderAdminTaaruf(allTaarufRequests)}
+    else{allTaarufRequests=[];renderTaarufSummary([]);t.innerHTML='<tr><td colspan="5" style="text-align:center;color:var(--text-muted)">Belum ada pengajuan.</td></tr>';m.innerHTML='<div class="empty-state"><i class="fas fa-heart"></i><p>Belum ada pengajuan.</p></div>'}
+}
+
+function renderAdminTaaruf(requests){
+    var t=document.getElementById('admin-taaruf-tbody'),m=document.getElementById('admin-taaruf-mobile'),pg=document.getElementById('admin-taaruf-pagination');
+
+    /* Filter berdasarkan tab aktif */
+    var filtered=currentTaarufFilter?requests.filter(function(r){return r.status===currentTaarufFilter}):requests;
+
+    /* Pagination */
+    var totalPages=Math.max(1,Math.ceil(filtered.length/taarufPageSize));
+    if(taarufCurrentPage>totalPages)taarufCurrentPage=totalPages;
+    var start=(taarufCurrentPage-1)*taarufPageSize;
+    var pageItems=filtered.slice(start,start+taarufPageSize);
+
+    if(filtered.length===0){
+        t.innerHTML='<tr><td colspan="5" style="text-align:center;color:var(--text-muted)">Tidak ada data untuk filter ini.</td></tr>';
+        m.innerHTML='<div class="empty-state"><i class="fas fa-filter"></i><p>Tidak ada data untuk filter ini.</p></div>';
+        pg.innerHTML='';return;
+    }
+
+    /* Desktop: tabel */
+    t.innerHTML=pageItems.map(function(r){
+        return '<tr>'
+            +'<td style="white-space:nowrap">'+r.tanggal+'</td>'
+            +'<td>'+buildTaarufPhotoCell(r.pelamarEmail,r.pelamarNama,'sm')+'<b style="color:var(--text-dark)">'+esc(r.pelamarNama)+'</b><div class="sub-text">'+esc(r.pelamarEmail)+'</div><div class="sub-text" style="color:var(--green-700)">'+esc(r.pelamarDaerah)+', '+esc(r.pelamarDesa)+'</div><div class="sub-text"><i class="fas fa-users" style="width:12px"></i> '+esc(r.pelamarKelompok)+'</div></td>'
+            +'<td>'+buildTaarufPhotoCell(r.targetEmail,r.targetNama,'sm')+'<b style="color:var(--text-dark)">'+esc(r.targetNama)+'</b><div class="sub-text">'+esc(r.targetEmail)+'</div><div class="sub-text" style="color:var(--green-700)">'+esc(r.targetDaerah)+', '+esc(r.targetDesa)+'</div><div class="sub-text"><i class="fas fa-users" style="width:12px"></i> '+esc(r.targetKelompok)+'</div></td>'
+            +'<td><span class="badge '+getBadgeClass(r.status)+'">'+r.status+'</span></td>'
+            +'<td>'+getActionButtons(r.status,r.pelamarEmail,r.targetEmail)+'</td>'
+            +'</tr>';
+    }).join('');
+    t.querySelectorAll('.lazy-img').forEach(observeLazyImg);
+
+    /* Mobile: kartu */
+    m.innerHTML=pageItems.map(function(r){
+        var mobileActionHtml=getMobileActionButtons(r.status,r.pelamarEmail,r.targetEmail);
+        return '<div class="am-card">'
+            +'<div class="am-taaruf-header">'
+                +'<div class="am-taaruf-date"><i class="far fa-calendar"></i> '+r.tanggal+'</div>'
+                +'<span class="badge '+getBadgeClass(r.status)+'">'+r.status+'</span>'
+            +'</div>'
+            +'<div class="am-taaruf-people">'
+                +'<div class="am-taaruf-person">'
+                    +'<div class="am-taaruf-person-label am-pelamar"><i class="fas fa-paper-plane"></i> Pelamar</div>'
+                    +'<div class="am-taaruf-person-row">'+buildTaarufMobilePhoto(r.pelamarEmail,r.pelamarNama)
+                    +'<div style="flex:1;min-width:0">'
+                        +'<div class="am-taaruf-person-name">'+esc(r.pelamarNama)+'</div>'
+                        +'<div class="am-taaruf-person-detail">'+esc(r.pelamarDaerah)+', '+esc(r.pelamarDesa)+' &middot; <i class="fas fa-users" style="font-size:0.6rem"></i> '+esc(r.pelamarKelompok)+'</div>'
+                    +'</div></div>'
+                +'</div>'
+                +'<div class="am-taaruf-arrow"><i class="fas fa-arrow-down"></i></div>'
+                +'<div class="am-taaruf-person">'
+                    +'<div class="am-taaruf-person-label am-target"><i class="fas fa-bullseye"></i> Target</div>'
+                    +'<div class="am-taaruf-person-row">'+buildTaarufMobilePhoto(r.targetEmail,r.targetNama)
+                    +'<div style="flex:1;min-width:0">'
+                        +'<div class="am-taaruf-person-name">'+esc(r.targetNama)+'</div>'
+                        +'<div class="am-taaruf-person-detail">'+esc(r.targetDaerah)+', '+esc(r.targetDesa)+' &middot; <i class="fas fa-users" style="font-size:0.6rem"></i> '+esc(r.targetKelompok)+'</div>'
+                    +'</div></div>'
+                +'</div>'
+            +'</div>'
+            +'<div class="am-taaruf-actions">'+mobileActionHtml+'</div>'
+            +'</div>';
+    }).join('');
+    m.querySelectorAll('.lazy-img').forEach(observeLazyImg);
+
+    /* Render pagination */
+    generatePagination('admin-taaruf-pagination',taarufCurrentPage,totalPages,filtered.length,taarufPageSize,'goToTaarufPage');
+}
+
+/* Tutup modal dengan tombol Escape */
+document.addEventListener('keydown',function(e){
+    if(e.key==='Escape'){
+        var sc=document.getElementById('sc-modal');
+        if(!sc.classList.contains('hidden')){closeScModal();return}
+        var pm=document.querySelector('.photo-modal-overlay');
+        if(pm)closePhotoModal();
+    }
+});
 </script>
 </body>
 </html>
