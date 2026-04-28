@@ -3,219 +3,542 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Halalkan</title>
+    <title>Halalkan - Ta'aruf Online</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root{--primary:#4F46E5;--primary-hover:#4338CA;--primary-light:#EEF2FF;--primary-glow:rgba(79,70,229,0.1);--bg:#FFFFFF;--surface:#F9FAFB;--border:#E5E7EB;--border-focus:#4F46E5;--text-main:#111827;--text-muted:#6B7280;--text-light:#9CA3AF;--danger:#EF4444;--danger-light:#FEF2F2;--success:#10B981;--success-light:#ECFDF5;--warning:#F59E0B;--warning-light:#FFFBEB;--radius:8px}
+        :root {
+            --green-900: #064E2E;
+            --green-800: #0B6B3F;
+            --green-700: #0F8A50;
+            --green-600: #12A363;
+            --green-500: #15B872;
+            --green-400: #34D399;
+            --green-100: #D1FAE5;
+            --green-50: #ECFDF5;
+            --gold-500: #D4A843;
+            --gold-400: #E8C66A;
+            --gold-300: #F0D88A;
+            --gold-100: #FEF3C7;
+            --gold-50: #FFFBEB;
+            --bg-dark: #042F1A;
+            --bg-card: #FFFFFF;
+            --bg-card-alt: #F0FDF4;
+            --border-light: rgba(255,255,255,0.08);
+            --border-card: #E5E7EB;
+            --text-white: #FFFFFF;
+            --text-cream: #E8F5E9;
+            --text-muted-light: rgba(255,255,255,0.6);
+            --text-main: #1a1a2e;
+            --text-muted: #6B7280;
+            --text-light: #9CA3AF;
+            --danger: #EF4444;
+            --danger-light: #FEF2F2;
+            --success: #10B981;
+            --success-light: #ECFDF5;
+            --warning: #F59E0B;
+            --warning-light: #FFFBEB;
+            --radius: 14px;
+            --radius-sm: 10px;
+            --shadow-card: 0 4px 24px rgba(0,0,0,0.08);
+            --shadow-glow: 0 0 40px rgba(21,184,114,0.15);
+        }
         *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-        body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text-main);min-height:100vh}
+        body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg-dark);color:var(--text-main);min-height:100vh;overflow-x:hidden}
+
+        /* ===== ISLAMIC PATTERN BACKGROUND ===== */
+        .islamic-bg{
+            position:fixed;inset:0;z-index:0;pointer-events:none;
+            background:
+                radial-gradient(ellipse at 20% 50%, rgba(15,138,80,0.15) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, rgba(212,168,67,0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 100%, rgba(11,107,63,0.2) 0%, transparent 50%),
+                var(--bg-dark);
+        }
+        .islamic-bg::before{
+            content:'';position:absolute;inset:0;opacity:0.03;
+            background-image:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        .islamic-bg::after{
+            content:'';position:absolute;top:-50%;right:-30%;width:80%;height:80%;border-radius:50%;
+            background:radial-gradient(circle, rgba(212,168,67,0.06) 0%, transparent 70%);
+            animation:floatGlow 12s ease-in-out infinite alternate;
+        }
+        @keyframes floatGlow{0%{transform:translate(0,0)}100%{transform:translate(-30px,40px)}}
+
         .hidden{display:none!important}
-        .auth-wrapper{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg);padding:1.5rem}
-        .auth-card{width:100%;max-width:400px}
-        .auth-header{text-align:center;margin-bottom:2.5rem}
-        .auth-header h1{font-size:1.75rem;font-weight:700;letter-spacing:-0.5px}
-        .auth-header h1 span{color:var(--primary)}
-        .auth-header p{color:var(--text-muted);font-size:0.9rem;margin-top:0.5rem}
-        .form-group{margin-bottom:1.25rem}
-        label{display:block;font-size:0.8rem;font-weight:600;margin-bottom:0.5rem;color:var(--text-main)}
+
+        /* ===== AUTH PAGES ===== */
+        .auth-wrapper{
+            min-height:100vh;display:flex;align-items:center;justify-content:center;
+            padding:1.5rem;position:relative;z-index:1;
+        }
+        .auth-card{
+            width:100%;max-width:420px;
+            background:linear-gradient(145deg, rgba(255,255,255,0.95), rgba(240,253,244,0.95));
+            backdrop-filter:blur(20px);
+            border-radius:24px;padding:2.5rem 2rem;
+            box-shadow:0 24px 80px rgba(0,0,0,0.3), var(--shadow-glow);
+            border:1px solid rgba(255,255,255,0.2);
+        }
+        .auth-header{text-align:center;margin-bottom:2rem}
+        .auth-logo{
+            width:64px;height:64px;margin:0 auto 1rem;
+            background:linear-gradient(135deg, var(--green-700), var(--green-500));
+            border-radius:18px;display:flex;align-items:center;justify-content:center;
+            box-shadow:0 8px 24px rgba(15,138,80,0.35);
+            font-size:1.5rem;color:white;
+        }
+        .auth-header h1{font-size:1.6rem;font-weight:800;letter-spacing:-0.5px;color:var(--green-900)}
+        .auth-header h1 span{color:var(--gold-500)}
+        .auth-header .arabic-greeting{
+            font-family:'Amiri',serif;font-size:1.3rem;color:var(--green-700);
+            margin-bottom:0.25rem;letter-spacing:1px;
+        }
+        .auth-header p{color:var(--text-muted);font-size:0.85rem;margin-top:0.4rem}
+
+        .form-group{margin-bottom:1.1rem}
+        label{display:block;font-size:0.78rem;font-weight:700;margin-bottom:0.4rem;color:var(--green-900);letter-spacing:0.3px}
         .input-wrapper{position:relative}
-        .input-wrapper i.icon-left{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text-light);font-size:0.85rem;pointer-events:none}
-        input,select{width:100%;padding:10px 12px 10px 36px;border:1px solid var(--border);border-radius:var(--radius);font-size:0.9rem;font-family:'Inter',sans-serif;outline:none;transition:all 0.2s;background:var(--bg);color:var(--text-main)}
-        input:focus,select:focus{border-color:var(--border-focus);box-shadow:0 0 0 3px var(--primary-glow)}
+        .input-wrapper i.icon-left{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--green-400);font-size:0.85rem;pointer-events:none}
+        input,select{
+            width:100%;padding:11px 14px 11px 40px;
+            border:2px solid #E5E7EB;border-radius:var(--radius-sm);
+            font-size:0.88rem;font-family:'Plus Jakarta Sans',sans-serif;outline:none;
+            transition:all 0.25s;background:white;color:var(--text-main);
+        }
+        input:focus,select:focus{border-color:var(--green-500);box-shadow:0 0 0 4px rgba(21,184,114,0.12)}
         input::placeholder{color:var(--text-light)}
-        select{padding-left:12px;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
-        input[type="file"]{padding:10px;font-size:0.85rem;cursor:pointer}
-        textarea{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius);font-size:0.9rem;font-family:'Inter',sans-serif;outline:none;resize:vertical;transition:all 0.2s;background:var(--bg);color:var(--text-main);line-height:1.6}
-        textarea:focus{border-color:var(--border-focus);box-shadow:0 0 0 3px var(--primary-glow)}
+        select{
+            padding-left:14px;
+            appearance:none;
+            background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+            background-repeat:no-repeat;background-position:right 14px center;
+        }
+        input[type="file"]{padding:10px;font-size:0.83rem;cursor:pointer;border-color:#E5E7EB}
+        textarea{
+            width:100%;padding:11px 14px;border:2px solid #E5E7EB;border-radius:var(--radius-sm);
+            font-size:0.88rem;font-family:'Plus Jakarta Sans',sans-serif;outline:none;resize:vertical;
+            transition:all 0.25s;background:white;color:var(--text-main);line-height:1.6;
+        }
+        textarea:focus{border-color:var(--green-500);box-shadow:0 0 0 4px rgba(21,184,114,0.12)}
         textarea::placeholder{color:var(--text-light)}
-        .btn{width:100%;padding:11px;background:var(--primary);color:white;border:none;border-radius:var(--radius);font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;font-size:0.9rem;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:8px}
-        .btn:hover{background:var(--primary-hover)}
-        .btn:disabled{background:var(--text-light);cursor:not-allowed}
-        .btn-outline{background:transparent;border:1px solid var(--border);color:var(--text-muted);margin-top:0.75rem}
-        .btn-outline:hover{background:var(--surface);border-color:var(--text-light);color:var(--text-main)}
-        .btn-sm{padding:6px 14px;width:auto;font-size:0.8rem;border-radius:6px}
-        .btn-success{background:var(--success)}.btn-success:hover{background:#059669}
-        .btn-danger-sm{background:var(--danger)}.btn-danger-sm:hover{background:#DC2626}
-        .btn-warning-sm{background:var(--warning);color:var(--text-main)}.btn-warning-sm:hover{background:#D97706}
-        .btn-wa{background:#25D366}.btn-wa:hover{background:#1EBE57}
-        .btn-info-sm{background:#3B82F6}.btn-info-sm:hover{background:#2563EB}
-        .link{color:var(--primary);font-size:0.85rem;font-weight:500;cursor:pointer;text-decoration:none}
-        .link:hover{text-decoration:underline}
-        .link-muted{color:var(--text-muted);font-size:0.85rem}
-        .link-muted a{color:var(--primary);font-weight:600;cursor:pointer}
-        .app-shell{display:flex;min-height:100vh}
-        .sidebar{width:250px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100;transition:transform 0.2s}
-        .sidebar-header{padding:1.5rem;border-bottom:1px solid var(--border)}
-        .sidebar-header h2{font-size:1.2rem;font-weight:700}
-        .sidebar-header h2 span{color:var(--primary)}
-        .sidebar-nav{flex:1;padding:1rem 0.75rem;display:flex;flex-direction:column;gap:2px;overflow-y:auto}
-        .sidebar-nav a{display:flex;align-items:center;gap:12px;padding:10px 12px;color:var(--text-muted);font-size:0.9rem;font-weight:500;cursor:pointer;border-radius:var(--radius);transition:all 0.15s;text-decoration:none}
-        .sidebar-nav a:hover:not(.locked){background:var(--border);color:var(--text-main)}
-        .sidebar-nav a.active{background:var(--primary-light);color:var(--primary);font-weight:600}
+
+        /* ===== BUTTONS ===== */
+        .btn{
+            width:100%;padding:12px;
+            background:linear-gradient(135deg, var(--green-700), var(--green-600));
+            color:white;border:none;border-radius:var(--radius-sm);
+            font-weight:700;font-family:'Plus Jakarta Sans',sans-serif;cursor:pointer;
+            font-size:0.88rem;transition:all 0.25s;
+            display:flex;align-items:center;justify-content:center;gap:8px;
+            box-shadow:0 4px 16px rgba(15,138,80,0.3);
+            letter-spacing:0.2px;
+        }
+        .btn:hover{transform:translateY(-1px);box-shadow:0 6px 24px rgba(15,138,80,0.4)}
+        .btn:active{transform:translateY(0)}
+        .btn:disabled{background:#9CA3AF;cursor:not-allowed;box-shadow:none;transform:none}
+        .btn-outline{
+            background:transparent;border:2px solid #E5E7EB;color:var(--text-muted);
+            margin-top:0.75rem;box-shadow:none;
+        }
+        .btn-outline:hover{background:var(--green-50);border-color:var(--green-400);color:var(--green-700);box-shadow:none;transform:none}
+        .btn-sm{padding:8px 16px;width:auto;font-size:0.78rem;border-radius:8px}
+        .btn-success{background:linear-gradient(135deg,#059669,#10B981);box-shadow:0 4px 12px rgba(16,185,129,0.3)}
+        .btn-success:hover{box-shadow:0 6px 20px rgba(16,185,129,0.4)}
+        .btn-danger-sm{background:linear-gradient(135deg,#DC2626,#EF4444);box-shadow:0 4px 12px rgba(239,68,68,0.3)}
+        .btn-warning-sm{background:linear-gradient(135deg,#D97706,#F59E0B);color:var(--text-main);box-shadow:0 4px 12px rgba(245,158,11,0.3)}
+        .btn-wa{background:linear-gradient(135deg,#1EBE57,#25D366);box-shadow:0 4px 12px rgba(37,211,102,0.3)}
+        .btn-info-sm{background:linear-gradient(135deg,#2563EB,#3B82F6);box-shadow:0 4px 12px rgba(59,130,246,0.3)}
+        .btn-gold{background:linear-gradient(135deg,var(--gold-500),var(--gold-400));color:var(--green-900);box-shadow:0 4px 12px rgba(212,168,67,0.3)}
+
+        .link{color:var(--green-700);font-size:0.83rem;font-weight:600;cursor:pointer;text-decoration:none;transition:color 0.2s}
+        .link:hover{color:var(--green-500)}
+        .link-muted{color:var(--text-muted);font-size:0.83rem}
+        .link-muted a{color:var(--green-700);font-weight:700;cursor:pointer}
+
+        /* ===== APP SHELL ===== */
+        .app-shell{display:flex;min-height:100vh;position:relative;z-index:1}
+
+        .sidebar{
+            width:260px;
+            background:linear-gradient(180deg, var(--green-900) 0%, var(--bg-dark) 100%);
+            border-right:1px solid var(--border-light);
+            display:flex;flex-direction:column;
+            position:fixed;top:0;left:0;bottom:0;z-index:100;
+            transition:transform 0.3s cubic-bezier(0.4,0,0.2,1);
+        }
+        .sidebar-header{padding:1.5rem 1.25rem;border-bottom:1px solid var(--border-light);display:flex;align-items:center;gap:12px}
+        .sidebar-logo{
+            width:40px;height:40px;flex-shrink:0;
+            background:linear-gradient(135deg, var(--green-600), var(--gold-500));
+            border-radius:12px;display:flex;align-items:center;justify-content:center;
+            font-size:1rem;color:white;
+            box-shadow:0 4px 12px rgba(21,184,114,0.3);
+        }
+        .sidebar-header h2{font-size:1.15rem;font-weight:800;color:var(--text-white)}
+        .sidebar-header h2 span{color:var(--gold-400)}
+
+        .sidebar-nav{
+            flex:1;padding:1rem 0.75rem;display:flex;flex-direction:column;gap:3px;overflow-y:auto;
+        }
+        .sidebar-nav a{
+            display:flex;align-items:center;gap:12px;padding:10px 14px;
+            color:var(--text-muted-light);font-size:0.87rem;font-weight:500;
+            cursor:pointer;border-radius:var(--radius-sm);transition:all 0.2s;text-decoration:none;
+        }
+        .sidebar-nav a:hover:not(.locked){
+            background:rgba(255,255,255,0.08);color:var(--text-white);
+        }
+        .sidebar-nav a.active{
+            background:linear-gradient(135deg, rgba(21,184,114,0.2), rgba(21,184,114,0.08));
+            color:var(--green-400);font-weight:700;
+            border:1px solid rgba(21,184,114,0.2);
+        }
         .sidebar-nav a i.nav-icon{width:20px;text-align:center;font-size:0.9rem}
-        .sidebar-nav a .lock-badge{margin-left:auto;font-size:0.65rem;background:var(--danger-light);color:var(--danger);padding:2px 6px;border-radius:4px;font-weight:700}
-        .sidebar-nav a.locked{opacity:0.6;cursor:not-allowed}
-        .sidebar-footer{padding:1rem 1.25rem;border-top:1px solid var(--border)}
+        .sidebar-nav a .lock-badge{
+            margin-left:auto;font-size:0.62rem;
+            background:rgba(239,68,68,0.15);color:#FCA5A5;
+            padding:2px 7px;border-radius:6px;font-weight:700;
+            border:1px solid rgba(239,68,68,0.15);
+        }
+        .sidebar-nav a.locked{opacity:0.5;cursor:not-allowed}
+        .sidebar-footer{padding:1rem 1.25rem;border-top:1px solid var(--border-light)}
         .sidebar-user{display:flex;align-items:center;gap:10px}
-        .sidebar-avatar{width:32px;height:32px;border-radius:50%;background:var(--primary-light);color:var(--primary);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.75rem;flex-shrink:0;overflow:hidden}
+        .sidebar-avatar{
+            width:36px;height:36px;border-radius:12px;
+            background:linear-gradient(135deg, var(--green-600), var(--green-400));
+            color:white;display:flex;align-items:center;justify-content:center;
+            font-weight:700;font-size:0.75rem;flex-shrink:0;overflow:hidden;
+        }
         .sidebar-avatar img{width:100%;height:100%;object-fit:cover}
-        .sidebar-user-info div:first-child{font-size:0.85rem;font-weight:600}
-        .sidebar-user-info div:last-child{font-size:0.75rem;color:var(--text-muted)}
-        .main{flex:1;margin-left:250px;background:var(--bg)}
-        .main-header{padding:1.25rem 2rem;border-bottom:1px solid var(--border);background:var(--bg);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:50}
-        .main-header h3{font-size:1.15rem;font-weight:600}
-        .main-content{padding:2rem;max-width:1400px}
-        .hamburger{display:none;background:none;border:none;font-size:1.2rem;color:var(--text-main);cursor:pointer}
-        .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.3);z-index:99}
-        .alert{padding:12px 16px;border-radius:var(--radius);font-size:0.85rem;margin-bottom:1.5rem;display:flex;align-items:flex-start;gap:10px;line-height:1.5}
-        .alert i{margin-top:2px;flex-shrink:0}
-        .alert-warning{background:var(--warning-light);color:#92400E;border:1px solid #FDE68A}
-        .alert-info{background:var(--primary-light);color:var(--primary);border:1px solid #C7D2FE}
+        .sidebar-user-info div:first-child{font-size:0.85rem;font-weight:700;color:var(--text-white)}
+        .sidebar-user-info div:last-child{font-size:0.72rem;color:var(--text-muted-light)}
+
+        .main{flex:1;margin-left:260px;min-height:100vh}
+        .main-header{
+            padding:1rem 2rem;
+            border-bottom:1px solid rgba(255,255,255,0.05);
+            background:rgba(4,47,26,0.8);backdrop-filter:blur(12px);
+            display:flex;justify-content:space-between;align-items:center;
+            position:sticky;top:0;z-index:50;
+        }
+        .main-header h3{font-size:1.1rem;font-weight:700;color:var(--text-white)}
+        .main-content{padding:2rem;max-width:1400px;position:relative}
+        .hamburger{display:none;background:none;border:none;font-size:1.2rem;color:var(--text-white);cursor:pointer;padding:8px}
+        .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:99;backdrop-filter:blur(4px)}
+
+        /* ===== ALERTS ===== */
+        .alert{
+            padding:14px 18px;border-radius:var(--radius-sm);font-size:0.84rem;
+            margin-bottom:1.5rem;display:flex;align-items:flex-start;gap:10px;line-height:1.6;
+        }
+        .alert i{margin-top:3px;flex-shrink:0}
+        .alert-warning{background:var(--gold-50);color:#92400E;border:1px solid #FDE68A}
+        .alert-info{background:var(--green-50);color:var(--green-900);border:1px solid #A7F3D0}
         .alert-success{background:var(--success-light);color:#065F46;border:1px solid #A7F3D0}
+
         .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:0 1.25rem}
-        .section-title{font-size:0.8rem;font-weight:700;color:var(--text-muted);margin:1.5rem 0 1rem;text-transform:uppercase;letter-spacing:0.5px}
-        .search-bar{width:100%;padding:10px 12px 10px 36px;border:1px solid var(--border);border-radius:var(--radius);font-size:0.9rem;outline:none;background:var(--surface);transition:all 0.2s;font-family:'Inter',sans-serif}
-        .search-bar:focus{border-color:var(--border-focus);background:var(--bg);box-shadow:0 0 0 3px var(--primary-glow)}
+        .section-title{font-size:0.78rem;font-weight:800;color:var(--green-600);margin:1.75rem 0 1rem;text-transform:uppercase;letter-spacing:1px;display:flex;align-items:center;gap:8px}
+        .section-title::after{content:'';flex:1;height:1px;background:linear-gradient(to right, var(--green-200), transparent)}
+
+        .search-bar{
+            width:100%;padding:11px 14px 11px 40px;
+            border:2px solid rgba(255,255,255,0.1);border-radius:var(--radius-sm);
+            font-size:0.88rem;outline:none;
+            background:rgba(255,255,255,0.06);color:var(--text-white);
+            transition:all 0.25s;font-family:'Plus Jakarta Sans',sans-serif;
+        }
+        .search-bar:focus{border-color:var(--green-500);background:rgba(255,255,255,0.1);box-shadow:0 0 0 4px rgba(21,184,114,0.15)}
+        .search-bar::placeholder{color:rgba(255,255,255,0.4)}
         .search-wrap{position:relative;margin-bottom:1.5rem}
-        .search-wrap i{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text-light)}
-        .card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:1.25rem}
-        .card{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:var(--bg);display:flex;flex-direction:column;transition:box-shadow 0.2s}
-        .card:hover{box-shadow:0 4px 12px rgba(0,0,0,0.05)}
-        .card-top{display:flex;gap:1rem;padding:1rem;border-bottom:1px solid var(--border)}
-        .card-img{width:100px;height:100px;object-fit:cover;border-radius:var(--radius);background:var(--surface);flex-shrink:0}
-        .card-avatar{width:100px;height:100px;display:flex;align-items:center;justify-content:center;font-size:2.5rem;font-weight:700;color:var(--primary);background:var(--primary-light);border-radius:var(--radius);flex-shrink:0}
+        .search-wrap i{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,0.4)}
+
+        /* ===== CARDS ===== */
+        .card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:1.25rem}
+        .card{
+            border:1px solid rgba(255,255,255,0.06);border-radius:18px;overflow:hidden;
+            background:linear-gradient(145deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+            backdrop-filter:blur(10px);display:flex;flex-direction:column;
+            transition:all 0.3s;border:1px solid rgba(255,255,255,0.08);
+        }
+        .card:hover{
+            transform:translateY(-2px);
+            box-shadow:0 12px 40px rgba(0,0,0,0.2);
+            border-color:rgba(21,184,114,0.2);
+        }
+        .card-top{display:flex;gap:1rem;padding:1.25rem;border-bottom:1px solid rgba(255,255,255,0.06)}
+        .card-img{width:100px;height:100px;object-fit:cover;border-radius:14px;background:rgba(255,255,255,0.05);flex-shrink:0;border:2px solid rgba(255,255,255,0.1)}
+        .card-avatar{
+            width:100px;height:100px;display:flex;align-items:center;justify-content:center;
+            font-size:2.2rem;font-weight:800;color:var(--green-400);
+            background:rgba(21,184,114,0.1);border-radius:14px;flex-shrink:0;
+            border:2px solid rgba(21,184,114,0.15);
+        }
         .card-identity{flex:1;display:flex;flex-direction:column;justify-content:center}
-        .card-name{font-weight:700;font-size:1.05rem;margin-bottom:4px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-        .card-sub{font-size:0.8rem;color:var(--text-muted);margin-bottom:2px}
-        .card-body{padding:1rem}
+        .card-name{font-weight:800;font-size:1.05rem;margin-bottom:5px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;color:var(--text-white)}
+        .card-sub{font-size:0.78rem;color:var(--text-muted-light);margin-bottom:3px}
+        .card-sub i{width:14px;text-align:center;margin-right:4px;color:var(--green-400)}
+        .card-body{padding:1rem 1.25rem}
         .data-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-        .data-item{font-size:0.82rem}
-        .data-label{color:var(--text-light);font-size:0.7rem;text-transform:uppercase;letter-spacing:0.3px}
-        .data-value{color:var(--text-main);font-weight:500}
+        .data-item{font-size:0.8rem}
+        .data-label{color:var(--text-muted-light);font-size:0.68rem;text-transform:uppercase;letter-spacing:0.5px;font-weight:600}
+        .data-value{color:var(--text-cream);font-weight:600}
         .full-col{grid-column:1/-1}
-        .card-footer{padding:0.75rem 1rem;border-top:1px solid var(--border);margin-top:auto}
-        .badge{padding:2px 8px;border-radius:12px;font-size:0.7rem;font-weight:600;display:inline-block;white-space:nowrap}
-        .badge-m{background:#DBEAFE;color:#1E40AF}
-        .badge-f{background:#FCE7F3;color:#BE185D}
-        .badge-pending{background:#FEF3C7;color:#92400E}
-        .badge-approved{background:#D1FAE5;color:#065F46}
-        .badge-rejected{background:#FEE2E2;color:#991B1B}
-        .badge-taaruf{background:#DBEAFE;color:#1E40AF}
-        .badge-proses{background:#FEF3C7;color:#92400E}
-        .badge-menikah{background:#D1FAE5;color:#065F46}
+        .card-footer{padding:0.85rem 1.25rem;border-top:1px solid rgba(255,255,255,0.06);margin-top:auto}
+
+        /* ===== BADGES ===== */
+        .badge{padding:3px 10px;border-radius:20px;font-size:0.68rem;font-weight:700;display:inline-block;white-space:nowrap;letter-spacing:0.3px}
+        .badge-m{background:rgba(59,130,246,0.15);color:#93C5FD;border:1px solid rgba(59,130,246,0.2)}
+        .badge-f{background:rgba(236,72,153,0.15);color:#F9A8D4;border:1px solid rgba(236,72,153,0.2)}
+        .badge-pending{background:rgba(245,158,11,0.15);color:#FCD34D;border:1px solid rgba(245,158,11,0.2)}
+        .badge-approved{background:rgba(16,185,129,0.15);color:#6EE7B7;border:1px solid rgba(16,185,129,0.2)}
+        .badge-rejected{background:rgba(239,68,68,0.15);color:#FCA5A5;border:1px solid rgba(239,68,68,0.2)}
+        .badge-taaruf{background:rgba(59,130,246,0.15);color:#93C5FD;border:1px solid rgba(59,130,246,0.2)}
+        .badge-proses{background:rgba(245,158,11,0.15);color:#FCD34D;border:1px solid rgba(245,158,11,0.2)}
+        .badge-menikah{background:rgba(16,185,129,0.15);color:#6EE7B7;border:1px solid rgba(16,185,129,0.2)}
+
         .filter-tabs{display:flex;gap:6px;margin-bottom:1.25rem;flex-wrap:wrap}
-        .filter-tab{padding:6px 14px;border:1px solid var(--border);border-radius:20px;font-size:0.8rem;font-weight:500;cursor:pointer;background:var(--bg);color:var(--text-muted);font-family:'Inter',sans-serif;transition:all 0.2s;white-space:nowrap}
-        .filter-tab:hover{border-color:var(--primary);color:var(--primary)}
-        .filter-tab.active{background:var(--primary);color:white;border-color:var(--primary)}
-        .table-wrap{border:1px solid var(--border);border-radius:var(--radius);overflow-x:auto;background:var(--bg)}
-        table{width:100%;border-collapse:collapse;font-size:0.85rem}
-        thead{background:var(--surface)}
-        th{text-align:left;padding:10px 16px;font-size:0.75rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;border-bottom:1px solid var(--border)}
-        td{padding:12px 16px;border-bottom:1px solid var(--border);vertical-align:top}
+        .filter-tab{
+            padding:7px 16px;border:1px solid rgba(255,255,255,0.1);border-radius:24px;
+            font-size:0.78rem;font-weight:600;cursor:pointer;
+            background:rgba(255,255,255,0.04);color:var(--text-muted-light);
+            font-family:'Plus Jakarta Sans',sans-serif;transition:all 0.2s;white-space:nowrap;
+        }
+        .filter-tab:hover{border-color:var(--green-500);color:var(--green-400);background:rgba(21,184,114,0.08)}
+        .filter-tab.active{background:linear-gradient(135deg,var(--green-700),var(--green-600));color:white;border-color:transparent;box-shadow:0 4px 12px rgba(15,138,80,0.3)}
+
+        /* ===== TABLE ===== */
+        .table-wrap{border:1px solid rgba(255,255,255,0.08);border-radius:16px;overflow-x:auto;background:rgba(255,255,255,0.03);backdrop-filter:blur(10px)}
+        table{width:100%;border-collapse:collapse;font-size:0.83rem}
+        thead{background:rgba(255,255,255,0.04)}
+        th{text-align:left;padding:12px 16px;font-size:0.72rem;font-weight:700;color:var(--text-muted-light);text-transform:uppercase;letter-spacing:0.5px;border-bottom:1px solid rgba(255,255,255,0.08)}
+        td{padding:14px 16px;border-bottom:1px solid rgba(255,255,255,0.04);vertical-align:top;color:var(--text-cream)}
         tr:last-child td{border-bottom:none}
-        tr:hover td{background:var(--surface)}
-        .img-preview{width:80px;height:80px;object-fit:cover;margin-top:8px;border-radius:var(--radius);border:1px solid var(--border);display:none}
-        .question-box{background:var(--surface);border:1px solid var(--border);padding:12px;border-radius:var(--radius);font-weight:500;font-size:0.9rem;margin-bottom:8px;line-height:1.6}
-        .toast{position:fixed;top:20px;right:20px;padding:12px 20px;border-radius:var(--radius);color:white;font-weight:500;font-family:'Inter',sans-serif;z-index:10000;animation:slideIn 0.3s ease;max-width:360px;font-size:0.85rem;box-shadow:0 4px 12px rgba(0,0,0,0.15)}
-        .toast-success{background:var(--success)}
-        .toast-error{background:var(--danger)}
-        @keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
-        .loading-overlay{position:fixed;inset:0;background:rgba(255,255,255,0.8);display:flex;align-items:center;justify-content:center;z-index:9998}
-        .spinner{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin 0.6s linear infinite}
+        tr:hover td{background:rgba(255,255,255,0.03)}
+        .img-preview{width:80px;height:80px;object-fit:cover;margin-top:8px;border-radius:var(--radius-sm);border:2px solid rgba(255,255,255,0.1);display:none}
+
+        .question-box{
+            background:rgba(21,184,114,0.08);border:1px dashed var(--green-500);
+            padding:14px;border-radius:var(--radius-sm);font-weight:600;font-size:0.9rem;
+            margin-bottom:10px;line-height:1.7;color:var(--green-900);
+        }
+
+        /* ===== TOAST ===== */
+        .toast{
+            position:fixed;top:20px;right:20px;padding:14px 22px;border-radius:var(--radius-sm);
+            color:white;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif;z-index:10000;
+            animation:toastIn 0.4s cubic-bezier(0.34,1.56,0.64,1);max-width:380px;font-size:0.84rem;
+            box-shadow:0 8px 32px rgba(0,0,0,0.2);backdrop-filter:blur(8px);
+        }
+        .toast-success{background:linear-gradient(135deg, rgba(16,185,129,0.95), rgba(5,150,105,0.95))}
+        .toast-error{background:linear-gradient(135deg, rgba(239,68,68,0.95), rgba(220,38,38,0.95))}
+        @keyframes toastIn{from{transform:translateX(120%) scale(0.8);opacity:0}to{transform:translateX(0) scale(1);opacity:1}}
+
+        .loading-overlay{position:fixed;inset:0;background:rgba(4,47,26,0.7);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;z-index:9998}
+        .spinner{width:36px;height:36px;border:3px solid rgba(255,255,255,0.1);border-top-color:var(--green-400);border-radius:50%;animation:spin 0.7s linear infinite}
         @keyframes spin{to{transform:rotate(360deg)}}
+
         .action-btns{display:flex;gap:6px;flex-wrap:wrap}
-        .sub-text{font-size:0.75rem;color:var(--text-light);margin-top:2px}
-        .data-cell-line{margin-bottom:4px}
-        .kriteria-box{background:var(--primary-light);border:1px dashed var(--primary);border-radius:6px;padding:8px 10px;margin-top:8px;font-size:0.8rem;line-height:1.5}
-        .kriteria-box .kriteria-label{font-size:0.7rem;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:2px}
-        .empty-state{text-align:center;color:var(--text-muted);padding:3rem 1rem}
-        .empty-state i{font-size:2.5rem;margin-bottom:1rem;display:block;opacity:0.4}
+        .sub-text{font-size:0.72rem;color:var(--text-muted-light);margin-top:2px}
+        .data-cell-line{margin-bottom:5px;color:var(--text-cream)}
+        .kriteria-box{
+            background:rgba(212,168,67,0.08);border:1px dashed var(--gold-500);
+            border-radius:10px;padding:10px 12px;margin-top:10px;font-size:0.8rem;line-height:1.6;
+        }
+        .kriteria-box .kriteria-label{font-size:0.68rem;font-weight:800;color:var(--gold-400);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:3px}
+
+        .empty-state{text-align:center;color:var(--text-muted-light);padding:3rem 1rem}
+        .empty-state i{font-size:2.5rem;margin-bottom:1rem;display:block;opacity:0.3}
         .empty-state p{font-size:0.9rem}
         .empty-state .retry-btn{margin-top:1rem;display:inline-flex}
-        .status-card{border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin-bottom:1rem;background:var(--bg);transition:box-shadow 0.2s}
-        .status-card:hover{box-shadow:0 2px 8px rgba(0,0,0,0.04)}
-        .status-card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;flex-wrap:wrap;gap:8px}
-        .status-card-title{font-weight:700;font-size:1rem}
-        .status-card-meta{font-size:0.8rem;color:var(--text-muted);line-height:1.7}
-        .status-card-meta i{width:16px;text-align:center;margin-right:4px}
-        .photo-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.75);backdrop-filter:blur(4px);z-index:10000;display:flex;align-items:center;justify-content:center;padding:2rem;cursor:pointer;animation:slideIn 0.2s ease}
+
+        .status-card{
+            border:1px solid rgba(255,255,255,0.08);border-radius:18px;padding:1.5rem;margin-bottom:1rem;
+            background:linear-gradient(145deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+            backdrop-filter:blur(10px);transition:all 0.3s;
+        }
+        .status-card:hover{box-shadow:0 8px 32px rgba(0,0,0,0.15);border-color:rgba(21,184,114,0.15)}
+        .status-card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;flex-wrap:wrap;gap:8px}
+        .status-card-title{font-weight:800;font-size:1.05rem;color:var(--text-white)}
+        .status-card-meta{font-size:0.8rem;color:var(--text-muted-light);line-height:1.8}
+        .status-card-meta i{width:16px;text-align:center;margin-right:6px;color:var(--green-400)}
+
+        /* ===== PHOTO MODAL ===== */
+        .photo-modal-overlay{
+            position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);
+            z-index:10000;display:flex;align-items:center;justify-content:center;padding:2rem;cursor:pointer;
+        }
         .photo-modal-content{position:relative;max-width:90vw;max-height:90vh;cursor:default}
-        .photo-modal-content img{max-width:100%;max-height:85vh;border-radius:var(--radius);box-shadow:0 20px 50px rgba(0,0,0,0.3);object-fit:contain;background:white}
-        .photo-modal-close{position:absolute;top:-12px;right:-12px;width:36px;height:36px;border-radius:50%;background:white;border:none;font-size:1.2rem;color:var(--text-main);cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,0.2);transition:all 0.2s}
+        .photo-modal-content img{max-width:100%;max-height:85vh;border-radius:18px;box-shadow:0 24px 64px rgba(0,0,0,0.4);object-fit:contain;background:white}
+        .photo-modal-close{
+            position:absolute;top:-14px;right:-14px;width:40px;height:40px;border-radius:50%;
+            background:white;border:none;font-size:1.2rem;color:var(--text-main);cursor:pointer;
+            display:flex;align-items:center;justify-content:center;
+            box-shadow:0 4px 16px rgba(0,0,0,0.3);transition:all 0.2s;
+        }
         .photo-modal-close:hover{background:var(--danger);color:white}
-        .wa-info-box{background:#ECFDF5;border:1px solid #A7F3D0;border-radius:var(--radius);padding:16px;margin-bottom:1.5rem}
-        .wa-info-box .wa-title{font-weight:700;color:#065F46;font-size:0.95rem;margin-bottom:6px;display:flex;align-items:center;gap:8px}
-        .wa-info-box .wa-detail{font-size:0.82rem;color:#065F46;line-height:1.6}
-        .wa-info-box .wa-btn{margin-top:10px}
+
+        .wa-info-box{
+            background:rgba(37,211,102,0.08);border:1px solid rgba(37,211,102,0.2);
+            border-radius:var(--radius-sm);padding:18px;margin-bottom:1.5rem;
+        }
+        .wa-info-box .wa-title{font-weight:800;color:#6EE7B7;font-size:0.95rem;margin-bottom:6px;display:flex;align-items:center;gap:8px}
+        .wa-info-box .wa-detail{font-size:0.82rem;color:var(--text-cream);line-height:1.7}
+        .wa-info-box .wa-btn{margin-top:12px}
+
+        /* ===== NOTIFIKASI ===== */
         .notif-wrap{position:relative}
-        .bell-btn{background:none;border:none;font-size:1.15rem;color:var(--text-muted);cursor:pointer;position:relative;padding:8px;border-radius:50%;transition:all 0.2s}
-        .bell-btn:hover{background:var(--surface);color:var(--text-main)}
-        .bell-badge{position:absolute;top:2px;right:2px;background:var(--danger);color:white;font-size:0.6rem;font-weight:700;min-width:16px;height:16px;border-radius:8px;display:flex;align-items:center;justify-content:center;padding:0 4px;animation:pulse 2s infinite}
+        .bell-btn{background:none;border:none;font-size:1.15rem;color:var(--text-muted-light);cursor:pointer;position:relative;padding:8px;border-radius:50%;transition:all 0.2s}
+        .bell-btn:hover{background:rgba(255,255,255,0.08);color:var(--text-white)}
+        .bell-badge{
+            position:absolute;top:2px;right:2px;background:var(--danger);color:white;
+            font-size:0.58rem;font-weight:800;min-width:16px;height:16px;border-radius:8px;
+            display:flex;align-items:center;justify-content:center;padding:0 4px;
+            animation:pulse 2s infinite;
+        }
         @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
-        .notif-panel{position:absolute;top:calc(100% + 8px);right:0;width:380px;max-height:460px;overflow-y:auto;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);box-shadow:0 8px 24px rgba(0,0,0,0.12);z-index:200}
-        .notif-header{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:var(--bg);z-index:1;border-radius:var(--radius) var(--radius) 0 0}
-        .notif-header h4{font-size:0.9rem;font-weight:700}
-        .notif-close-btn{background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--text-muted);line-height:1;padding:0 2px}
-        .notif-close-btn:hover{color:var(--text-main)}
-        .notif-item{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;gap:10px;align-items:flex-start;font-size:0.82rem;line-height:1.5;transition:background 0.15s;cursor:default}
-        .notif-item:hover{background:var(--surface)}
+        .notif-panel{
+            position:absolute;top:calc(100% + 8px);right:0;width:380px;max-height:460px;overflow-y:auto;
+            background:linear-gradient(145deg, #0a3d23, var(--bg-dark));
+            border:1px solid rgba(255,255,255,0.1);border-radius:16px;
+            box-shadow:0 16px 48px rgba(0,0,0,0.4);z-index:200;
+        }
+        .notif-header{padding:14px 18px;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:rgba(4,47,26,0.95);backdrop-filter:blur(8px);z-index:1;border-radius:16px 16px 0 0}
+        .notif-header h4{font-size:0.9rem;font-weight:700;color:var(--text-white)}
+        .notif-close-btn{background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--text-muted-light);line-height:1;padding:0 2px}
+        .notif-close-btn:hover{color:var(--text-white)}
+        .notif-item{padding:14px 18px;border-bottom:1px solid rgba(255,255,255,0.04);display:flex;gap:12px;align-items:flex-start;font-size:0.82rem;line-height:1.6;transition:background 0.15s;cursor:default;color:var(--text-cream)}
+        .notif-item:hover{background:rgba(255,255,255,0.04)}
         .notif-item:last-child{border-bottom:none}
-        .notif-icon{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:0.75rem}
-        .notif-icon.taaruf{background:var(--primary-light);color:var(--primary)}
-        .notif-icon.kegiatan{background:var(--success-light);color:var(--success)}
+        .notif-icon{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:0.75rem}
+        .notif-icon.taaruf{background:rgba(59,130,246,0.15);color:#93C5FD}
+        .notif-icon.kegiatan{background:rgba(16,185,129,0.15);color:#6EE7B7}
         .notif-text{flex:1}
-        .notif-text strong{color:var(--text-main)}
-        .notif-time{font-size:0.7rem;color:var(--text-light);margin-top:3px}
-        .notif-empty{padding:2rem;text-align:center;color:var(--text-muted);font-size:0.85rem}
-        .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);z-index:9000;display:flex;align-items:center;justify-content:center;padding:1.5rem;animation:fadeIn 0.2s ease}
-        @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-        .modal-card{background:var(--bg);border-radius:12px;padding:2rem;width:100%;max-width:420px;box-shadow:0 20px 50px rgba(0,0,0,0.2)}
-        .modal-card h3{font-size:1.15rem;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+        .notif-text strong{color:var(--text-white)}
+        .notif-time{font-size:0.68rem;color:rgba(255,255,255,0.35);margin-top:4px}
+        .notif-empty{padding:2.5rem;text-align:center;color:var(--text-muted-light);font-size:0.85rem}
+
+        /* ===== MODAL ===== */
+        .modal-overlay{
+            position:fixed;inset:0;background:rgba(4,47,26,0.8);backdrop-filter:blur(8px);
+            z-index:9000;display:flex;align-items:center;justify-content:center;padding:1.5rem;
+        }
+        .modal-card{
+            background:linear-gradient(145deg, rgba(255,255,255,0.97), rgba(240,253,244,0.97));
+            border-radius:20px;padding:2rem;width:100%;max-width:440px;
+            box-shadow:0 24px 80px rgba(0,0,0,0.4), var(--shadow-glow);
+            border:1px solid rgba(255,255,255,0.2);
+        }
+        .modal-card h3{font-size:1.15rem;font-weight:800;margin-bottom:4px;display:flex;align-items:center;gap:8px;color:var(--green-900)}
         .modal-card .modal-sub{font-size:0.82rem;color:var(--text-muted);margin-bottom:1.25rem}
-        .modal-card .question-box{margin-bottom:1rem;font-size:0.95rem;line-height:1.6}
+        .modal-card .question-box{margin-bottom:1rem;font-size:0.95rem;line-height:1.7}
         .modal-actions{display:flex;gap:8px;margin-top:1.25rem}
         .modal-actions .btn{flex:1}
-        .kegiatan-card{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:var(--bg);margin-bottom:1.25rem;transition:box-shadow 0.2s}
-        .kegiatan-card:hover{box-shadow:0 4px 12px rgba(0,0,0,0.05)}
+
+        /* ===== KEGIATAN ===== */
+        .kegiatan-card{
+            border:1px solid rgba(255,255,255,0.08);border-radius:18px;overflow:hidden;
+            background:linear-gradient(145deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+            backdrop-filter:blur(10px);margin-bottom:1.25rem;transition:all 0.3s;
+        }
+        .kegiatan-card:hover{box-shadow:0 8px 32px rgba(0,0,0,0.15);border-color:rgba(21,184,114,0.15)}
         .kegiatan-card img{width:100%;max-height:320px;object-fit:cover;cursor:pointer;display:block}
-        .kegiatan-card-body{padding:1.25rem}
-        .kegiatan-card-title{font-size:1.1rem;font-weight:700;margin-bottom:8px;color:var(--text-main)}
-        .kegiatan-card-content{font-size:0.9rem;color:var(--text-muted);line-height:1.7;white-space:pre-wrap}
-        .kegiatan-card-footer{padding:0.75rem 1.25rem;border-top:1px solid var(--border);font-size:0.78rem;color:var(--text-light);display:flex;justify-content:space-between;align-items:center}
-        .kegiatan-form-card{border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;margin-bottom:1.5rem;background:var(--surface)}
-        .kegiatan-form-card h4{font-size:0.95rem;font-weight:700;margin-bottom:1rem;display:flex;align-items:center;gap:8px}
-        .kegiatan-form-card h4 i{color:var(--primary)}
+        .kegiatan-card-body{padding:1.5rem}
+        .kegiatan-card-title{font-size:1.1rem;font-weight:800;margin-bottom:10px;color:var(--text-white)}
+        .kegiatan-card-content{font-size:0.88rem;color:var(--text-muted-light);line-height:1.8;white-space:pre-wrap}
+        .kegiatan-card-footer{padding:0.85rem 1.5rem;border-top:1px solid rgba(255,255,255,0.06);font-size:0.76rem;color:rgba(255,255,255,0.35);display:flex;justify-content:space-between;align-items:center}
+        .kegiatan-form-card{
+            border:1px solid rgba(255,255,255,0.08);border-radius:18px;padding:1.5rem;margin-bottom:1.5rem;
+            background:linear-gradient(145deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+            backdrop-filter:blur(10px);
+        }
+        .kegiatan-form-card h4{font-size:0.95rem;font-weight:700;margin-bottom:1rem;display:flex;align-items:center;gap:8px;color:var(--text-white)}
+        .kegiatan-form-card h4 i{color:var(--green-400)}
+
+        /* ===== PAGINATION ===== */
         .pagination-wrap{display:flex;justify-content:space-between;align-items:center;margin-top:1.5rem;padding:0.5rem 0;flex-wrap:wrap;gap:0.75rem}
-        .pagination-info{font-size:0.82rem;color:var(--text-muted);white-space:nowrap}
-        .pagination-info strong{color:var(--text-main);font-weight:600}
+        .pagination-info{font-size:0.82rem;color:var(--text-muted-light);white-space:nowrap}
+        .pagination-info strong{color:var(--green-400);font-weight:700}
         .pagination-buttons{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
-        .page-btn{min-width:36px;height:36px;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text-muted);font-size:0.82rem;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.15s;padding:0 6px;user-select:none}
-        .page-btn:hover:not(:disabled):not(.active){border-color:var(--primary);color:var(--primary);background:var(--primary-light)}
-        .page-btn.active{background:var(--primary);color:white;border-color:var(--primary);font-weight:700;box-shadow:0 2px 6px rgba(79,70,229,0.3)}
-        .page-btn:disabled{opacity:0.35;cursor:not-allowed;background:var(--surface)}
-        .page-ellipsis{padding:0 4px;color:var(--text-light);font-size:0.85rem;letter-spacing:1px;user-select:none}
-        .page-size-select{display:flex;align-items:center;gap:6px;font-size:0.82rem;color:var(--text-muted)}
-        .page-size-select select{width:auto;padding:5px 28px 5px 8px;font-size:0.8rem;border-radius:6px;height:36px}
+        .page-btn{
+            min-width:36px;height:36px;display:flex;align-items:center;justify-content:center;
+            border:1px solid rgba(255,255,255,0.1);border-radius:8px;
+            background:rgba(255,255,255,0.04);color:var(--text-muted-light);
+            font-size:0.82rem;font-weight:600;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;
+            transition:all 0.2s;padding:0 6px;user-select:none;
+        }
+        .page-btn:hover:not(:disabled):not(.active){border-color:var(--green-500);color:var(--green-400);background:rgba(21,184,114,0.1)}
+        .page-btn.active{background:linear-gradient(135deg,var(--green-700),var(--green-600));color:white;border-color:transparent;font-weight:800;box-shadow:0 4px 12px rgba(15,138,80,0.4)}
+        .page-btn:disabled{opacity:0.25;cursor:not-allowed}
+        .page-ellipsis{padding:0 4px;color:rgba(255,255,255,0.3);font-size:0.85rem;letter-spacing:1px;user-select:none}
+        .page-size-select{display:flex;align-items:center;gap:6px;font-size:0.82rem;color:var(--text-muted-light)}
+        .page-size-select select{width:auto;padding:5px 28px 5px 8px;font-size:0.8rem;border-radius:8px;height:36px;background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.1);color:var(--text-cream)}
+        .page-size-select select option{background:var(--bg-dark);color:var(--text-cream)}
+
+        /* ===== WELCOME BANNER ===== */
+        .welcome-banner{
+            background:linear-gradient(135deg, rgba(21,184,114,0.15), rgba(212,168,67,0.08));
+            border:1px solid rgba(21,184,114,0.15);border-radius:20px;padding:2rem;
+            margin-bottom:1.5rem;position:relative;overflow:hidden;
+        }
+        .welcome-banner::before{
+            content:'';position:absolute;top:-20px;right:-20px;width:120px;height:120px;
+            background:radial-gradient(circle, rgba(212,168,67,0.15), transparent);border-radius:50%;
+        }
+        .welcome-banner .greeting-arabic{font-family:'Amiri',serif;font-size:1.4rem;color:var(--gold-400);margin-bottom:0.5rem}
+        .welcome-banner .greeting-main{font-size:1.3rem;font-weight:800;color:var(--text-white);margin-bottom:0.5rem}
+        .welcome-banner .greeting-sub{font-size:0.88rem;color:var(--text-muted-light);line-height:1.6}
+        .welcome-banner .greeting-sub b{color:var(--green-400)}
+
+        /* ===== STATS ROW ===== */
+        .stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin-bottom:1.5rem}
+        .stat-card{
+            background:linear-gradient(145deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+            border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:1.25rem;
+            text-align:center;transition:all 0.3s;
+        }
+        .stat-card:hover{border-color:rgba(21,184,114,0.2);transform:translateY(-2px)}
+        .stat-card .stat-icon{font-size:1.5rem;margin-bottom:0.5rem;color:var(--green-400)}
+        .stat-card .stat-value{font-size:1.5rem;font-weight:800;color:var(--text-white)}
+        .stat-card .stat-label{font-size:0.72rem;color:var(--text-muted-light);margin-top:2px;text-transform:uppercase;letter-spacing:0.5px}
+
+        /* ===== RESPONSIVE ===== */
         @media(max-width:768px){
-            .sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}
-            .overlay.open{display:block}.main{margin-left:0}
-            .hamburger{display:block}.main-content{padding:1.25rem}
-            .grid-2{grid-template-columns:1fr}.card-grid{grid-template-columns:1fr}.data-grid{grid-template-columns:1fr}
-            .filter-tabs{gap:4px}.filter-tab{padding:5px 10px;font-size:0.75rem}
+            .sidebar{transform:translateX(-100%)}
+            .sidebar.open{transform:translateX(0)}
+            .overlay.open{display:block}
+            .main{margin-left:0}
+            .hamburger{display:block}
+            .main-content{padding:1.25rem}
+            .grid-2{grid-template-columns:1fr}
+            .card-grid{grid-template-columns:1fr}
+            .data-grid{grid-template-columns:1fr}
+            .filter-tabs{gap:4px}
+            .filter-tab{padding:5px 10px;font-size:0.72rem}
             .notif-panel{width:calc(100vw - 2rem);right:-0.5rem}
             .pagination-wrap{flex-direction:column;align-items:stretch;text-align:center}
             .pagination-buttons{justify-content:center}
             .pagination-info{text-align:center}
+            .stats-row{grid-template-columns:1fr 1fr}
+            .auth-card{padding:2rem 1.5rem;border-radius:20px}
         }
     </style>
 </head>
 <body>
 
+<!-- Latar belakang Islami -->
+<div class="islamic-bg"></div>
+
 <div id="login-view" class="auth-wrapper">
     <div class="auth-card">
-        <div class="auth-header"><h1>Halal<span>kan</span></h1><p>Bismillah, mulai perjalanan ta'arufmu</p></div>
+        <div class="auth-header">
+            <div class="auth-logo"><i class="fas fa-mosque"></i></div>
+            <div class="arabic-greeting">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</div>
+            <h1>Halal<span>kan</span></h1>
+            <p>Mulai perjalanan ta'arufmu dengan berkah</p>
+        </div>
         <form onsubmit="event.preventDefault();login();">
             <div class="form-group"><label>Email</label><div class="input-wrapper"><i class="fas fa-envelope icon-left"></i><input type="email" id="loginEmail" placeholder="email@contoh.com" required></div></div>
             <div class="form-group"><label>Password</label><div class="input-wrapper"><i class="fas fa-lock icon-left"></i><input type="password" id="loginPass" placeholder="Masukkan password" required></div></div>
@@ -228,7 +551,12 @@
 
 <div id="register-view" class="auth-wrapper hidden">
     <div class="auth-card">
-        <div class="auth-header"><h1>Daftar <span>Akun</span></h1><p>Isi data untuk membuat akun baru</p></div>
+        <div class="auth-header">
+            <div class="auth-logo"><i class="fas fa-user-plus"></i></div>
+            <div class="arabic-greeting">بِسْمِ اللَّهِ</div>
+            <h1>Daftar <span>Akun</span></h1>
+            <p>Isi data untuk membuat akun baru</p>
+        </div>
         <form id="registerForm" onsubmit="handleRegisterClick(event)">
             <div class="form-group"><label>Email</label><div class="input-wrapper"><i class="fas fa-envelope icon-left"></i><input type="email" id="regEmail" placeholder="email@contoh.com" required></div></div>
             <div class="form-group"><label>Password</label><div class="input-wrapper"><i class="fas fa-lock icon-left"></i><input type="password" id="regPass" placeholder="Min 6 karakter" required minlength="6"></div></div>
@@ -241,8 +569,8 @@
 
 <div id="verify-modal" class="modal-overlay hidden">
     <div class="modal-card">
-        <h3><i class="fas fa-shield-alt" style="color:var(--primary)"></i> Pertanyaan</h3>
-        <p class="modal-sub">Jawab pertanyaan berikut ini</p>
+        <h3><i class="fas fa-shield-alt" style="color:var(--green-700)"></i> Verifikasi Komunitas</h3>
+        <p class="modal-sub">Jawab pertanyaan berikut untuk membuktikan Anda anggota komunitas</p>
         <div class="question-box" id="modalQuestion">Memuat pertanyaan...</div>
         <input type="hidden" id="modalQuestionHidden">
         <div class="input-wrapper"><i class="fas fa-key icon-left"></i><input type="text" id="modalAnswer" placeholder="Ketik jawaban Anda" onkeydown="if(event.key==='Enter'){event.preventDefault();submitVerifyAndRegister();}"></div>
@@ -256,7 +584,10 @@
 <div id="app-shell" class="app-shell hidden">
     <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
     <aside class="sidebar" id="sidebar">
-        <div class="sidebar-header"><h2>Halal<span>kan</span></h2></div>
+        <div class="sidebar-header">
+            <div class="sidebar-logo"><i class="fas fa-mosque"></i></div>
+            <h2>Halal<span>kan</span></h2>
+        </div>
         <nav class="sidebar-nav" id="sidebarNav">
             <div id="nav-personal">
                 <a class="active" onclick="switchPage('home')" data-page="home"><i class="fas fa-home nav-icon"></i> Beranda</a>
@@ -272,7 +603,7 @@
                 <a onclick="switchPage('admin-kegiatan')" data-page="admin-kegiatan"><i class="fas fa-bullhorn nav-icon"></i> Kelola Kegiatan</a>
             </div>
             <div style="flex:1"></div>
-            <a onclick="logout()" style="color:var(--danger)"><i class="fas fa-sign-out-alt nav-icon"></i> Keluar</a>
+            <a onclick="logout()" style="color:#FCA5A5"><i class="fas fa-sign-out-alt nav-icon"></i> Keluar</a>
         </nav>
         <div class="sidebar-footer">
             <div class="sidebar-user">
@@ -293,7 +624,21 @@
             </div>
         </header>
         <div class="main-content">
-            <div id="page-home"><div class="alert alert-info"><i class="fas fa-info-circle"></i><div>Selamat datang di <b>Halalkan</b>! Lengkapi profil dan mulai cari jodoh melalui menu <b>Cari Jodoh</b>.<br>Pengajuan ta'aruf akan diarahkan langsung ke WhatsApp tim ta'aruf daerah terkait.</div></div></div>
+            <!-- BERANDA -->
+            <div id="page-home">
+                <div class="welcome-banner">
+                    <div class="greeting-arabic">اَلسَلاَمُ عَلَيْكُمْ وَرَحْمَةُ اللهِ</div>
+                    <div class="greeting-main" id="welcomeName">Selamat Datang!</div>
+                    <div class="greeting-sub">Selamat datang di <b>Halalkan</b>! Lengkapi profil dan mulai cari jodoh melalui menu <b>Cari Jodoh</b>.<br>Pengajuan ta'aruf akan diarahkan langsung ke WhatsApp tim ta'aruf daerah terkait.</div>
+                </div>
+                <div class="stats-row">
+                    <div class="stat-card"><div class="stat-icon"><i class="fas fa-users"></i></div><div class="stat-value" id="statPeserta">-</div><div class="stat-label">Total Peserta</div></div>
+                    <div class="stat-card"><div class="stat-icon"><i class="fas fa-heart"></i></div><div class="stat-value" id="statTaaruf">-</div><div class="stat-label">Proses Ta'aruf</div></div>
+                    <div class="stat-card"><div class="stat-icon"><i class="fas fa-ring"></i></div><div class="stat-value" id="statMenikah">-</div><div class="stat-label">Sudah Menikah</div></div>
+                    <div class="stat-card"><div class="stat-icon"><i class="fas fa-bullhorn"></i></div><div class="stat-value" id="statKegiatan">-</div><div class="stat-label">Info Kegiatan</div></div>
+                </div>
+            </div>
+            <!-- CARI JODOH -->
             <div id="page-search" class="hidden">
                 <div class="alert alert-warning" style="margin-bottom:1rem"><i class="fab fa-whatsapp"></i><div>Klik <b>Ajukan Ta'aruf</b> untuk langsung terhubung ke WhatsApp tim ta'aruf daerah target.</div></div>
                 <div id="search-taaruf-blocked" class="hidden" style="margin-bottom:1rem"></div>
@@ -301,8 +646,11 @@
                 <div id="dashboard-list" class="card-grid"></div>
                 <div id="dashboard-pagination"></div>
             </div>
+            <!-- STATUS TAARUF -->
             <div id="page-status" class="hidden"><div id="status-content"></div></div>
+            <!-- KEGIATAN -->
             <div id="page-kegiatan" class="hidden"><div id="kegiatan-list"></div></div>
+            <!-- EDIT PROFIL -->
             <div id="page-profile" class="hidden">
                 <div class="alert alert-warning" id="profileAlert"><i class="fas fa-exclamation-triangle"></i><div>Lengkapi profil terlebih dahulu untuk membuka fitur Cari Jodoh dan Status Ta'aruf.</div></div>
                 <form id="profileForm" onsubmit="handleUpdateProfile(event)">
@@ -337,7 +685,21 @@
                     <button type="submit" id="btnSaveProfile" class="btn" style="margin-top:1rem"><i class="fas fa-save"></i> Simpan Profil</button>
                 </form>
             </div>
-            <div id="page-admin-home" class="hidden"><div class="alert alert-info"><i class="fas fa-shield-alt"></i><div>Anda masuk sebagai <b id="adminRoleLabel">Admin</b> Wilayah <b id="adminScopeLabel">-</b>.</div></div></div>
+            <!-- ADMIN HOME -->
+            <div id="page-admin-home" class="hidden">
+                <div class="welcome-banner">
+                    <div class="greeting-arabic">اَلسَلاَمُ عَلَيْكُمْ</div>
+                    <div class="greeting-main">Dashboard Admin</div>
+                    <div class="greeting-sub">Anda masuk sebagai <b id="adminRoleLabel">Admin</b> Wilayah <b id="adminScopeLabel">-</b>.</div>
+                </div>
+                <div class="stats-row">
+                    <div class="stat-card"><div class="stat-icon"><i class="fas fa-users"></i></div><div class="stat-value" id="statAdminPeserta">-</div><div class="stat-label">Total Peserta</div></div>
+                    <div class="stat-card"><div class="stat-icon"><i class="fas fa-clock"></i></div><div class="stat-value" id="statAdminPending">-</div><div class="stat-label">Ta'aruf Pending</div></div>
+                    <div class="stat-card"><div class="stat-icon"><i class="fas fa-heart"></i></div><div class="stat-value" id="statAdminProses">-</div><div class="stat-label">Sedang Proses</div></div>
+                    <div class="stat-card"><div class="stat-icon"><i class="fas fa-ring"></i></div><div class="stat-value" id="statAdminMenikah">-</div><div class="stat-label">Sudah Menikah</div></div>
+                </div>
+            </div>
+            <!-- ADMIN USERS -->
             <div id="page-admin-users" class="hidden">
                 <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.75rem;margin-bottom:1.25rem">
                     <div class="search-wrap" style="margin-bottom:0;flex:1;min-width:200px;max-width:400px"><i class="fas fa-search"></i><input type="text" class="search-bar" id="adminSearchInput" placeholder="Cari peserta..." oninput="filterAdmin()"></div>
@@ -346,6 +708,7 @@
                 <div class="table-wrap"><table><thead><tr><th>Peserta</th><th>Data Pribadi</th><th>Pekerjaan & Lainnya</th><th>Wilayah</th><th>Status</th></tr></thead><tbody id="admin-tbody"></tbody></table></div>
                 <div id="admin-users-pagination"></div>
             </div>
+            <!-- ADMIN TAARUF -->
             <div id="page-admin-taaruf" class="hidden">
                 <div class="filter-tabs" id="taarufFilterTabs">
                     <button class="filter-tab active" onclick="filterTaaruf(this,'')">Semua</button>
@@ -357,6 +720,7 @@
                 </div>
                 <div class="table-wrap"><table><thead><tr><th>Tanggal</th><th>Pelamar</th><th>Target</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="admin-taaruf-tbody"></tbody></table></div>
             </div>
+            <!-- ADMIN KEGIATAN -->
             <div id="page-admin-kegiatan" class="hidden">
                 <div class="kegiatan-form-card">
                     <h4><i class="fas fa-plus-circle"></i> Tambah Informasi Kegiatan</h4>
@@ -364,7 +728,7 @@
                         <div class="form-group"><label>Judul</label><div class="input-wrapper"><i class="fas fa-heading icon-left"></i><input type="text" id="kgJudul" placeholder="Judul informasi" required></div></div>
                         <div class="form-group"><label>Isi Informasi</label><textarea id="kgIsi" rows="4" placeholder="Tulis isi informasi kegiatan..." required></textarea></div>
                         <div class="form-group"><label>Gambar (opsional, maks 3MB)</label><input type="file" id="kgFoto" accept="image/*" onchange="previewFoto(event,'kgFotoPreview')"><img id="kgFotoPreview" class="img-preview" src="" alt="Preview"></div>
-                        <button type="submit" id="btnAddKg" class="btn btn-sm" style="width:auto"><i class="fas fa-paper-plane"></i> Publikasikan</button>
+                        <button type="submit" id="btnAddKg" class="btn btn-sm btn-gold" style="width:auto"><i class="fas fa-paper-plane"></i> Publikasikan</button>
                     </form>
                 </div>
                 <div id="admin-kegiatan-list"></div>
@@ -384,12 +748,7 @@ var currentTaarufFilter = '';
 var cachedTaarufTim = {};
 var cachedKegiatan = [];
 var adminRoles = ['Admin', 'Desa', 'Daerah', 'Super Admin'];
-
-var searchCurrentPage = 1;
-var searchPageSize = 6;
-var adminCurrentPage = 1;
-var adminPageSize = 10;
-var searchIamInTaaruf = false;
+var searchCurrentPage = 1, searchPageSize = 6, adminCurrentPage = 1, adminPageSize = 10, searchIamInTaaruf = false;
 
 function showToast(msg, type) {
     type = type || 'success';
@@ -402,7 +761,6 @@ function showToast(msg, type) {
 function showLoading() { var o = document.createElement('div'); o.className = 'loading-overlay'; o.id = 'loadOv'; o.innerHTML = '<div class="spinner"></div>'; document.body.appendChild(o); }
 function hideLoading() { var el = document.getElementById('loadOv'); if (el) el.remove(); }
 
-/* ===== FETCH DENGAN TIMEOUT & CACHE BUSTING ===== */
 async function fetchGAS(action, params, method, body) {
     params = params || {}; method = method || 'GET'; body = body || null;
     var url = GAS_URL + '?action=' + action;
@@ -415,33 +773,16 @@ async function fetchGAS(action, params, method, body) {
             var resp = await fetch(url, { signal: controller.signal, cache: 'no-store' });
             clearTimeout(timeoutId);
             var text = await resp.text();
-            try { return JSON.parse(text); } catch (pe) {
-                console.error('JSON parse error:', text.substring(0, 200));
-                showToast('Respons server tidak valid', 'error');
-                return { status: 'error', message: 'Respons tidak valid' };
-            }
+            try { return JSON.parse(text); } catch (pe) { showToast('Respons server tidak valid', 'error'); return { status: 'error', message: 'Respons tidak valid' }; }
         } else {
-            var resp = await fetch(url, {
-                method: 'POST',
-                headers: { 'Content-Type': 'text/plain' },
-                body: JSON.stringify(Object.assign({ action: action }, body)),
-                signal: controller.signal
-            });
+            var resp = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(Object.assign({ action: action }, body)), signal: controller.signal });
             clearTimeout(timeoutId);
             var text = await resp.text();
-            try { return JSON.parse(text); } catch (pe) {
-                console.error('JSON parse error:', text.substring(0, 200));
-                showToast('Respons server tidak valid', 'error');
-                return { status: 'error', message: 'Respons tidak valid' };
-            }
+            try { return JSON.parse(text); } catch (pe) { showToast('Respons server tidak valid', 'error'); return { status: 'error', message: 'Respons tidak valid' }; }
         }
     } catch (e) {
         clearTimeout(timeoutId);
-        if (e.name === 'AbortError') {
-            showToast('Permintaan timeout, silakan coba lagi', 'error');
-        } else {
-            showToast('Gagal terhubung ke server', 'error');
-        }
+        showToast(e.name === 'AbortError' ? 'Permintaan timeout' : 'Gagal terhubung ke server', 'error');
         return { status: 'error', message: e.message || 'Koneksi gagal' };
     }
 }
@@ -449,7 +790,6 @@ async function fetchGAS(action, params, method, body) {
 function showView(id) { document.querySelectorAll('.auth-wrapper, .app-shell').forEach(function (el) { el.classList.add('hidden'); }); var t = document.getElementById(id); if (t) t.classList.remove('hidden'); }
 function getPhotoUrl(url) { if (!url) return ''; var m = url.match(/\/d\/([a-zA-Z0-9_-]+)/); if (m) return 'https://drive.google.com/thumbnail?id=' + m[1] + '&sz=w400'; return url.indexOf('thumbnail?id=') !== -1 ? url : url; }
 function getInitials(n) { if (!n) return '?'; var p = n.trim().split(/\s+/); return p.length === 1 ? p[0][0].toUpperCase() : (p[0][0] + p[p.length - 1][0]).toUpperCase(); }
-function getAvatarColor(n) { var h = 0; for (var i = 0; i < (n || '').length; i++) { h = n.charCodeAt(i) + ((h << 5) - h); } return ['#4F46E5', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6'][Math.abs(h) % 5]; }
 function esc(s) { return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
 function openPhotoModal(url) { document.body.insertAdjacentHTML('beforeend', '<div class="photo-modal-overlay" onclick="closePhotoModal(event)"><div class="photo-modal-content" onclick="event.stopPropagation()"><button class="photo-modal-close" onclick="closePhotoModal()"><i class="fas fa-times"></i></button><img src="' + url.replace('sz=w400', 'sz=w1200') + '" alt="Foto"></div></div>'); }
 function closePhotoModal(event) { if (event && event.target !== event.currentTarget) return; var m = document.querySelector('.photo-modal-overlay'); if (m) m.remove(); }
@@ -457,7 +797,6 @@ function toggleSidebar() { document.getElementById('sidebar').classList.toggle('
 function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('overlay').classList.remove('open'); }
 function handleLockedNav(page) { if (!currentUser.isComplete) { showToast('Lengkapi profil Anda terlebih dahulu.', 'error'); return; } switchPage(page); }
 
-/* ===== PAGINATION HELPER ===== */
 function getPaginationRange(current, total) {
     if (total <= 7) { var arr = []; for (var i = 1; i <= total; i++) arr.push(i); return arr; }
     var pages = [];
@@ -466,26 +805,17 @@ function getPaginationRange(current, total) {
     else { pages.push(1, '...', current - 1, current, current + 1, '...', total); }
     return pages;
 }
-
 function generatePagination(containerId, currentPage, totalPages, totalItems, pageSize, fnName) {
     var container = document.getElementById(containerId);
     if (totalPages <= 1 || totalItems === 0) { container.innerHTML = ''; return; }
-    var startItem = (currentPage - 1) * pageSize + 1;
-    var endItem = Math.min(currentPage * pageSize, totalItems);
+    var startItem = (currentPage - 1) * pageSize + 1, endItem = Math.min(currentPage * pageSize, totalItems);
     var pages = getPaginationRange(currentPage, totalPages);
-    var html = '<div class="pagination-wrap">';
-    html += '<div class="pagination-info">Menampilkan <strong>' + startItem + ' - ' + endItem + '</strong> dari <strong>' + totalItems + '</strong> data</div>';
-    html += '<div class="pagination-buttons">';
+    var html = '<div class="pagination-wrap"><div class="pagination-info">Menampilkan <strong>' + startItem + ' - ' + endItem + '</strong> dari <strong>' + totalItems + '</strong> data</div><div class="pagination-buttons">';
     html += '<button class="page-btn" ' + (currentPage === 1 ? 'disabled' : '') + ' onclick="' + fnName + '(' + (currentPage - 1) + ')"><i class="fas fa-chevron-left"></i></button>';
-    for (var i = 0; i < pages.length; i++) {
-        if (pages[i] === '...') { html += '<span class="page-ellipsis">...</span>'; }
-        else { html += '<button class="page-btn ' + (pages[i] === currentPage ? 'active' : '') + '" onclick="' + fnName + '(' + pages[i] + ')">' + pages[i] + '</button>'; }
-    }
-    html += '<button class="page-btn" ' + (currentPage === totalPages ? 'disabled' : '') + ' onclick="' + fnName + '(' + (currentPage + 1) + ')"><i class="fas fa-chevron-right"></i></button>';
-    html += '</div></div>';
+    for (var i = 0; i < pages.length; i++) { if (pages[i] === '...') html += '<span class="page-ellipsis">...</span>'; else html += '<button class="page-btn ' + (pages[i] === currentPage ? 'active' : '') + '" onclick="' + fnName + '(' + pages[i] + ')">' + pages[i] + '</button>'; }
+    html += '<button class="page-btn" ' + (currentPage === totalPages ? 'disabled' : '') + ' onclick="' + fnName + '(' + (currentPage + 1) + ')"><i class="fas fa-chevron-right"></i></button></div></div>';
     container.innerHTML = html;
 }
-
 function goToSearchPage(page) { searchCurrentPage = page; renderCards(allUsers, searchIamInTaaruf); document.getElementById('dashboard-list').scrollIntoView({ behavior: 'smooth', block: 'start' }); }
 function goToAdminPage(page) { adminCurrentPage = page; renderAdminUsers(allUsers); document.getElementById('admin-tbody').scrollIntoView({ behavior: 'smooth', block: 'start' }); }
 function changeAdminPageSize() { adminPageSize = parseInt(document.getElementById('adminPageSizeSelect').value) || 10; adminCurrentPage = 1; renderAdminUsers(allUsers); }
@@ -497,6 +827,8 @@ function switchPage(page) {
     var al = document.querySelector('.sidebar-nav a[data-page="' + page + '"]'); if (al) al.classList.add('active');
     var titles = { 'home': 'Beranda', 'search': 'Cari Jodoh', 'status': "Status Ta'aruf", 'kegiatan': 'Info Kegiatan', 'profile': 'Edit Profil', 'admin-home': 'Dashboard Admin', 'admin-users': 'Data Peserta', 'admin-taaruf': "Pengajuan Ta'aruf", 'admin-kegiatan': 'Kelola Kegiatan' };
     document.getElementById('pageTitle').textContent = titles[page] || '';
+    if (page === 'home' && !adminRoles.includes(currentUser.role)) loadHomeStats();
+    if (page === 'admin-home') loadAdminStats();
     if (page === 'search' && currentUser.isComplete) loadDashboard();
     if (page === 'status' && currentUser.isComplete) loadMyTaarufStatus();
     if (page === 'kegiatan') loadKegiatanPage();
@@ -513,77 +845,63 @@ function updateShell() {
     document.getElementById('sidebarRole').textContent = currentUser.role + (currentUser.scope && currentUser.scope !== 'All' ? ' ' + currentUser.scope : '');
     var av = document.getElementById('sidebarAvatar');
     if (currentUser.foto) av.innerHTML = '<img src="' + getPhotoUrl(currentUser.foto) + '">'; else av.textContent = getInitials(currentUser.nama);
-    var isAd = adminRoles.indexOf(currentUser.role) !== -1;
-    if (isAd) { document.getElementById('nav-personal').classList.add('hidden'); document.getElementById('nav-admin').classList.remove('hidden'); document.getElementById('adminRoleLabel').textContent = currentUser.role; document.getElementById('adminScopeLabel').textContent = currentUser.scope || 'All'; }
-    else { document.getElementById('nav-personal').classList.remove('hidden'); document.getElementById('nav-admin').classList.add('hidden'); updateLockedMenus(); }
+    if (adminRoles.indexOf(currentUser.role) !== -1) {
+        document.getElementById('nav-personal').classList.add('hidden'); document.getElementById('nav-admin').classList.remove('hidden');
+        document.getElementById('adminRoleLabel').textContent = currentUser.role; document.getElementById('adminScopeLabel').textContent = currentUser.scope || 'All';
+    } else {
+        document.getElementById('nav-personal').classList.remove('hidden'); document.getElementById('nav-admin').classList.add('hidden');
+        updateLockedMenus(); document.getElementById('welcomeName').textContent = 'Assalamu\'alaikum, ' + currentUser.nama + '!';
+    }
 }
-function updateLockedMenus() { if (!currentUser) return; var ic = currentUser.isComplete; document.getElementById('lock-search').classList.toggle('hidden', ic); document.getElementById('nav-search').classList.toggle('locked', !ic); document.getElementById('lock-status').classList.toggle('hidden', ic); document.getElementById('nav-status').classList.toggle('locked', !ic); document.getElementById('profileAlert').classList.toggle('hidden', ic); }
+function updateLockedMenus() {
+    if (!currentUser) return; var ic = currentUser.isComplete;
+    document.getElementById('lock-search').classList.toggle('hidden', ic); document.getElementById('nav-search').classList.toggle('locked', !ic);
+    document.getElementById('lock-status').classList.toggle('hidden', ic); document.getElementById('nav-status').classList.toggle('locked', !ic);
+    document.getElementById('profileAlert').classList.toggle('hidden', ic);
+}
 function previewFoto(event, prevId) { var file = event.target.files[0]; var imgEl = document.getElementById(prevId); if (file) { var r = new FileReader(); r.onload = function (e) { imgEl.src = e.target.result; imgEl.style.display = 'block'; }; r.readAsDataURL(file); } else { imgEl.style.display = 'none'; } }
 function compressImage(file, mw, q) { return new Promise(function (res, rej) { var r = new FileReader(); r.onload = function (e) { var img = new Image(); img.onload = function () { var c = document.createElement('canvas'); var w = img.width, h = img.height; if (w > mw) { h = Math.round((mw / w) * h); w = mw; } c.width = w; c.height = h; c.getContext('2d').drawImage(img, 0, 0, w, h); res(c.toDataURL('image/jpeg', q).split(',')[1]); }; img.onerror = rej; img.src = e.target.result; }; r.onerror = rej; r.readAsDataURL(file); }); }
 
-/* ========== NOTIFIKASI ========== */
+/* NOTIFIKASI */
 function toggleNotifPanel(e) { e.stopPropagation(); var p = document.getElementById('notif-panel'); p.classList.toggle('hidden'); if (!p.classList.contains('hidden')) loadNotifContent(); }
 function closeNotifPanel() { document.getElementById('notif-panel').classList.add('hidden'); }
 document.addEventListener('click', function (e) { var w = document.querySelector('.notif-wrap'); var p = document.getElementById('notif-panel'); if (w && p && !w.contains(e.target)) p.classList.add('hidden'); });
-
-async function refreshNotifCount() {
-    if (!currentUser) return;
-    try { var res = await fetchGAS('getNotifCount', { email: currentUser.email, role: currentUser.role, scope: currentUser.scope }); if (res.status === 'success') { var b = document.getElementById('bellBadge'); if (res.count > 0) { b.textContent = res.count; b.classList.remove('hidden'); } else { b.classList.add('hidden'); } } } catch (e) {}
-}
-
+async function refreshNotifCount() { if (!currentUser) return; try { var res = await fetchGAS('getNotifCount', { email: currentUser.email, role: currentUser.role, scope: currentUser.scope }); if (res.status === 'success') { var b = document.getElementById('bellBadge'); if (res.count > 0) { b.textContent = res.count; b.classList.remove('hidden'); } else { b.classList.add('hidden'); } } } catch (e) {} }
 async function loadNotifContent() {
     var el = document.getElementById('notif-list');
     el.innerHTML = '<div class="notif-empty"><div class="spinner" style="margin:0 auto 8px;width:20px;height:20px;border-width:2px"></div>Memuat...</div>';
     try {
-        var items = [];
-        var isAd = adminRoles.indexOf(currentUser.role) !== -1;
-        if (isAd) {
-            var res = await fetchGAS('getAllTaaruf', { role: currentUser.role, email: currentUser.email, scope: currentUser.scope });
-            if (res.status === 'success') { res.data.forEach(function (r) { if (r.status === 'Pending') items.push({ type: 'taaruf', text: '<strong>' + esc(r.pelamarNama) + '</strong> mengajukan ta\'aruf ke <strong>' + esc(r.targetNama) + '</strong>', time: r.tanggal }); }); }
-        } else {
-            var res = await fetchGAS('getMyTaaruf', { email: currentUser.email });
-            if (res.status === 'success') { res.data.forEach(function (r) { var role = r.isPelamar ? 'Pengajuan Anda ke' : 'Mengajukan Anda'; items.push({ type: 'taaruf', text: role + ' <strong>' + esc(r.otherNama) + '</strong> &mdash; Status: <strong>' + r.status + '</strong>', time: r.tanggal }); }); }
-        }
-        if (cachedKegiatan.length > 0) { cachedKegiatan.slice(0, 3).forEach(function (k) { items.push({ type: 'kegiatan', text: '<strong>' + esc(k.judul) + '</strong>', time: k.tanggal }); }); }
+        var items = [], isAd = adminRoles.indexOf(currentUser.role) !== -1;
+        if (isAd) { var res = await fetchGAS('getAllTaaruf', { role: currentUser.role, email: currentUser.email, scope: currentUser.scope }); if (res.status === 'success') res.data.forEach(function (r) { if (r.status === 'Pending') items.push({ type: 'taaruf', text: '<strong>' + esc(r.pelamarNama) + '</strong> mengajukan ta\'aruf ke <strong>' + esc(r.targetNama) + '</strong>', time: r.tanggal }); }); }
+        else { var res = await fetchGAS('getMyTaaruf', { email: currentUser.email }); if (res.status === 'success') res.data.forEach(function (r) { items.push({ type: 'taaruf', text: (r.isPelamar ? 'Pengajuan Anda ke' : 'Mengajukan Anda') + ' <strong>' + esc(r.otherNama) + '</strong> &mdash; <strong>' + r.status + '</strong>', time: r.tanggal }); }); }
+        if (cachedKegiatan.length > 0) cachedKegiatan.slice(0, 3).forEach(function (k) { items.push({ type: 'kegiatan', text: '<strong>' + esc(k.judul) + '</strong>', time: k.tanggal }); });
         if (items.length === 0) { el.innerHTML = '<div class="notif-empty"><i class="fas fa-bell-slash" style="font-size:1.5rem;margin-bottom:8px;display:block;opacity:0.4"></i>Tidak ada pemberitahuan</div>'; return; }
-        el.innerHTML = items.map(function (it) {
-            var iconCls = it.type === 'taaruf' ? 'taaruf' : 'kegiatan';
-            var iconName = it.type === 'taaruf' ? 'fa-heart' : 'fa-bullhorn';
-            return '<div class="notif-item"><div class="notif-icon ' + iconCls + '"><i class="fas ' + iconName + '"></i></div><div class="notif-text">' + it.text + '<div class="notif-time"><i class="far fa-clock"></i> ' + it.time + '</div></div></div>';
-        }).join('');
+        el.innerHTML = items.map(function (it) { return '<div class="notif-item"><div class="notif-icon ' + it.type + '"><i class="fas ' + (it.type === 'taaruf' ? 'fa-heart' : 'fa-bullhorn') + '"></i></div><div class="notif-text">' + it.text + '<div class="notif-time"><i class="far fa-clock"></i> ' + it.time + '</div></div></div>'; }).join('');
     } catch (e) { el.innerHTML = '<div class="notif-empty">Gagal memuat pemberitahuan</div>'; }
 }
 
-/* ========== VERIFIKASI MODAL ========== */
+/* VERIFIKASI MODAL */
 async function handleRegisterClick(e) {
-    e.preventDefault();
-    var form = document.getElementById('registerForm');
-    if (!form.checkValidity()) { form.reportValidity(); return; }
+    e.preventDefault(); var form = document.getElementById('registerForm'); if (!form.checkValidity()) { form.reportValidity(); return; }
     document.getElementById('verify-modal').classList.remove('hidden');
     document.getElementById('modalQuestion').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memuat pertanyaan...';
-    document.getElementById('modalAnswer').value = '';
-    document.getElementById('btnVerifySubmit').disabled = false;
-    document.getElementById('btnVerifySubmit').innerHTML = '<i class="fas fa-check"></i> Verifikasi & Daftar';
+    document.getElementById('modalAnswer').value = ''; document.getElementById('btnVerifySubmit').disabled = false; document.getElementById('btnVerifySubmit').innerHTML = '<i class="fas fa-check"></i> Verifikasi & Daftar';
     var res = await fetchGAS('getVerifyQuestion');
     if (res.status === 'success') { document.getElementById('modalQuestion').innerText = res.question; document.getElementById('modalQuestionHidden').value = res.question; }
     else { showToast('Gagal memuat pertanyaan', 'error'); closeVerifyModal(); }
 }
 function closeVerifyModal() { document.getElementById('verify-modal').classList.add('hidden'); }
-
 async function submitVerifyAndRegister() {
-    var answer = document.getElementById('modalAnswer').value.trim();
-    if (!answer) { showToast('Masukkan jawaban', 'error'); return; }
+    var answer = document.getElementById('modalAnswer').value.trim(); if (!answer) { showToast('Masukkan jawaban', 'error'); return; }
     var btn = document.getElementById('btnVerifySubmit'); btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Proses...';
     var res = await fetchGAS('register', {}, 'POST', { email: document.getElementById('regEmail').value.trim(), password: document.getElementById('regPass').value, nama: document.getElementById('regNama').value.trim(), question: document.getElementById('modalQuestionHidden').value, answer: answer });
-    if (res.status === 'success') { showToast(res.message); closeVerifyModal(); showView('login-view'); document.getElementById('registerForm').reset(); }
-    else { showToast(res.message, 'error'); }
+    if (res.status === 'success') { showToast(res.message); closeVerifyModal(); showView('login-view'); document.getElementById('registerForm').reset(); } else { showToast(res.message, 'error'); }
     btn.disabled = false; btn.innerHTML = '<i class="fas fa-check"></i> Verifikasi & Daftar';
 }
 
-/* ========== AUTH ========== */
-function showForgotPassword() { var email = prompt("Masukkan email akun Anda:"); if (email) { fetchGAS('forgotPassword', {}, 'POST', { email: email }).then(function (res) { showToast(res.message, res.status); }); } }
+/* AUTH */
+function showForgotPassword() { var email = prompt("Masukkan email akun Anda:"); if (email) fetchGAS('forgotPassword', {}, 'POST', { email: email }).then(function (res) { showToast(res.message, res.status); }); }
 async function loadRegisterView() { showView('register-view'); }
-
 async function login() {
     var btn = document.getElementById('btnLogin'); var email = document.getElementById('loginEmail').value.trim(); var password = document.getElementById('loginPass').value;
     if (!email || !password) { showToast('Isi email dan password', 'error'); return; }
@@ -593,21 +911,54 @@ async function login() {
         currentUser = res.user; if (!currentUser.role) currentUser.role = 'Personal'; if (!currentUser.scope) currentUser.scope = '';
         showToast("Assalamu'alaikum, " + currentUser.nama + "!");
         showView('app-shell'); updateShell(); refreshNotifCount(); loadKegiatanCache();
-        var isAd = adminRoles.indexOf(currentUser.role) !== -1;
-        if (isAd) { switchPage('admin-home'); }
-        else { if (!currentUser.isComplete) { switchPage('profile'); showToast('Silakan lengkapi profil Anda terlebih dahulu.', 'error'); } else { switchPage('home'); } }
+        if (adminRoles.indexOf(currentUser.role) !== -1) switchPage('admin-home');
+        else { if (!currentUser.isComplete) { switchPage('profile'); showToast('Silakan lengkapi profil Anda terlebih dahulu.', 'error'); } else switchPage('home'); }
     } else { showToast(res.message || 'Login gagal', 'error'); }
     btn.disabled = false; btn.innerHTML = '<i class="fas fa-arrow-right"></i> Masuk';
 }
 function logout() { currentUser = null; cachedKegiatan = []; document.getElementById('loginEmail').value = ''; document.getElementById('loginPass').value = ''; showView('login-view'); }
 
-/* ========== MASTER DATA ========== */
+/* HOME STATS */
+async function loadHomeStats() {
+    try {
+        var res = await fetchGAS('getUsers', { role: 'Personal', email: currentUser.email, gender: currentUser.gender || '' });
+        if (res.status === 'success') {
+            document.getElementById('statPeserta').textContent = (res.data || []).length;
+        }
+    } catch(e){}
+    try {
+        var res2 = await fetchGAS('getMyTaaruf', { email: currentUser.email });
+        if (res2.status === 'success') {
+            var data = res2.data || [];
+            document.getElementById('statTaaruf').textContent = data.filter(function(r){ return r.status === 'Sedang Taaruf' || r.status === 'Sedang Proses'; }).length;
+            document.getElementById('statMenikah').textContent = data.filter(function(r){ return r.status === 'Sudah Menikah'; }).length;
+        }
+    } catch(e){}
+    document.getElementById('statKegiatan').textContent = cachedKegiatan.length || '0';
+}
+async function loadAdminStats() {
+    try {
+        var res = await fetchGAS('getUsers', { role: currentUser.role, email: currentUser.email, scope: currentUser.scope });
+        if (res.status === 'success') document.getElementById('statAdminPeserta').textContent = (res.data || []).length;
+    } catch(e){}
+    try {
+        var res2 = await fetchGAS('getAllTaaruf', { role: currentUser.role, email: currentUser.email, scope: currentUser.scope });
+        if (res2.status === 'success') {
+            var data = res2.data || [];
+            document.getElementById('statAdminPending').textContent = data.filter(function(r){ return r.status === 'Pending'; }).length;
+            document.getElementById('statAdminProses').textContent = data.filter(function(r){ return r.status === 'Sedang Taaruf' || r.status === 'Sedang Proses'; }).length;
+            document.getElementById('statAdminMenikah').textContent = data.filter(function(r){ return r.status === 'Sudah Menikah'; }).length;
+        }
+    } catch(e){}
+}
+
+/* MASTER DATA */
 async function loadMasterData() { if (masterData.daerah.length === 0) { var res = await fetchGAS('getMasterData'); if (res.status === 'success') masterData = res.data; } }
 function populateDaerah() { var s = document.getElementById('upDaerah'); s.innerHTML = '<option value="">-- Pilih Daerah --</option>'; masterData.daerah.forEach(function (d) { s.innerHTML += '<option value="' + d + '">' + d + '</option>'; }); }
 function loadDesa() { var d = document.getElementById('upDaerah').value; var s = document.getElementById('upDesa'); var k = document.getElementById('upKelompok'); s.innerHTML = '<option value="">-- Pilih --</option>'; k.innerHTML = '<option value="">-- Pilih --</option>'; if (d && masterData.desa[d]) masterData.desa[d].forEach(function (i) { s.innerHTML += '<option value="' + i + '">' + i + '</option>'; }); }
 function loadKelompok() { var d = document.getElementById('upDesa').value; var k = document.getElementById('upKelompok'); k.innerHTML = '<option value="">-- Pilih --</option>'; if (d && masterData.kelompok[d]) masterData.kelompok[d].forEach(function (i) { k.innerHTML += '<option value="' + i + '">' + i + '</option>'; }); }
 
-/* ========== PROFIL ========== */
+/* PROFIL */
 async function prefillProfile() {
     await loadMasterData(); populateDaerah(); if (!currentUser) return;
     var map = { 'upNama': currentUser.nama, 'upOrtu': currentUser.namaOrtu, 'upTTL': currentUser.ttl, 'upAnakKe': currentUser.anakKe, 'upSuku': currentUser.suku, 'upTB': currentUser.tbBerat, 'upPendidikan': currentUser.pendidikan, 'upPekerjaan': currentUser.pekerjaan, 'upHobi': currentUser.hobi, 'upDapukan': currentUser.dapukan };
@@ -619,7 +970,6 @@ async function prefillProfile() {
     var imgPrev = document.getElementById('upFotoPreview'); if (currentUser.foto) { imgPrev.src = getPhotoUrl(currentUser.foto); imgPrev.style.display = 'block'; } else { imgPrev.style.display = 'none'; }
     updateLockedMenus();
 }
-
 async function handleUpdateProfile(e) {
     e.preventDefault(); var btn = document.getElementById('btnSaveProfile'); btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Simpan...';
     var fotoBase64 = null; var fotoInput = document.getElementById('upFoto');
@@ -632,65 +982,44 @@ async function handleUpdateProfile(e) {
     btn.disabled = false; btn.innerHTML = '<i class="fas fa-save"></i> Simpan Profil';
 }
 
-/* ========== TIM TAARUF ========== */
+/* TIM TAARUF */
 async function getTaarufTim(daerah) { var key = (daerah || '').toLowerCase(); if (cachedTaarufTim[key]) return cachedTaarufTim[key]; var res = await fetchGAS('getTaarufTim', { daerah: key }); if (res.status === 'success') { cachedTaarufTim[key] = res.data; return res.data; } return []; }
 
-/* ========== CARI JODOH (DENGAN PAGINATION + ERROR HANDLING) ========== */
+/* CARI JODOH */
 async function loadDashboard() {
-    var c = document.getElementById('dashboard-list');
-    var pg = document.getElementById('dashboard-pagination');
-    c.innerHTML = '<div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>Memuat data peserta...</p></div>';
-    pg.innerHTML = '';
-    searchCurrentPage = 1;
-
+    var c = document.getElementById('dashboard-list'), pg = document.getElementById('dashboard-pagination');
+    c.innerHTML = '<div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>Memuat data peserta...</p></div>'; pg.innerHTML = ''; searchCurrentPage = 1;
     var res = await fetchGAS('getUsers', { role: 'Personal', email: currentUser.email, gender: currentUser.gender || '' });
-
-    if (res.status === 'error') {
-        c.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle" style="color:var(--warning)"></i><p>Gagal memuat data peserta.</p><button class="btn btn-sm retry-btn" onclick="loadDashboard()"><i class="fas fa-redo"></i> Coba Lagi</button></div>';
-        pg.innerHTML = '';
-        return;
-    }
-
+    if (res.status === 'error') { c.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle" style="color:var(--gold-400)"></i><p>Gagal memuat data peserta.</p><button class="btn btn-sm retry-btn" onclick="loadDashboard()"><i class="fas fa-redo"></i> Coba Lagi</button></div>'; return; }
     if (res.status === 'success' && res.data && res.data.length > 0) {
-        allUsers = res.data;
-        searchIamInTaaruf = !!res.iamInTaaruf;
+        allUsers = res.data; searchIamInTaaruf = !!res.iamInTaaruf;
         var bl = document.getElementById('search-taaruf-blocked');
-        if (searchIamInTaaruf) { bl.classList.remove('hidden'); bl.innerHTML = '<div class="alert alert-warning"><i class="fas fa-heart"></i><div>Anda sedang dalam proses ta\'aruf. Daftar peserta hanya untuk dilihat, tombol ta\'aruf dinonaktifkan.</div></div>'; }
-        else { bl.classList.add('hidden'); bl.innerHTML = ''; }
+        if (searchIamInTaaruf) { bl.classList.remove('hidden'); bl.innerHTML = '<div class="alert alert-warning"><i class="fas fa-heart"></i><div>Anda sedang dalam proses ta\'aruf. Daftar peserta hanya untuk dilihat.</div></div>'; } else { bl.classList.add('hidden'); }
         renderCards(allUsers, searchIamInTaaruf);
     } else {
-        allUsers = [];
-        searchIamInTaaruf = !!(res && res.iamInTaaruf);
-        var bl = document.getElementById('search-taaruf-blocked');
-        if (searchIamInTaaruf) { bl.classList.remove('hidden'); bl.innerHTML = '<div class="alert alert-warning"><i class="fas fa-heart"></i><div>Anda sedang dalam proses ta\'aruf. Tidak ada peserta lain yang tersedia saat ini.</div></div>'; }
-        else { bl.classList.add('hidden'); bl.innerHTML = ''; }
-        c.innerHTML = '<div class="empty-state"><i class="fas fa-user-friends"></i><p>Belum ada peserta yang tersedia.</p></div>';
-        pg.innerHTML = '';
+        allUsers = []; searchIamInTaaruf = !!(res && res.iamInTaaruf);
+        var bl = document.getElementById('search-taaruf-blocked'); bl.classList.add('hidden');
+        c.innerHTML = '<div class="empty-state"><i class="fas fa-user-friends"></i><p>Belum ada peserta yang tersedia.</p></div>'; pg.innerHTML = '';
     }
 }
-
 function renderCards(users, iamInTaaruf) {
-    var c = document.getElementById('dashboard-list');
-    var pg = document.getElementById('dashboard-pagination');
+    var c = document.getElementById('dashboard-list'), pg = document.getElementById('dashboard-pagination');
     var s = (document.getElementById('searchInput') ? document.getElementById('searchInput').value : '').toLowerCase();
     var filtered = users.filter(function (u) { return !s || (u.nama && u.nama.toLowerCase().indexOf(s) !== -1); });
     var totalPages = Math.max(1, Math.ceil(filtered.length / searchPageSize));
     if (searchCurrentPage > totalPages) searchCurrentPage = totalPages;
-    var start = (searchCurrentPage - 1) * searchPageSize;
-    var pageItems = filtered.slice(start, start + searchPageSize);
+    var start = (searchCurrentPage - 1) * searchPageSize, pageItems = filtered.slice(start, start + searchPageSize);
     if (filtered.length === 0) { c.innerHTML = '<div class="empty-state"><i class="fas fa-search"></i><p>Tidak ditemukan.</p></div>'; pg.innerHTML = ''; return; }
     c.innerHTML = pageItems.map(function (u) {
         var ps = u.foto ? getPhotoUrl(u.foto) : '';
         var gc = u.gender === 'Perempuan' ? 'badge-f' : 'badge-m';
-        var ac = getAvatarColor(u.nama);
         var dis = iamInTaaruf ? 'disabled' : '';
         var krHtml = u.kriteriaPasangan ? '<div class="kriteria-box"><div class="kriteria-label">Kriteria Pasangan</div>' + esc(u.kriteriaPasangan) + '</div>' : '';
-        var ph = ps ? '<img src="' + ps + '" class="card-img" style="cursor:pointer" onclick="openPhotoModal(\'' + ps + '\')">' : '<div class="card-avatar" style="background:' + ac + '15;color:' + ac + '">' + getInitials(u.nama) + '</div>';
-        return '<div class="card"><div class="card-top">' + ph + '<div class="card-identity"><div class="card-name">' + esc(u.nama) + ' <span class="badge ' + gc + '">' + u.gender + '</span></div><div class="card-sub"><i class="fas fa-briefcase" style="width:14px;text-align:center;margin-right:4px"></i> ' + (u.pekerjaan || '-') + '</div><div class="card-sub"><i class="fas fa-graduation-cap" style="width:14px;text-align:center;margin-right:4px"></i> ' + (u.pendidikan || '-') + '</div><div class="card-sub"><i class="fas fa-map-marker-alt" style="width:14px;text-align:center;margin-right:4px"></i> ' + (u.daerah || '-') + ', ' + (u.desa || '-') + '</div></div></div><div class="card-body"><div class="data-grid"><div class="data-item full-col"><div class="data-label">Nama Orang Tua</div><div class="data-value">' + esc(u.namaOrtu) + '</div></div><div class="data-item"><div class="data-label">TTL</div><div class="data-value">' + esc(u.ttl) + '</div></div><div class="data-item"><div class="data-label">Anak Ke</div><div class="data-value">' + esc(u.anakKe) + '</div></div><div class="data-item"><div class="data-label">Suku</div><div class="data-value">' + esc(u.suku) + '</div></div><div class="data-item"><div class="data-label">TB / BB</div><div class="data-value">' + esc(u.tbBerat) + '</div></div><div class="data-item"><div class="data-label">Status Menikah</div><div class="data-value">' + esc(u.menikah) + '</div></div><div class="data-item"><div class="data-label">Hobi</div><div class="data-value">' + esc(u.hobi) + '</div></div><div class="data-item"><div class="data-label">Dapukan</div><div class="data-value">' + esc(u.dapukan) + '</div></div><div class="data-item full-col"><div class="data-label">Kelompok</div><div class="data-value">' + esc(u.kelompok) + '</div></div></div>' + krHtml + '</div><div class="card-footer"><button class="btn btn-sm btn-wa" style="width:100%" ' + dis + ' onclick="requestTaaruf(\'' + u.email + '\',\'' + esc(u.nama) + '\',\'' + esc(u.daerah) + '\')"><i class="fab fa-whatsapp"></i> Ajukan Ta\'aruf</button></div></div>';
+        var ph = ps ? '<img src="' + ps + '" class="card-img" style="cursor:pointer" onclick="openPhotoModal(\'' + ps + '\')">' : '<div class="card-avatar">' + getInitials(u.nama) + '</div>';
+        return '<div class="card"><div class="card-top">' + ph + '<div class="card-identity"><div class="card-name">' + esc(u.nama) + ' <span class="badge ' + gc + '">' + u.gender + '</span></div><div class="card-sub"><i class="fas fa-briefcase"></i> ' + (u.pekerjaan || '-') + '</div><div class="card-sub"><i class="fas fa-graduation-cap"></i> ' + (u.pendidikan || '-') + '</div><div class="card-sub"><i class="fas fa-map-marker-alt"></i> ' + (u.daerah || '-') + ', ' + (u.desa || '-') + '</div></div></div><div class="card-body"><div class="data-grid"><div class="data-item full-col"><div class="data-label">Nama Orang Tua</div><div class="data-value">' + esc(u.namaOrtu) + '</div></div><div class="data-item"><div class="data-label">TTL</div><div class="data-value">' + esc(u.ttl) + '</div></div><div class="data-item"><div class="data-label">Anak Ke</div><div class="data-value">' + esc(u.anakKe) + '</div></div><div class="data-item"><div class="data-label">Suku</div><div class="data-value">' + esc(u.suku) + '</div></div><div class="data-item"><div class="data-label">TB / BB</div><div class="data-value">' + esc(u.tbBerat) + '</div></div><div class="data-item"><div class="data-label">Status Menikah</div><div class="data-value">' + esc(u.menikah) + '</div></div><div class="data-item"><div class="data-label">Hobi</div><div class="data-value">' + esc(u.hobi) + '</div></div><div class="data-item"><div class="data-label">Dapukan</div><div class="data-value">' + esc(u.dapukan) + '</div></div><div class="data-item full-col"><div class="data-label">Kelompok</div><div class="data-value">' + esc(u.kelompok) + '</div></div></div>' + krHtml + '</div><div class="card-footer"><button class="btn btn-sm btn-wa" style="width:100%" ' + dis + ' onclick="requestTaaruf(\'' + u.email + '\',\'' + esc(u.nama) + '\',\'' + esc(u.daerah) + '\')"><i class="fab fa-whatsapp"></i> Ajukan Ta\'aruf</button></div></div>';
     }).join('');
     generatePagination('dashboard-pagination', searchCurrentPage, totalPages, filtered.length, searchPageSize, 'goToSearchPage');
 }
-
 function filterDashboard() { searchCurrentPage = 1; renderCards(allUsers, searchIamInTaaruf); }
 
 async function requestTaaruf(email, nama, daerah) {
@@ -703,33 +1032,32 @@ async function requestTaaruf(email, nama, daerah) {
             var waUrl = "https://wa.me/" + res.waNumber + "?text=" + encodeURIComponent(pesan);
             var box = document.getElementById('search-taaruf-blocked');
             box.classList.remove('hidden');
-            box.innerHTML = '<div class="wa-info-box"><div class="wa-title"><i class="fab fa-whatsapp" style="color:#25D366;font-size:1.2rem"></i> Tim Ta\'aruf ' + esc(daerah) + '</div><div class="wa-detail"><b>' + esc(res.teamName) + '</b>' + (res.teamPeran ? ' (' + esc(res.teamPeran) + ')' : '') + '<br>Nomor: ' + res.waNumber + '</div><div class="wa-btn"><a href="' + waUrl + '" target="_blank" rel="noopener" class="btn btn-sm btn-wa" style="width:auto;display:inline-flex"><i class="fab fa-whatsapp"></i> Chat WhatsApp Sekarang</a></div></div>';
-            showToast('Pengajuan dicatat! Silakan hubungi tim ta\'aruf via WhatsApp.');
+            box.innerHTML = '<div class="wa-info-box"><div class="wa-title"><i class="fab fa-whatsapp" style="color:#6EE7B7;font-size:1.2rem"></i> Tim Ta\'aruf ' + esc(daerah) + '</div><div class="wa-detail"><b>' + esc(res.teamName) + '</b>' + (res.teamPeran ? ' (' + esc(res.teamPeran) + ')' : '') + '<br>Nomor: ' + res.waNumber + '</div><div class="wa-btn"><a href="' + waUrl + '" target="_blank" rel="noopener" class="btn btn-sm btn-wa" style="width:auto;display:inline-flex"><i class="fab fa-whatsapp"></i> Chat WhatsApp Sekarang</a></div></div>';
+            showToast('Pengajuan dicatat! Hubungi tim ta\'aruf via WhatsApp.');
             window.open(waUrl, '_blank');
         } else { showToast('Pengajuan terkirim! Namun belum ada tim ta\'aruf untuk daerah ini.', 'error'); }
         searchIamInTaaruf = true; renderCards(allUsers, true); refreshNotifCount();
     } else { showToast(res.message || 'Gagal mengajukan', 'error'); }
 }
 
-/* ========== STATUS TAARUF ========== */
+/* STATUS TAARUF */
 async function loadMyTaarufStatus() {
     var el = document.getElementById('status-content');
     el.innerHTML = '<div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>Memuat status...</p></div>';
     var res = await fetchGAS('getMyTaaruf', { email: currentUser.email });
-    if (res.status !== 'success') { el.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle" style="color:var(--warning)"></i><p>Gagal memuat status.</p><button class="btn btn-sm retry-btn" onclick="loadMyTaarufStatus()"><i class="fas fa-redo"></i> Coba Lagi</button></div>'; return; }
+    if (res.status !== 'success') { el.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle" style="color:var(--gold-400)"></i><p>Gagal memuat status.</p><button class="btn btn-sm retry-btn" onclick="loadMyTaarufStatus()"><i class="fas fa-redo"></i> Coba Lagi</button></div>'; return; }
     if (res.data && res.data.length > 0) {
         el.innerHTML = res.data.map(function (r) {
             var bc = 'badge-pending';
-            if (r.status === 'Sedang Taaruf') bc = 'badge-taaruf'; else if (r.status === 'Sedang Proses') bc = 'badge-proses'; else if (r.status === 'Sudah Menikah') bc = 'badge-menikah'; else if (r.status === 'Approved') bc = 'badge-approved'; else if (r.status === 'Rejected') bc = 'badge-rejected';
+            if (r.status === 'Sedang Taaruf') bc = 'badge-taaruf'; else if (r.status === 'Sedang Proses') bc = 'badge-proses'; else if (r.status === 'Sudah Menikah') bc = 'badge-menikah'; else if (r.status === 'Rejected') bc = 'badge-rejected';
             var roleText = r.isPelamar ? 'Anda mengajukan' : 'Mengajukan Anda';
-            var statusDesc = '';
-            if (r.status === 'Pending') statusDesc = 'Menunggu konfirmasi tim ta\'aruf.'; else if (r.status === 'Sedang Taaruf') statusDesc = 'Sedang dalam proses ta\'aruf.'; else if (r.status === 'Sedang Proses') statusDesc = 'Proses ta\'aruf sedang berlanjut.'; else if (r.status === 'Sudah Menikah') statusDesc = 'Alhamdulillah, proses telah selesai.'; else if (r.status === 'Rejected') statusDesc = 'Pengajuan tidak dapat dilanjutkan.';
-            return '<div class="status-card"><div class="status-card-header"><div class="status-card-title">' + esc(r.otherNama) + '</div><span class="badge ' + bc + '">' + r.status + '</span></div><div class="status-card-meta"><i class="fas fa-info-circle"></i> ' + roleText + '<br><i class="fas fa-calendar"></i> ' + r.tanggal + '<br><i class="fas fa-map-marker-alt"></i> ' + esc(r.otherDaerah) + ', ' + esc(r.otherDesa) + '<br><i class="fas fa-users"></i> Kelompok target: ' + esc(r.otherKelompok) + '<br><i class="fas fa-user-tag"></i> Kelompok Anda: ' + esc(r.myKelompok) + '<br><div style="margin-top:6px;color:var(--text-main);font-weight:500;font-size:0.82rem">' + statusDesc + '</div></div></div>';
+            var statusDesc = { 'Pending': 'Menunggu konfirmasi tim ta\'aruf.', 'Sedang Taaruf': 'Sedang dalam proses ta\'aruf.', 'Sedang Proses': 'Proses ta\'aruf sedang berlanjut.', 'Sudah Menikah': 'Alhamdulillah, proses telah selesai.', 'Rejected': 'Pengajuan tidak dapat dilanjutkan.' };
+            return '<div class="status-card"><div class="status-card-header"><div class="status-card-title">' + esc(r.otherNama) + '</div><span class="badge ' + bc + '">' + r.status + '</span></div><div class="status-card-meta"><i class="fas fa-info-circle"></i> ' + roleText + '<br><i class="fas fa-calendar"></i> ' + r.tanggal + '<br><i class="fas fa-map-marker-alt"></i> ' + esc(r.otherDaerah) + ', ' + esc(r.otherDesa) + '<br><i class="fas fa-users"></i> Kelompok target: ' + esc(r.otherKelompok) + '<br><i class="fas fa-user-tag"></i> Kelompok Anda: ' + esc(r.myKelompok) + '<br><div style="margin-top:8px;color:var(--green-400);font-weight:600;font-size:0.83rem">' + (statusDesc[r.status] || '') + '</div></div></div>';
         }).join('');
     } else { el.innerHTML = '<div class="empty-state"><i class="fas fa-heart"></i><p>Belum ada pengajuan ta\'aruf.</p></div>'; }
 }
 
-/* ========== KEGIATAN ========== */
+/* KEGIATAN */
 async function loadKegiatanCache() { try { var res = await fetchGAS('getKegiatan'); if (res.status === 'success') cachedKegiatan = res.data || []; } catch (e) {} }
 function renderKegiatanCards(data) {
     if (!data || data.length === 0) return '<div class="empty-state"><i class="fas fa-bullhorn"></i><p>Belum ada informasi kegiatan.</p></div>';
@@ -737,83 +1065,74 @@ function renderKegiatanCards(data) {
 }
 async function loadKegiatanPage() { var el = document.getElementById('kegiatan-list'); el.innerHTML = '<div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>Memuat kegiatan...</p></div>'; await loadKegiatanCache(); el.innerHTML = renderKegiatanCards(cachedKegiatan); }
 async function loadAdminKegiatan() { var el = document.getElementById('admin-kegiatan-list'); el.innerHTML = '<div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>Memuat...</p></div>'; await loadKegiatanCache(); el.innerHTML = renderKegiatanCards(cachedKegiatan); }
-
 async function handleAddKegiatan(e) {
     e.preventDefault(); var btn = document.getElementById('btnAddKg'); btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Publikasi...';
     var fotoBase64 = null; var fotoInput = document.getElementById('kgFoto');
     if (fotoInput && fotoInput.files && fotoInput.files[0]) { if (fotoInput.files[0].size > 3 * 1024 * 1024) { showToast('Ukuran foto maks 3MB', 'error'); btn.disabled = false; btn.innerHTML = '<i class="fas fa-paper-plane"></i> Publikasikan'; return; } try { fotoBase64 = await compressImage(fotoInput.files[0], 800, 0.75); } catch (err) { showToast('Gagal proses foto', 'error'); btn.disabled = false; btn.innerHTML = '<i class="fas fa-paper-plane"></i> Publikasikan'; return; } }
     var res = await fetchGAS('addKegiatan', {}, 'POST', { judul: document.getElementById('kgJudul').value.trim(), isi: document.getElementById('kgIsi').value.trim(), foto: fotoBase64, postedBy: currentUser.nama });
-    if (res.status === 'success') { showToast(res.message); document.getElementById('kegiatanForm').reset(); document.getElementById('kgFotoPreview').style.display = 'none'; cachedKegiatan = []; loadAdminKegiatan(); }
-    else { showToast(res.message || 'Gagal mempublikasikan', 'error'); }
+    if (res.status === 'success') { showToast(res.message); document.getElementById('kegiatanForm').reset(); document.getElementById('kgFotoPreview').style.display = 'none'; cachedKegiatan = []; loadAdminKegiatan(); } else { showToast(res.message || 'Gagal mempublikasikan', 'error'); }
     btn.disabled = false; btn.innerHTML = '<i class="fas fa-paper-plane"></i> Publikasikan';
 }
 
-/* ========== ADMIN - DATA PESERTA (DENGAN PAGINATION + ERROR HANDLING) ========== */
+/* ADMIN - DATA PESERTA */
 async function loadAdminUsers() {
-    var t = document.getElementById('admin-tbody');
-    var pg = document.getElementById('admin-users-pagination');
-    t.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-muted)"><i class="fas fa-spinner fa-spin"></i></td></tr>';
-    pg.innerHTML = '';
-    adminCurrentPage = 1;
+    var t = document.getElementById('admin-tbody'), pg = document.getElementById('admin-users-pagination');
+    t.innerHTML = '<tr><td colspan="5" style="text-align:center"><i class="fas fa-spinner fa-spin"></i></td></tr>'; pg.innerHTML = ''; adminCurrentPage = 1;
     var res = await fetchGAS('getUsers', { role: currentUser.role, email: currentUser.email, scope: currentUser.scope });
-    if (res.status === 'error') { t.innerHTML = '<tr><td colspan="5" style="text-align:center"><i class="fas fa-exclamation-triangle" style="color:var(--warning);margin-right:8px"></i>Gagal memuat data. <a class="link" onclick="loadAdminUsers()">Coba Lagi</a></td></tr>'; pg.innerHTML = ''; return; }
+    if (res.status === 'error') { t.innerHTML = '<tr><td colspan="5" style="text-align:center"><i class="fas fa-exclamation-triangle" style="color:var(--gold-400);margin-right:8px"></i>Gagal memuat data. <a class="link" onclick="loadAdminUsers()">Coba Lagi</a></td></tr>'; return; }
     if (res.status === 'success' && res.data && res.data.length > 0) { allUsers = res.data; renderAdminUsers(allUsers); }
-    else { allUsers = []; t.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-muted)">Tidak ada data.</td></tr>'; pg.innerHTML = ''; }
+    else { allUsers = []; t.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-muted-light)">Tidak ada data.</td></tr>'; }
 }
-
 function renderAdminUsers(users) {
-    var t = document.getElementById('admin-tbody');
-    var pg = document.getElementById('admin-users-pagination');
+    var t = document.getElementById('admin-tbody'), pg = document.getElementById('admin-users-pagination');
     var s = (document.getElementById('adminSearchInput') ? document.getElementById('adminSearchInput').value : '').toLowerCase();
     var filtered = users.filter(function (u) { return !s || (u.nama && u.nama.toLowerCase().indexOf(s) !== -1); });
     var totalPages = Math.max(1, Math.ceil(filtered.length / adminPageSize));
     if (adminCurrentPage > totalPages) adminCurrentPage = totalPages;
-    var start = (adminCurrentPage - 1) * adminPageSize;
-    var pageItems = filtered.slice(start, start + adminPageSize);
-    if (filtered.length === 0) { t.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-muted)">Tidak ditemukan.</td></tr>'; pg.innerHTML = ''; return; }
+    var start = (adminCurrentPage - 1) * adminPageSize, pageItems = filtered.slice(start, start + adminPageSize);
+    if (filtered.length === 0) { t.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-muted-light)">Tidak ditemukan.</td></tr>'; pg.innerHTML = ''; return; }
     t.innerHTML = pageItems.map(function (u) {
-        var ac = getAvatarColor(u.nama); var sc = u.isComplete ? 'badge-approved' : 'badge-pending'; var st = u.isComplete ? 'Lengkap' : 'Belum';
+        var sc = u.isComplete ? 'badge-approved' : 'badge-pending'; var st = u.isComplete ? 'Lengkap' : 'Belum';
         var ps = u.foto ? getPhotoUrl(u.foto) : '';
-        var kr = u.kriteriaPasangan ? '<div class="data-cell-line" style="margin-top:4px"><b>Kriteria:</b> <span style="font-size:0.78rem;color:var(--text-muted)">' + esc(u.kriteriaPasangan).substring(0, 80) + (u.kriteriaPasangan.length > 80 ? '...' : '') + '</span></div>' : '';
-        var photoBlock = ps ? '<img src="' + ps + '" style="width:40px;height:40px;border-radius:50%;object-fit:cover;cursor:pointer;border:2px solid var(--border);transition:0.2s" onmouseover="this.style.transform=\'scale(1.1)\'" onmouseout="this.style.transform=\'scale(1)\'" onclick="openPhotoModal(\'' + ps + '\')">' : '<div style="width:40px;height:40px;border-radius:50%;background:' + ac + '15;color:' + ac + ';display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700">' + getInitials(u.nama) + '</div>';
-        return '<tr><td><div style="display:flex;align-items:center;gap:10px">' + photoBlock + '<div><div style="font-weight:600">' + esc(u.nama) + '</div><div class="sub-text">' + esc(u.email) + '</div></div></div></td><td><div class="data-cell-line"><b>Ortu:</b> ' + esc(u.namaOrtu) + '</div><div class="data-cell-line"><b>TTL:</b> ' + esc(u.ttl) + '</div><div class="data-cell-line"><b>JK:</b> ' + esc(u.gender) + ' | <b>Anak ke:</b> ' + esc(u.anakKe) + '</div><div class="data-cell-line"><b>Suku:</b> ' + esc(u.suku) + ' | <b>TB/BB:</b> ' + esc(u.tbBerat) + '</div><div class="data-cell-line"><b>Status:</b> ' + esc(u.menikah) + '</div></td><td><div class="data-cell-line"><b>Pendidikan:</b> ' + esc(u.pendidikan) + '</div><div class="data-cell-line"><b>Pekerjaan:</b> ' + esc(u.pekerjaan) + '</div><div class="data-cell-line"><b>Hobi:</b> ' + esc(u.hobi) + '</div><div class="data-cell-line"><b>Dapukan:</b> ' + esc(u.dapukan) + '</div>' + kr + '</td><td><div class="data-cell-line">' + esc(u.daerah) + '</div><div class="data-cell-line">' + esc(u.desa) + '</div><div class="data-cell-line">' + esc(u.kelompok) + '</div></td><td><span class="badge ' + sc + '">' + st + '</span></td></tr>';
+        var kr = u.kriteriaPasangan ? '<div class="data-cell-line" style="margin-top:4px"><b style="color:var(--gold-400)">Kriteria:</b> <span style="font-size:0.76rem;color:var(--text-muted-light)">' + esc(u.kriteriaPasangan).substring(0, 80) + (u.kriteriaPasangan.length > 80 ? '...' : '') + '</span></div>' : '';
+        var photoBlock = ps ? '<img src="' + ps + '" style="width:40px;height:40px;border-radius:12px;object-fit:cover;cursor:pointer;border:2px solid rgba(255,255,255,0.1);transition:0.2s" onmouseover="this.style.transform=\'scale(1.1)\'" onmouseout="this.style.transform=\'scale(1)\'" onclick="openPhotoModal(\'' + ps + '\')">' : '<div style="width:40px;height:40px;border-radius:12px;background:rgba(21,184,114,0.15);color:var(--green-400);display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700">' + getInitials(u.nama) + '</div>';
+        return '<tr><td><div style="display:flex;align-items:center;gap:10px">' + photoBlock + '<div><div style="font-weight:700;color:var(--text-white)">' + esc(u.nama) + '</div><div class="sub-text">' + esc(u.email) + '</div></div></div></td><td><div class="data-cell-line"><b>Ortu:</b> ' + esc(u.namaOrtu) + '</div><div class="data-cell-line"><b>TTL:</b> ' + esc(u.ttl) + '</div><div class="data-cell-line"><b>JK:</b> ' + esc(u.gender) + ' | <b>Anak ke:</b> ' + esc(u.anakKe) + '</div><div class="data-cell-line"><b>Suku:</b> ' + esc(u.suku) + ' | <b>TB/BB:</b> ' + esc(u.tbBerat) + '</div><div class="data-cell-line"><b>Status:</b> ' + esc(u.menikah) + '</div></td><td><div class="data-cell-line"><b>Pendidikan:</b> ' + esc(u.pendidikan) + '</div><div class="data-cell-line"><b>Pekerjaan:</b> ' + esc(u.pekerjaan) + '</div><div class="data-cell-line"><b>Hobi:</b> ' + esc(u.hobi) + '</div><div class="data-cell-line"><b>Dapukan:</b> ' + esc(u.dapukan) + '</div>' + kr + '</td><td><div class="data-cell-line">' + esc(u.daerah) + '</div><div class="data-cell-line">' + esc(u.desa) + '</div><div class="data-cell-line">' + esc(u.kelompok) + '</div></td><td><span class="badge ' + sc + '">' + st + '</span></td></tr>';
     }).join('');
     generatePagination('admin-users-pagination', adminCurrentPage, totalPages, filtered.length, adminPageSize, 'goToAdminPage');
 }
 function filterAdmin() { adminCurrentPage = 1; renderAdminUsers(allUsers); }
 
-/* ========== ADMIN - PENGAJUAN TAARUF ========== */
+/* ADMIN - PENGAJUAN TAARUF */
 async function loadAdminTaaruf() {
     var t = document.getElementById('admin-taaruf-tbody');
-    t.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-muted)"><i class="fas fa-spinner fa-spin"></i></td></tr>';
+    t.innerHTML = '<tr><td colspan="5" style="text-align:center"><i class="fas fa-spinner fa-spin"></i></td></tr>';
     var res = await fetchGAS('getAllTaaruf', { role: currentUser.role, email: currentUser.email, scope: currentUser.scope });
-    if (res.status !== 'success') { t.innerHTML = '<tr><td colspan="5" style="text-align:center"><i class="fas fa-exclamation-triangle" style="color:var(--warning);margin-right:8px"></i>Gagal memuat. <a class="link" onclick="loadAdminTaaruf()">Coba Lagi</a></td></tr>'; return; }
+    if (res.status !== 'success') { t.innerHTML = '<tr><td colspan="5" style="text-align:center"><i class="fas fa-exclamation-triangle" style="color:var(--gold-400);margin-right:8px"></i>Gagal memuat. <a class="link" onclick="loadAdminTaaruf()">Coba Lagi</a></td></tr>'; return; }
     if (res.data && res.data.length > 0) { allTaarufRequests = res.data; renderAdminTaaruf(allTaarufRequests); }
-    else { allTaarufRequests = []; t.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-muted)">Belum ada pengajuan.</td></tr>'; }
+    else { allTaarufRequests = []; t.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-muted-light)">Belum ada pengajuan.</td></tr>'; }
 }
 function filterTaaruf(btn, filter) { currentTaarufFilter = filter; document.querySelectorAll('#taarufFilterTabs .filter-tab').forEach(function (b) { b.classList.remove('active'); }); btn.classList.add('active'); renderAdminTaaruf(allTaarufRequests); }
-function getBadgeClass(status) { if (status === 'Pending') return 'badge-pending'; if (status === 'Sedang Taaruf') return 'badge-taaruf'; if (status === 'Sedang Proses') return 'badge-proses'; if (status === 'Sudah Menikah') return 'badge-menikah'; if (status === 'Rejected') return 'badge-rejected'; if (status === 'Approved') return 'badge-approved'; return 'badge-pending'; }
+function getBadgeClass(status) { var m = { 'Pending': 'badge-pending', 'Sedang Taaruf': 'badge-taaruf', 'Sedang Proses': 'badge-proses', 'Sudah Menikah': 'badge-menikah', 'Rejected': 'badge-rejected', 'Approved': 'badge-approved' }; return m[status] || 'badge-pending'; }
 function getActionButtons(status, pEmail, tEmail) {
-    if (status === 'Pending') return '<div class="action-btns"><button class="btn btn-sm btn-info-sm" onclick="updateTaarufStatus(\'' + pEmail + '\',\'' + tEmail + '\',\'Sedang Taaruf\')"><i class="fas fa-heart"></i> Sedang Taaruf</button><button class="btn btn-sm btn-danger-sm" onclick="updateTaarufStatus(\'' + pEmail + '\',\'' + tEmail + '\',\'Rejected\')"><i class="fas fa-times"></i> Tolak</button></div>';
-    if (status === 'Sedang Taaruf') return '<div class="action-btns"><button class="btn btn-sm btn-warning-sm" onclick="updateTaarufStatus(\'' + pEmail + '\',\'' + tEmail + '\',\'Sedang Proses\')"><i class="fas fa-spinner"></i> Sedang Proses</button><button class="btn btn-sm btn-danger-sm" onclick="updateTaarufStatus(\'' + pEmail + '\',\'' + tEmail + '\',\'Rejected\')"><i class="fas fa-times"></i> Tolak</button></div>';
-    if (status === 'Sedang Proses') return '<div class="action-btns"><button class="btn btn-sm btn-success" onclick="updateTaarufStatus(\'' + pEmail + '\',\'' + tEmail + '\',\'Sudah Menikah\')"><i class="fas fa-ring"></i> Sudah Menikah</button><button class="btn btn-sm btn-danger-sm" onclick="updateTaarufStatus(\'' + pEmail + '\',\'' + tEmail + '\',\'Rejected\')"><i class="fas fa-times"></i> Tolak</button></div>';
-    if (status === 'Sudah Menikah') return '<span style="font-size:0.8rem;color:var(--success);font-weight:600"><i class="fas fa-check-circle"></i> Selesai</span>';
-    if (status === 'Rejected') return '<span style="font-size:0.8rem;color:var(--danger);font-weight:500">Ditolak</span>';
+    if (status === 'Pending') return '<div class="action-btns"><button class="btn btn-sm btn-info-sm" onclick="updateTaarufStatus(\'' + pEmail + '\',\'' + tEmail + '\',\'Sedang Taaruf\')"><i class="fas fa-heart"></i> Taaruf</button><button class="btn btn-sm btn-danger-sm" onclick="updateTaarufStatus(\'' + pEmail + '\',\'' + tEmail + '\',\'Rejected\')"><i class="fas fa-times"></i> Tolak</button></div>';
+    if (status === 'Sedang Taaruf') return '<div class="action-btns"><button class="btn btn-sm btn-warning-sm" onclick="updateTaarufStatus(\'' + pEmail + '\',\'' + tEmail + '\',\'Sedang Proses\')"><i class="fas fa-spinner"></i> Proses</button><button class="btn btn-sm btn-danger-sm" onclick="updateTaarufStatus(\'' + pEmail + '\',\'' + tEmail + '\',\'Rejected\')"><i class="fas fa-times"></i> Tolak</button></div>';
+    if (status === 'Sedang Proses') return '<div class="action-btns"><button class="btn btn-sm btn-success" onclick="updateTaarufStatus(\'' + pEmail + '\',\'' + tEmail + '\',\'Sudah Menikah\')"><i class="fas fa-ring"></i> Menikah</button><button class="btn btn-sm btn-danger-sm" onclick="updateTaarufStatus(\'' + pEmail + '\',\'' + tEmail + '\',\'Rejected\')"><i class="fas fa-times"></i> Tolak</button></div>';
+    if (status === 'Sudah Menikah') return '<span style="font-size:0.8rem;color:var(--green-400);font-weight:700"><i class="fas fa-check-circle"></i> Selesai</span>';
+    if (status === 'Rejected') return '<span style="font-size:0.8rem;color:#FCA5A5;font-weight:500">Ditolak</span>';
     return '-';
 }
 function renderAdminTaaruf(requests) {
     var t = document.getElementById('admin-taaruf-tbody');
     var f = currentTaarufFilter ? requests.filter(function (r) { return r.status === currentTaarufFilter; }) : requests;
-    if (f.length === 0) { t.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-muted)">Tidak ada data untuk filter ini.</td></tr>'; return; }
-    t.innerHTML = f.map(function (r) { var bc = getBadgeClass(r.status); var actions = getActionButtons(r.status, r.pelamarEmail, r.targetEmail); return '<tr><td style="white-space:nowrap">' + r.tanggal + '</td><td><b>' + esc(r.pelamarNama) + '</b><div class="sub-text">' + esc(r.pelamarEmail) + '</div><div class="sub-text" style="color:var(--primary)">' + esc(r.pelamarDaerah) + ', ' + esc(r.pelamarDesa) + '</div><div class="sub-text"><i class="fas fa-users" style="width:12px"></i> ' + esc(r.pelamarKelompok) + '</div></td><td><b>' + esc(r.targetNama) + '</b><div class="sub-text">' + esc(r.targetEmail) + '</div><div class="sub-text" style="color:var(--primary)">' + esc(r.targetDaerah) + ', ' + esc(r.targetDesa) + '</div><div class="sub-text"><i class="fas fa-users" style="width:12px"></i> ' + esc(r.targetKelompok) + '</div></td><td><span class="badge ' + bc + '">' + r.status + '</span></td><td>' + actions + '</td></tr>'; }).join('');
+    if (f.length === 0) { t.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-muted-light)">Tidak ada data untuk filter ini.</td></tr>'; return; }
+    t.innerHTML = f.map(function (r) { return '<tr><td style="white-space:nowrap">' + r.tanggal + '</td><td><b style="color:var(--text-white)">' + esc(r.pelamarNama) + '</b><div class="sub-text">' + esc(r.pelamarEmail) + '</div><div class="sub-text" style="color:var(--green-400)">' + esc(r.pelamarDaerah) + ', ' + esc(r.pelamarDesa) + '</div><div class="sub-text"><i class="fas fa-users" style="width:12px"></i> ' + esc(r.pelamarKelompok) + '</div></td><td><b style="color:var(--text-white)">' + esc(r.targetNama) + '</b><div class="sub-text">' + esc(r.targetEmail) + '</div><div class="sub-text" style="color:var(--green-400)">' + esc(r.targetDaerah) + ', ' + esc(r.targetDesa) + '</div><div class="sub-text"><i class="fas fa-users" style="width:12px"></i> ' + esc(r.targetKelompok) + '</div></td><td><span class="badge ' + getBadgeClass(r.status) + '">' + r.status + '</span></td><td>' + getActionButtons(r.status, r.pelamarEmail, r.targetEmail) + '</td></tr>'; }).join('');
 }
 async function updateTaarufStatus(pEmail, tEmail, newStatus) {
     if (!confirm('Ubah status menjadi "' + newStatus + '"?')) return;
     showLoading();
     var res = await fetchGAS('updateTaarufStatus', {}, 'POST', { pelamarEmail: pEmail, targetEmail: tEmail, newStatus: newStatus });
     hideLoading();
-    if (res.status === 'success') { showToast(res.message); loadAdminTaaruf(); refreshNotifCount(); }
-    else { showToast(res.message || 'Gagal update', 'error'); }
+    if (res.status === 'success') { showToast(res.message); loadAdminTaaruf(); refreshNotifCount(); } else { showToast(res.message || 'Gagal update', 'error'); }
 }
 </script>
 </body>
