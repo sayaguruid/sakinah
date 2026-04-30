@@ -1,0 +1,1560 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panduan Penggunaan — Halalkan</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --green-900: #064E2E;
+            --green-800: #0B6B3F;
+            --green-700: #0F8A50;
+            --green-600: #12A363;
+            --green-500: #15B872;
+            --green-400: #34D399;
+            --green-100: #D1FAE5;
+            --green-50: #ECFDF5;
+            --gold-500: #D4A843;
+            --gold-400: #E8C66A;
+            --gold-300: #F0D88A;
+            --gold-100: #FEF3C7;
+            --gold-50: #FFFBEB;
+            --bg-page: #F5F7FA;
+            --bg-card: #FFF;
+            --border-light: #E5E7EB;
+            --text-main: #1a1a2e;
+            --text-dark: #111827;
+            --text-muted: #6B7280;
+            --text-light: #9CA3AF;
+            --danger: #EF4444;
+            --danger-light: #FEF2F2;
+            --success: #10B981;
+            --success-light: #ECFDF5;
+            --warning: #F59E0B;
+            --warning-light: #FFFBEB;
+            --info: #2563EB;
+            --info-light: #EFF6FF;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg-page);
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .bg-pattern {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            background:
+                radial-gradient(ellipse at 20% 50%, rgba(15,138,80,.04) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, rgba(212,168,67,.03) 0%, transparent 50%);
+        }
+
+        /* LAYOUT */
+        .guide-layout {
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* SIDEBAR NAV */
+        .guide-sidebar {
+            width: 280px;
+            background: linear-gradient(180deg, var(--green-900) 0%, #042F1A 100%);
+            border-right: 1px solid rgba(255,255,255,.06);
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            transition: transform .3s cubic-bezier(.4,0,.2,1);
+        }
+
+        .guide-sidebar-header {
+            padding: 1.3rem 1.1rem;
+            border-bottom: 1px solid rgba(255,255,255,.06);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .guide-sidebar-logo {
+            width: 38px;
+            height: 38px;
+            flex-shrink: 0;
+            background: linear-gradient(135deg, var(--green-600), var(--gold-500));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: .95rem;
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(21,184,114,.3);
+        }
+
+        .guide-sidebar-header h2 {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .guide-sidebar-header h2 span { color: var(--gold-400); }
+
+        .guide-sidebar-subtitle {
+            padding: .7rem 1.1rem .3rem;
+            font-size: .62rem;
+            font-weight: 700;
+            color: rgba(255,255,255,.35);
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+        }
+
+        .guide-nav { flex: 1; padding: .3rem .7rem .7rem; }
+
+        .guide-nav a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 12px;
+            color: rgba(255,255,255,.5);
+            font-size: .8rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: all .2s;
+            text-decoration: none;
+            min-height: 40px;
+            margin-bottom: 1px;
+        }
+
+        .guide-nav a:hover {
+            background: rgba(255,255,255,.08);
+            color: #fff;
+        }
+
+        .guide-nav a.active {
+            background: linear-gradient(135deg, rgba(21,184,114,.2), rgba(21,184,114,.08));
+            color: var(--green-400);
+            font-weight: 700;
+            border: 1px solid rgba(21,184,114,.2);
+        }
+
+        .guide-nav a i.nav-icon {
+            width: 18px;
+            text-align: center;
+            font-size: .82rem;
+        }
+
+        .guide-sidebar-footer {
+            padding: .9rem 1.1rem;
+            border-top: 1px solid rgba(255,255,255,.06);
+            text-align: center;
+        }
+
+        .guide-sidebar-footer small {
+            font-size: .62rem;
+            color: rgba(255,255,255,.3);
+            line-height: 1.5;
+        }
+
+        /* MAIN */
+        .guide-main {
+            flex: 1;
+            margin-left: 280px;
+            min-height: 100vh;
+        }
+
+        .guide-topbar {
+            padding: .75rem 1.5rem;
+            border-bottom: 1px solid var(--border-light);
+            background: #fff;
+            box-shadow: 0 1px 3px rgba(0,0,0,.04);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            min-height: 52px;
+        }
+
+        .guide-topbar h3 {
+            font-size: .95rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .guide-topbar h3 i { color: var(--green-600); }
+
+        .guide-hamburger {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.1rem;
+            color: var(--text-main);
+            cursor: pointer;
+            padding: 8px;
+            min-width: 44px;
+            min-height: 44px;
+            justify-content: center;
+            align-items: center;
+            border-radius: 8px;
+        }
+
+        .guide-hamburger:hover { background: rgba(0,0,0,.05); }
+
+        .guide-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.3);
+            z-index: 99;
+            backdrop-filter: blur(4px);
+        }
+
+        .guide-overlay.open { display: block; }
+
+        .guide-content {
+            padding: 1.5rem 2rem 3rem;
+            max-width: 900px;
+        }
+
+        /* SECTIONS */
+        .guide-section {
+            display: none;
+            animation: fadeUp .35s ease;
+        }
+
+        .guide-section.active { display: block; }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-hero {
+            background: linear-gradient(135deg, rgba(21,184,114,.08), rgba(212,168,67,.04));
+            border: 1px solid rgba(21,184,114,.15);
+            border-radius: 18px;
+            padding: 1.8rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section-hero::before {
+            content: '';
+            position: absolute;
+            top: -30px;
+            right: -30px;
+            width: 120px;
+            height: 120px;
+            background: radial-gradient(circle, rgba(212,168,67,.08), transparent);
+            border-radius: 50%;
+        }
+
+        .section-hero .arabic {
+            font-family: 'Amiri', serif;
+            font-size: 1.25rem;
+            color: var(--green-700);
+            margin-bottom: .4rem;
+        }
+
+        .section-hero h1 {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: .4rem;
+        }
+
+        .section-hero h1 span { color: var(--gold-500); }
+
+        .section-hero p {
+            font-size: .84rem;
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+
+        .section-hero p b { color: var(--green-700); }
+
+        /* CARDS */
+        .g-card {
+            background: #fff;
+            border: 1px solid var(--border-light);
+            border-radius: 16px;
+            padding: 1.3rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,.04);
+            transition: all .25s;
+        }
+
+        .g-card:hover {
+            border-color: var(--green-400);
+            box-shadow: 0 4px 16px rgba(0,0,0,.06);
+        }
+
+        .g-card-title {
+            font-size: .95rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: .6rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .g-card-title .icon-circle {
+            width: 32px;
+            height: 32px;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: .82rem;
+            flex-shrink: 0;
+        }
+
+        .icon-green { background: var(--green-50); color: var(--green-700); }
+        .icon-gold { background: var(--gold-50); color: var(--gold-500); }
+        .icon-blue { background: var(--info-light); color: var(--info); }
+        .icon-red { background: var(--danger-light); color: var(--danger); }
+        .icon-purple { background: #F3E8FF; color: #7C3AED; }
+
+        .g-card p, .g-card li {
+            font-size: .82rem;
+            color: var(--text-muted);
+            line-height: 1.75;
+        }
+
+        .g-card ul, .g-card ol {
+            padding-left: 1.2rem;
+            margin: .4rem 0;
+        }
+
+        .g-card li { margin-bottom: 3px; }
+
+        .g-card li strong { color: var(--text-dark); }
+
+        /* STEP LIST */
+        .step-list { list-style: none; padding: 0; counter-reset: step; }
+
+        .step-list li {
+            counter-increment: step;
+            position: relative;
+            padding: .7rem 0 .7rem 3rem;
+            border-bottom: 1px solid #F3F4F6;
+            font-size: .82rem;
+            color: var(--text-muted);
+            line-height: 1.65;
+        }
+
+        .step-list li:last-child { border-bottom: none; }
+
+        .step-list li::before {
+            content: counter(step);
+            position: absolute;
+            left: 0;
+            top: .65rem;
+            width: 26px;
+            height: 26px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, var(--green-700), var(--green-500));
+            color: #fff;
+            font-size: .72rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .step-list li strong { color: var(--text-dark); }
+
+        /* INFO BOX */
+        .info-box {
+            border-radius: 12px;
+            padding: 1rem 1.1rem;
+            margin: .8rem 0;
+            font-size: .8rem;
+            line-height: 1.7;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .info-box i { margin-top: 3px; flex-shrink: 0; }
+
+        .info-box.green { background: var(--green-50); color: var(--green-900); border: 1px solid #A7F3D0; }
+        .info-box.gold { background: var(--gold-50); color: #92400E; border: 1px solid #FDE68A; }
+        .info-box.red { background: var(--danger-light); color: #991B1B; border: 1px solid #FECACA; }
+        .info-box.blue { background: var(--info-light); color: #1E40AF; border: 1px solid #BFDBFE; }
+
+        /* FLOW DIAGRAM */
+        .flow-diagram {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin: 1rem 0;
+            padding: 1rem;
+            background: #F9FAFB;
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+        }
+
+        .flow-step {
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-size: .74rem;
+            font-weight: 700;
+            text-align: center;
+            min-width: 90px;
+        }
+
+        .flow-step.f-green { background: var(--green-50); color: var(--green-700); border: 1px solid #A7F3D0; }
+        .flow-step.f-gold { background: var(--gold-50); color: #92400E; border: 1px solid #FDE68A; }
+        .flow-step.f-blue { background: var(--info-light); color: var(--info); border: 1px solid #BFDBFE; }
+        .flow-step.f-purple { background: #F3E8FF; color: #7C3AED; border: 1px solid #DDD6FE; }
+        .flow-step.f-red { background: var(--danger-light); color: #DC2626; border: 1px solid #FECACA; }
+
+        .flow-arrow {
+            color: var(--text-light);
+            font-size: .9rem;
+            flex-shrink: 0;
+        }
+
+        /* BADGE */
+        .gbadge {
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: .68rem;
+            font-weight: 700;
+            display: inline-block;
+            white-space: nowrap;
+        }
+
+        .gbadge-green { background: var(--green-50); color: var(--green-700); border: 1px solid #A7F3D0; }
+        .gbadge-gold { background: var(--gold-50); color: #92400E; border: 1px solid #FDE68A; }
+        .gbadge-blue { background: var(--info-light); color: var(--info); border: 1px solid #BFDBFE; }
+        .gbadge-red { background: var(--danger-light); color: #DC2626; border: 1px solid #FECACA; }
+        .gbadge-purple { background: #F3E8FF; color: #7C3AED; border: 1px solid #DDD6FE; }
+
+        /* TABLE */
+        .g-table-wrap {
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            overflow-x: auto;
+            margin: .8rem 0;
+            background: #fff;
+        }
+
+        .g-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: .78rem;
+        }
+
+        .g-table thead { background: #F9FAFB; }
+
+        .g-table th {
+            text-align: left;
+            padding: 10px 14px;
+            font-size: .68rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            border-bottom: 1px solid var(--border-light);
+            white-space: nowrap;
+        }
+
+        .g-table td {
+            padding: 10px 14px;
+            border-bottom: 1px solid #F3F4F6;
+            vertical-align: top;
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+
+        .g-table tr:last-child td { border-bottom: none; }
+        .g-table tr:hover td { background: #FAFBFC; }
+
+        /* SUB HEADING */
+        .sub-heading {
+            font-size: .72rem;
+            font-weight: 800;
+            color: var(--green-700);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 1.5rem 0 .7rem;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .sub-heading::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(to right, rgba(21,184,114,.25), transparent);
+        }
+
+        /* SCREENSHOT PLACEHOLDER */
+        .screen-mock {
+            background: #F9FAFB;
+            border: 2px dashed var(--border-light);
+            border-radius: 14px;
+            padding: 1.5rem;
+            text-align: center;
+            margin: .8rem 0;
+        }
+
+        .screen-mock i {
+            font-size: 1.8rem;
+            color: var(--text-light);
+            margin-bottom: .5rem;
+            display: block;
+        }
+
+        .screen-mock p {
+            font-size: .76rem;
+            color: var(--text-light);
+        }
+
+        .screen-mock .screen-label {
+            font-size: .72rem;
+            font-weight: 700;
+            color: var(--green-700);
+            margin-bottom: .3rem;
+        }
+
+        /* TOC GRID */
+        .toc-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: .8rem;
+            margin: 1rem 0;
+        }
+
+        .toc-item {
+            background: #fff;
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all .25s;
+            text-decoration: none;
+            display: block;
+        }
+
+        .toc-item:hover {
+            border-color: var(--green-400);
+            box-shadow: 0 4px 16px rgba(0,0,0,.06);
+            transform: translateY(-2px);
+        }
+
+        .toc-item .toc-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: .9rem;
+            margin-bottom: .5rem;
+        }
+
+        .toc-item .toc-title {
+            font-size: .84rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 2px;
+        }
+
+        .toc-item .toc-desc {
+            font-size: .7rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .guide-sidebar {
+                transform: translateX(-100%);
+                width: 280px;
+            }
+            .guide-sidebar.open { transform: translateX(0); }
+            .guide-main { margin-left: 0; }
+            .guide-hamburger { display: flex; }
+            .guide-content { padding: 1rem 1rem 2rem; }
+            .toc-grid { grid-template-columns: 1fr; }
+            .flow-diagram { gap: 4px; padding: .7rem; }
+            .flow-step { min-width: 70px; padding: 6px 10px; font-size: .66rem; }
+            .section-hero { padding: 1.2rem; }
+            .section-hero h1 { font-size: 1.15rem; }
+            .g-card { padding: 1rem; }
+        }
+
+        @media (max-width: 400px) {
+            .flow-diagram { flex-direction: column; }
+            .flow-arrow { transform: rotate(90deg); }
+        }
+
+        @media print {
+            .guide-sidebar, .guide-topbar, .guide-hamburger, .guide-overlay { display: none !important; }
+            .guide-main { margin-left: 0; }
+            .guide-content { max-width: 100%; }
+            .g-card { break-inside: avoid; }
+        }
+    </style>
+</head>
+<body>
+<div class="bg-pattern"></div>
+
+<div class="guide-layout">
+    <div class="guide-overlay" id="guideOverlay" onclick="closeGuideSidebar()"></div>
+
+    <aside class="guide-sidebar" id="guideSidebar">
+        <div class="guide-sidebar-header">
+            <div class="guide-sidebar-logo"><i class="fas fa-heart"></i></div>
+            <h2>Halal<span>kan</span></h2>
+        </div>
+        <div class="guide-sidebar-subtitle">Panduan Penggunaan</div>
+        <nav class="guide-nav">
+            <a class="active" onclick="showSection('sec-beranda')"><i class="fas fa-home nav-icon"></i> Beranda</a>
+            <a onclick="showSection('sec-daftar')"><i class="fas fa-user-plus nav-icon"></i> Daftar Akun</a>
+            <a onclick="showSection('sec-login')"><i class="fas fa-sign-in-alt nav-icon"></i> Login</a>
+            <a onclick="showSection('sec-profil')"><i class="fas fa-user-edit nav-icon"></i> Lengkapi Profil</a>
+            <a onclick="showSection('sec-cari')"><i class="fas fa-search nav-icon"></i> Temukan Pasangan</a>
+            <a onclick="showSection('sec-taaruf')"><i class="fas fa-paper-plane nav-icon"></i> Ajukan Ta'aruf</a>
+            <a onclick="showSection('sec-status')"><i class="fas fa-heart nav-icon"></i> Status Ta'aruf</a>
+            <a onclick="showSection('sec-kegiatan')"><i class="fas fa-bullhorn nav-icon"></i> Info Kegiatan</a>
+            <a onclick="showSection('sec-keamanan')"><i class="fas fa-shield-alt nav-icon"></i> Keamanan Data</a>
+            <div style="padding: .5rem 0"></div>
+            <div class="guide-sidebar-subtitle">Panel Admin</div>
+            <a onclick="showSection('sec-admin-home')"><i class="fas fa-tachometer-alt nav-icon"></i> Dashboard</a>
+            <a onclick="showSection('sec-admin-users')"><i class="fas fa-users nav-icon"></i> Data Peserta</a>
+            <a onclick="showSection('sec-admin-taaruf')"><i class="fas fa-heart nav-icon"></i> Kelola Ta'aruf</a>
+            <a onclick="showSection('sec-admin-kg')"><i class="fas fa-bullhorn nav-icon"></i> Kelola Kegiatan</a>
+            <div style="padding: .5rem 0"></div>
+            <div class="guide-sidebar-subtitle">Lainnya</div>
+            <a onclick="showSection('sec-faq')"><i class="fas fa-question-circle nav-icon"></i> FAQ</a>
+            <a onclick="showSection('sec-tips')"><i class="fas fa-lightbulb nav-icon"></i> Tips & Etika</a>
+        </nav>
+        <div class="guide-sidebar-footer">
+            <small>Halalkan v1.0<br>Panduan Resmi Pengguna</small>
+        </div>
+    </aside>
+
+    <div class="guide-main">
+        <header class="guide-topbar">
+            <div style="display:flex;align-items:center;gap:7px">
+                <button class="guide-hamburger" onclick="toggleGuideSidebar()" aria-label="Menu"><i class="fas fa-bars"></i></button>
+                <h3 id="guidePageTitle"><i class="fas fa-home"></i> Beranda</h3>
+            </div>
+            <span style="font-size:.7rem;color:var(--text-light);white-space:nowrap">Panduan Penggunaan</span>
+        </header>
+
+        <div class="guide-content">
+
+            <!-- ===================== BERANDA ===================== -->
+            <div id="sec-beranda" class="guide-section active">
+                <div class="section-hero">
+                    <div class="arabic">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</div>
+                    <h1>Panduan Penggunaan <span>Halalkan</span></h1>
+                    <p>Halalkan adalah platform ta'aruf digital yang memfasilitasi pernikahan sesuai syariat Islam. Panduan ini menjelaskan seluruh fitur yang tersedia bagi <b>peserta</b> dan <b>admin</b>.</p>
+                </div>
+
+                <div class="sub-heading"><i class="fas fa-th-large" style="color:var(--green-600)"></i> Daftar Isi</div>
+                <div class="toc-grid">
+                    <div class="toc-item" onclick="showSection('sec-daftar')">
+                        <div class="toc-icon icon-green"><i class="fas fa-user-plus"></i></div>
+                        <div class="toc-title">Daftar Akun</div>
+                        <div class="toc-desc">Cara membuat akun baru dengan verifikasi pertanyaan keamanan</div>
+                    </div>
+                    <div class="toc-item" onclick="showSection('sec-login')">
+                        <div class="toc-icon icon-blue"><i class="fas fa-sign-in-alt"></i></div>
+                        <div class="toc-title">Login</div>
+                        <div class="toc-desc">Masuk ke akun yang sudah terdaftar</div>
+                    </div>
+                    <div class="toc-item" onclick="showSection('sec-profil')">
+                        <div class="toc-icon icon-gold"><i class="fas fa-user-edit"></i></div>
+                        <div class="toc-title">Lengkapi Profil</div>
+                        <div class="toc-desc">Isi data pribadi, pekerjaan, wilayah, dan kriteria pasangan</div>
+                    </div>
+                    <div class="toc-item" onclick="showSection('sec-cari')">
+                        <div class="toc-icon icon-green"><i class="fas fa-search"></i></div>
+                        <div class="toc-title">Temukan Pasangan</div>
+                        <div class="toc-desc">Cari dan filter peserta berdasarkan daerah, desa, kelompok</div>
+                    </div>
+                    <div class="toc-item" onclick="showSection('sec-taaruf')">
+                        <div class="toc-icon icon-purple"><i class="fas fa-paper-plane"></i></div>
+                        <div class="toc-title">Ajukan Ta'aruf</div>
+                        <div class="toc-desc">Kirim pengajuan ta'aruf via WhatsApp tim pernikahan</div>
+                    </div>
+                    <div class="toc-item" onclick="showSection('sec-status')">
+                        <div class="toc-icon icon-gold"><i class="fas fa-heart"></i></div>
+                        <div class="toc-title">Status Ta'aruf</div>
+                        <div class="toc-desc">Pantau perkembangan status pengajuan ta'aruf</div>
+                    </div>
+                    <div class="toc-item" onclick="showSection('sec-kegiatan')">
+                        <div class="toc-icon icon-blue"><i class="fas fa-bullhorn"></i></div>
+                        <div class="toc-title">Info Kegiatan</div>
+                        <div class="toc-desc">Baca informasi kegiatan dari admin</div>
+                    </div>
+                    <div class="toc-item" onclick="showSection('sec-keamanan')">
+                        <div class="toc-icon icon-red"><i class="fas fa-shield-alt"></i></div>
+                        <div class="toc-title">Keamanan Data</div>
+                        <div class="toc-desc">Watermark, anti-screenshot, dan perlindungan data pribadi</div>
+                    </div>
+                    <div class="toc-item" onclick="showSection('sec-admin-home')">
+                        <div class="toc-icon icon-purple"><i class="fas fa-tachometer-alt"></i></div>
+                        <div class="toc-title">Dashboard Admin</div>
+                        <div class="toc-desc">Statistik dan chart data peserta</div>
+                    </div>
+                    <div class="toc-item" onclick="showSection('sec-admin-users')">
+                        <div class="toc-icon icon-green"><i class="fas fa-users"></i></div>
+                        <div class="toc-title">Data Peserta (Admin)</div>
+                        <div class="toc-desc">Kelola dan filter seluruh data peserta</div>
+                    </div>
+                    <div class="toc-item" onclick="showSection('sec-admin-taaruf')">
+                        <div class="toc-icon icon-gold"><i class="fas fa-heart"></i></div>
+                        <div class="toc-title">Kelola Ta'aruf (Admin)</div>
+                        <div class="toc-desc">Terima, proses, atau tolak pengajuan ta'aruf</div>
+                    </div>
+                    <div class="toc-item" onclick="showSection('sec-faq')">
+                        <div class="toc-icon icon-blue"><i class="fas fa-question-circle"></i></div>
+                        <div class="toc-title">FAQ</div>
+                        <div class="toc-desc">Pertanyaan yang sering diajukan</div>
+                    </div>
+                </div>
+
+                <div class="info-box green">
+                    <i class="fas fa-info-circle"></i>
+                    <div><strong>Tips:</strong> Klik menu di sidebar kiri atau kartu di atas untuk langsung menuju bagian yang diinginkan. Gunakan <strong>Ctrl+F</strong> untuk mencari kata kunci tertentu.</div>
+                </div>
+            </div>
+
+            <!-- ===================== DAFTAR ===================== -->
+            <div id="sec-daftar" class="guide-section">
+                <div class="g-card">
+                    <div class="g-card-title"><div class="icon-circle icon-green"><i class="fas fa-user-plus"></i></div> Cara Mendaftar Akun Baru</div>
+                    <p>Untuk menggunakan Halalkan, Anda harus mendaftar terlebih dahulu. Proses pendaftaran dilengkapi dengan <strong>verifikasi keamanan</strong> untuk mencegah pendaftaran otomatis.</p>
+                </div>
+
+                <div class="g-card">
+                    <div class="g-card-title"><div class="icon-circle icon-blue"><i class="fas fa-list-ol"></i></div> Langkah-langkah</div>
+                    <ol class="step-list">
+                        <li>Buka halaman utama Halalkan. Anda akan melihat halaman <strong>Login</strong>.</li>
+                        <li>Klik tautan <strong>"Daftar"</strong> di bagian bawah form login.</li>
+                        <li>Isi formulir pendaftaran:
+                            <ul style="margin-top:5px">
+                                <li><strong>Email</strong> — Alamat email aktif yang akan digunakan untuk login</li>
+                                <li><strong>Password</strong> — Minimal 6 karakter, gunakan kombinasi huruf dan angka</li>
+                                <li><strong>Nama Lengkap</strong> — Nama sesuai identitas resmi</li>
+                            </ul>
+                        </li>
+                        <li>Klik tombol <strong>"Daftar"</strong>. Akan muncul <strong>modal verifikasi</strong> berisi pertanyaan keamanan.</li>
+                        <li><strong>Jawab pertanyaan</strong> dengan benar, lalu klik <strong>"Verifikasi & Daftar"</strong>.</li>
+                        <li>Jika berhasil, Anda akan dikembalikan ke halaman Login untuk masuk dengan akun baru.</li>
+                    </ol>
+                </div>
+
+                <div class="info-box gold">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <div><strong>Perhatian:</strong> Jika jawaban verifikasi salah, pendaftaran akan gagal. Pastikan Anda memahami pertanyaan sebelum menjawab. Hubungi admin jika kesulitan.</div>
+                </div>
+
+                <div class="screen-mock">
+                    <div class="screen-label">Tampilan Formulir Pendaftaran</div>
+                    <i class="fas fa-image"></i>
+                    <p>Formulir dengan field Email, Password, Nama Lengkap, dan tombol Daftar</p>
+                </div>
+            </div>
+
+            <!-- ===================== LOGIN ===================== -->
+            <div id="sec-login" class="guide-section">
+                <div class="g-card">
+                    <div class="g-card-title"><div class="icon-circle icon-blue"><i class="fas fa-sign-in-alt"></i></div> Cara Login</div>
+                    <p>Gunakan email dan password yang sudah didaftarkan untuk masuk ke sistem.</p>
+                </div>
+
+                <div class="g-card">
+                    <div class="g-card-title"><div class="icon-circle icon-green"><i class="fas fa-list-ol"></i></div> Langkah-langkah</div>
+                    <ol class="step-list">
+                        <li>Di halaman Login, masukkan <strong>email</strong> yang terdaftar.</li>
+                        <li>Masukkan <strong>password</strong> Anda.</li>
+                        <li>Klik tombol <strong>"Masuk"</strong>.</li>
+                        <li>Jika berhasil, sistem akan mendeteksi role Anda:
+                            <ul style="margin-top:5px">
+                                <li><span class="gbadge gbadge-green">Personal</span> — Diarahkan ke Beranda pengguna</li>
+                                <li><span class="gbadge gbadge-purple">Admin</span> — Diarahkan ke Dashboard admin</li>
+                            </ul>
+                        </li>
+                        <li>Jika profil belum lengkap, Anda akan diarahkan ke halaman <strong>Edit Profil</strong> terlebih dahulu.</li>
+                    </ol>
+                </div>
+
+                <div class="g-card">
+                    <div class="g-card-title"><div class="icon-circle icon-gold"><i class="fas fa-key"></i></div> Lupa Password</div>
+                    <p>Klik tautan <strong>"Lupa Password?"</strong> di halaman login. Masukkan email akun Anda, dan sistem akan mengirimkan instruksi reset password (jika fitur tersedia di backend).</p>
+                </div>
+
+                <div class="info-box red">
+                    <i class="fas fa-lock"></i>
+                    <div><strong>Keamanan:</strong> Setiap sesi login bersifat sementara. Tutup browser untuk keluar, atau gunakan tombol <strong>"Keluar"</strong> di sidebar.</div>
+                </div>
+            </div>
+
+            <!-- ===================== PROFIL ===================== -->
+            <div id="sec-profil" class="guide-section">
+                <div class="g-card">
+                    <div class="g-card-title"><div class="icon-circle icon-gold"><i class="fas fa-user-edit"></i></div> Mengapa Harus Lengkapi Profil?</div>
+                    <p>Profil yang <strong>lengkap</strong> adalah syarat wajib untuk membuka fitur <strong>Temukan Pasangan</strong> dan <strong>Status Ta'aruf</strong>. Tanpa profil lengkap, kedua menu tersebut akan terkunci.</p>
+                </div>
+
+                <div class="flow-diagram">
+                    <div class="flow-step f-gold">Profil Belum Lengkap</div>
+                    <div class="flow-arrow"><i class="fas fa-arrow-right"></i></div>
+                    <div class="flow-step f-red"><i class="fas fa-lock"></i> Menu Terkunci</div>
+                    <div class="flow-arrow"><i class="fas fa-arrow-right"></i></div>
+                    <div class="flow-step f-green">Lengkapi Profil</div>
+                    <div class="flow-arrow"><i class="fas fa-arrow-right"></i></div>
+                    <div class="flow-step f-blue"><i class="fas fa-lock-open"></i> Menu Terbuka</div>
+                </div>
+
+                <div class="sub-heading"><i class="fas fa-clipboard-list" style="color:var(--green-600)"></i> Data yang Diisi</div>
+
+                <div class="g-card">
+                    <div class="g-card-title"><div class="icon-circle icon-green"><i class="fas fa-id-card"></i></div> Data Pribadi</div>
+                    <div class="g-table-wrap">
+                        <table class="g-table">
+                            <thead><tr><th>Field</th><th>Keterangan</th></tr></thead>
+                            <tbody>
+                                <tr><td><strong>Nama Lengkap</strong></td><td>Sesuai identitas resmi (KTP/Akta)</td></tr>
+                                <tr><td><strong>Nama Orang Tua</strong></td><td>Nama ayah dan/atau ibu</td></tr>
+                                <tr><td><strong>Tempat, Tanggal Lahir</strong></td><td>Contoh: Makassar, 15 Maret 1998</td></tr>
+                                <tr><td><strong>Jenis Kelamin</strong></td><td>Laki-laki / Perempuan</td></tr>
+                                <tr><td><strong>Anak Ke</strong></td><td>Contoh: Anak ke-2 dari 4 bersaudara</td></tr>
+                                <tr><td><strong>Suku</strong></td><td>Suku/bangsa</td></tr>
+                                <tr><td><strong>Tinggi / Berat Badan</strong></td><td>Contoh: 170cm / 65kg</td></tr>
+                                <tr><td><strong>Status Menikah</strong></td><td>Belum Menikah / Janda / Duda</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="g-card">
+                    <div class="g-card-title"><div class="icon-circle icon-blue"><i class="fas fa-graduation-cap"></i></div> Pendidikan & Pekerjaan</div>
+                    <div class="g-table-wrap">
+                        <table class="g-table">
+                            <thead><tr><th>Field</th><th>Keterangan</th></tr></thead>
+                            <tbody>
+                                <tr><td><strong>Pendidikan</strong></td><td>Contoh: S1 Teknik Informatika</td></tr>
+                                <tr><td><strong>Pekerjaan</strong></td><td>Contoh: Guru / Wiraswasta</td></tr>
+                                <tr><td><strong>Hobi</strong></td><td>Contoh: Membaca, olahraga</td></tr>
+                                <tr><td><strong>Dapukan</strong></td><td>Jabatan adat/organisasi jika ada</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="g-card">
+                    <div class="g-card-title"><div class="icon-circle icon-gold"><i class="fas fa-map-marker-alt"></i></div> Wilayah</div>
+                    <div class="g-table-wrap">
+                        <table class="g-table">
+                            <thead><tr><th>Field</th><th>Keterangan</th></tr></thead>
+                            <tbody>
+                                <tr><td><strong>Daerah</strong></td><td>Pilih dari daftar daerah yang tersedia</td></tr>
+                                <tr><td><strong>Desa</strong></td><td>Akan muncul setelah memilih daerah</td></tr>
+                                <tr><td><strong>Kelompok</strong></td><td>Akan muncul setelah memilih desa</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="info-box blue" style="margin-top:.7rem">
+                        <i class="fas fa-info-circle"></i>
+                        <div><strong>Cascading Select:</strong> Pilihan Desa bergantung pada Daerah yang dipilih. Pilihan Kelompok bergantung pada Desa. Pastikan memilih secara berurutan.</div>
+                    </div>
+                </div>
+
+                <div class="g-card">
+                    <div class="g-card-title"><div class="icon-circle icon-green"><i class="fas fa-camera"></i></div> Foto & Kriteria Pasangan</div>
+                    <ul>
+                        <li><strong>Foto:</strong> Upload foto terbaik Anda (maks 2MB). Foto akan otomatis dikompres oleh sistem.</li>
+                        <li><strong>Kriteria Pasangan:</strong> Tulis kriteria pasangan yang Anda inginkan, misalnya: sholeh/sholehah, pendidikan minimal SMA, tinggi minimal 165cm, dan sebagainya. Kriteria ini akan ditampilkan di kartu profil Anda kepada peserta lain.</li>
+                    </ul>
+                </div>
+
+                <div class="info-box green">
+                    <i class="fas fa-check-circle"></i>
+                    <div><strong>Simpan Profil:</strong> Setelah semua data terisi, klik <strong>"Simpan Profil"</strong>. Jika berhasil, menu Temukan Pasangan dan Status Ta'aruf akan otomatis terbuka (ikun terbuka).</div>
+                </div>
+            </div>
+
+            <!-- ===================== CARI ===================== -->
+            <div id="sec-cari" class="guide-section">
+                <div class="g-card">
+                    <div class="g-card-title"><div class="icon-circle icon-green"><i class="fas fa-search"></i></div> Temukan Pasangan</div>
+                    <p>Menu ini menampilkan daftar peserta yang bisa Anda ajukan ta'aruf. Sistem otomatis menampilkan peserta <strong>lawan jenis</strong> dari Anda.</p>
+                </div>
+
+                <div class="info-box red">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <div><strong>Penting:</strong> Halaman ini dilindungi dengan <strong>watermark</strong> dan <strong>anti-screenshot</strong>. Dilarang keras melakukan screenshot, screen record, copy, atau distribusi data yang ditampilkan. Pelanggaran ditindak tegas.</div>
+                </div>
+
+                <div class="sub-heading"><i class="fas fa-filter" style="color:var(--green-600)"></i> Filter & Pencarian</div>
+
+                <div class="g-card">
+                    <div class="g-card-title"><div class="icon-circle icon-blue"><i class="fas fa-sliders-h"></i></div> Filter yang Tersedia</div>
+                    <div class="g-table-wrap">
+                        <table class="g-table">
+                            <thead><tr><th>Filter</th><th>Fungsi</th></tr></thead>
+                            <tbody>
+                                <tr><td><strong>Daerah</strong></td><td>Filter peserta berdasarkan daerah tertentu</td></tr>
+                                <tr><td><strong>Desa</strong></td><td>Filter berdasarkan desa (bergantung pada pilihan daerah)</td></tr>
+                                <tr><td><strong>Kelompok</strong></td><td>Filter berdasarkan kelompok (bergantung pada pilihan desa)</td></tr>
+                                <tr><td><strong>Pencarian Nama</strong></td><td>Ketik nama di kolom pencarian untuk filter real-time</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="info-box blue" style="margin-top:.7rem">
+                        <i class="fas fa-bolt"></i>
+                        <div><strong>Real-time:</strong> Filter dan pencarian bekerja secara instan saat Anda mengetik atau memilih. Tidak perlu menekan tombol "Cari".</div>
+                    </div>
+                </div>
+
+                <div class="sub-heading"><i class="fas fa-id-card" style="color:var(--green-600)"></i> Kartu Peserta</div>
+
+                <div class="g-card">
+                    <div class="g-card-title"><div class="icon-circle icon-gold"><i class="fas fa-address-card"></i></div> Informasi yang Ditampilkan</div>
+                    <p>Setiap peserta ditampilkan dalam bentuk kartu yang memuat:</p>
+                    <ul>
+                        <li><strong>Foto</strong> — Klik foto untuk memperbesar (modal)</li>
+                        <li><strong>Nama</strong> & <strong>Jenis Kelamin</strong> (badge biru/hijau)</li>
+                        <li><strong>Pekerjaan, Pendidikan, Wilayah</strong></li>
+                        <li><strong>Data Pribadi:</strong> Nama orang tua, TTL, anak ke, suku, TB/BB, status menikah, hobi, dapukan, kelompok</li>
+                        <li><strong>Kriteria Pasangan</strong> (jika diisi)</li>
+                        <li><strong>Tombol "Ajukan Ta'aruf"</strong> di bagian bawah kartu</li>
+                    </ul>
+                </div>
+
+                <div class="info-box gold">
+                    <i class="fas fa-heart-broken"></i>
+                    <div><strong>Blokir Saat Ta'aruf:</strong> Jika Anda sedang dalam proses ta'aruf (Pending / Sedang Taaruf / Sedang Proses), daftar peserta <strong>tidak akan ditampilkan</strong>. Anda akan melihat pesan bahwa sedang dalam proses ta'aruf.</div>
+                </div>
+
+                <div class="sub-heading"><i class="fas fa-mobile-alt" style="color:var(--green-600)"></i> Navigasi Halaman</div>
+                <div class="g-card">
+                    <div class="g-card-title"><div class="icon-circle icon-blue"><i class="fas fa-layer-group"></i></div> Paginasi</div>
+                    <p>Data peserta ditampilkan per halaman (6 peserta per halaman). Di bagian bawah daftar terdapat kontrol paginasi:</p>
+                    <ul>
+                        <li><strong>Info:</strong> "Menampilkan 1 - 6 dari 24"</li>
+                        <li><strong>Nomor halaman</strong> — Klik untuk langsung ke halaman tertentu</li>
+                        <li><strong>Panah kiri/kanan</strong> — Navigasi ke halaman sebelum/sesudah</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- ===================== AJUKAN TAARUF ===================== -->
+            <div id="sec-taaruf" class="guide-section">
+                <div class="g-card">
+                    <div class="g-card-title"><div class="icon-circle icon-purple"><i class="fas fa-paper-plane"></i></div> Proses Pengajuan Ta'aruf</div>
+                    <p>Pengajuan ta'aruf tidak dilakukan langsung di aplikasi, melainkan <strong>melalui WhatsApp tim pernikahan daerah</strong>. Sistem mencatat pengajuan dan menampilkan kontak tim yang bertanggung jawab.</p>
+                </div>
+
+                <div class="flow-diagram">
+                    <div class="flow-step f-green">Lihat Kartu Peserta</div>
+                    <div class="flow-arrow"><i class="fas fa-arrow-right"></i></div>
+                    <div class="flow-step f-blue">Klik "Ajukan Ta'aruf"</div>
+                    <div class="flow-arrow"><i class="fas fa-arrow-right"></i></div>
+                    <div class="flow-step f-gold">Sistem Catat + Tampilkan WA</div>
+                    <div class="flow-arrow"><i class="fas fa-arrow-right"></i></div>
+                    <div class="flow-step f-purple">Chat Tim Pernikahan</div>
+                </div>
+
+                <div class="g-card">
+                    <div class="g-card-title"><div class="icon-circle icon-green"><i class="fas fa-list-ol"></i></div> Langkah Detail</div>
+                    <ol class="step-list">
+                        <li>Browse daftar peserta di menu <strong>Temukan Pasangan</strong>.</li>
+                        <li>Temukan peserta yang sesuai, lalu klik tombol <strong>"Ajukan Ta'aruf"</strong> (hijau, ikon WhatsApp) di bagian bawah kartu.</li>
+                        <li>Sistem akan:
+                            <ul style="margin-top:5px">
+                                <li>Mencatat pengajuan Anda di database</li>
+                                <li>Menampilkan <strong>info box hijau</strong> berisi nama tim pernikahan, nomor WhatsApp, dan tombol <strong>"Chat WhatsApp Sekarang"</strong></li>
+                            </ul>
+                        </li>
+                        <li>Klik tombol WhatsApp. Pesan otomatis akan terisi dengan format:
+                            <div style="background:#F9FAFB;border:1px solid var(--border-light);border-radius:8px;padding:.6rem .8rem;margin-top:5px;font-size:.74rem;color:var(--text-main);font-style:italic">
+                                "Assalamu'alaikum, saya [Nama Anda] dari kelompok [Kelompok]. Saya ingin mengajukan ta'aruf dengan [Nama Target] ([Daerah Target]) melalui Halalkan. Mohon bimbingannya."
+                            </div>
+                        </li>
+                        <li>Kirim pesan dan tunggu konfirmasi dari tim pernikahan.</li>
+                    </ol>
+                </div>
+
+                <div class="info-box gold">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <div><strong>Setelah Mengajukan:</strong> Menu Temukan Pasangan akan diblokir (menampilkan banner "Sedang dalam Proses Ta'aruf"). Daftar peserta hanya kembali tersedia jika pengajuan <strong>ditolak</strong> oleh admin.</div>
+                </div>
+
+                <div class="info-box blue">
+                    <i class="fas fa-question-circle"></i>
+                    <div><strong>Jika Tim Tidak Tersedia:</strong> Jika belum ada tim pernikahan yang terdaftar untuk daerah target, Anda akan mendapat notifikasi bahwa pengajuan tercatat namun belum ada kontak tim.</div>
+                </div>
+            </div>
+
+            <!-- ===================== STATUS TAARUF ===================== -->
+            <div id="sec-status" class="guide-section">
+                <div class="g-card">
+                    <div class="g-card-title"><div class="icon-circle icon-gold"><i class="fas fa-heart"></i></div> Status Ta'aruf</div>
+                    <p>Menu ini menampilkan seluruh riwayat pengajuan ta'aruf Anda, baik sebagai <strong>pelamar</strong> maupun sebagai <strong>target</strong>.</p>
+                </div>
+
+                <div class="sub-heading"><i class="fas fa-stream" style="color:var(--green-600)"></i> Status yang Ada</div>
+
+                <div class="g-table-wrap">
+                    <table class="g-table">
+                        <thead><tr><th>Status</th><th>Arti</th><th>Warna</th></tr></thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="gbadge gbadge-gold">Pending</span></td>
+                                <td>Menunggu konfirmasi dari tim pernikahan</td>
+                                <td style="color:var(--gold-500)">Kuning/Emas</td>
+                            </tr>
+                            <tr>
+                                <td><span class="gbadge gbadge-blue">Sedang Taaruf</span></td>
+                                <td>Proses ta'aruf sudah dimulai, kedua pihak sudah dikonfirmasi</td>
+                                <td style="color:var(--info)">Biru</td>
+                            </tr>
+                            <tr>
+                                <td><span class="gbadge gbadge-gold">Sedang Proses</span></td>
+                                <td>Taaruf berlanjut ke tahap selanjutnya (pendalaman, khitbah, dll)</td>
+                                <td style="color:#D97706">Oranye</td>
+                            </tr>
+                            <tr>
+                                <td><span class="gbadge gbadge-green">Sudah Menikah</span></td>
+                                <td>Alhamdulillah, proses telah selesai hingga akad nikah</td>
+                                <td style="color:var(--green-700)">Hijau</td>
+                            </tr>
+                            <tr>
+                                <td><span class="gbadge gbadge-red">Rejected</span></td>
+                                <td>Pengajuan ditolak. Anda dapat kembali melihat daftar peserta.</td>
+                                <td style="color:var(--danger)">Merah</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="flow-diagram">
+                    <div class="flow-step f-gold">Pending</div>
+                    <div class="flow-arrow"><i class="fas fa-arrow-right"></i></div>
+                    <div class="flow-step f-blue">Sedang Taaruf</div>
+                    <div class="flow-arrow"><i class="fas fa-arrow-right"></i></div>
+                    <div class="flow-step f-gold">Sedang Proses</div>
+                    <div class="flow-arrow"><i class="fas fa-arrow-right"></i></div>
+                    <div class="flow-step f-green">Sudah Menikah</div>
+                </div>
+                <div style="text-align:center;margin:-.5rem 0 .8rem">
+                    <div class="flow-arrow" style="display:inline-block;transform:rotate(90deg);color:var(--danger);font-size:.8rem">
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                </div>
+                <div class="flow-diagram" style="margin-top:-.5rem">
+                    <div class="flow-step f-red" style="margin:0 auto">Rejected (dapat dari status manapun)</div>
+                </div>
+
+                <div class="g-card">
+                    <div class="g-card-title"><div class="icon-circle icon-blue"><i class="fas fa-info-circle"></i></div> Informasi per Kartu Status</div>
+                    <p>Setiap pengajuan ditampilkan dalam kartu berisi:</p>
+                    <ul>
+                        <li><strong>Nama</strong> pihak terkait (pelamar/target)</li>
+                        <li><strong>Peran Anda:</strong> "Anda mengajukan" atau "Mengajukan Anda"</li>
+                        <li><strong>Tanggal</strong> pengajuan</li>
+                        <li><strong>Wilayah & Kelompok</strong> target</li>
+                        <li><strong>Badge status</strong> berwarna sesuai tahapan</li>
+                        <li><strong>Keterangan</strong> penjelasan singkat tentang status tersebut</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- ===================== KEGIATAN ===================== -->
+            <div id="sec-kegiatan" class="guide-section">
+                <div class="g-card">
+                    <div class="g-card-title"><div class="icon-circle icon-blue"><i class="fas fa-bullhorn"></i></div> Info Kegiatan</div>
+                    <p>Menu ini menampilkan informasi kegiatan yang dipublikasikan oleh admin, seperti kegiatan daerah, seminar pernikahan, kajian, atau pengumuman penting.</p>
+                </div>
+
+                <div class="g-card">
+                    <div class="g-card-title"><div class="icon-circle icon-green"><i class="fas fa-newspaper"></i></div> Format Tampilan</div>
+                    <p>Setiap kegiatan ditampilkan dalam kartu yang berisi:</p>
+                    <ul>
+                        <li><strong>Gambar</strong> (jika ada) — Klik untuk memperbesar</li>
+                        <li><strong>Judul</strong> kegiatan</li>
+                        <li><strong>Isi informasi</strong> — Detail lengkap kegiatan</li>
+                        <li><strong>Tanggal</strong> publikasi</li>
+                        <li><strong>Nama penulis</strong> (admin yang mempublikasikan)</li>
+                    </ul>
+                </div>
+
+                <div class="info-box green">
+                    <i class="fas fa-bell"></i>
+                    <div><strong>Notifikasi:</strong> Kegiatan terbaru juga muncul di panel notifikasi (ikon lonceng di header kanan atas).</div>
+                </div>
+            </div>
+
+            <!-- ===================== KEAMANAN ===================== -->
+            <div id="sec-keamanan" class="guide-section">
+                <div class="g-card">
+                    <div class="g-card-title"><div class="icon-circle icon-red"><i class="fas fa-shield-alt"></i></div> Perlindungan Data Pribadi</div>
+                    <p>Data peserta bersifat <strong>sangat sensitif</strong>. Halalkan menerapkan beberapa lapisan perlindungan keamanan:</p>
+                </div>
+
+                <div class="sub-heading"><i class="fas fa-tint" style="color:var(--green-600)"></i> Watermark Dinamis</div>
+                <div class="g-card">
+                    <p>Saat Anda membuka halaman <strong>Temukan Pasangan</strong>, seluruh halaman akan ditutupi oleh <strong>watermark transparan</strong> berisi:</p>
+                    <ul>
+                        <li><strong>Email</strong> akun Anda</li>
+                        <li>Teks <strong>"— DILINDUNGI —"</strong></li>
+                    </ul>
+                    <p>Watermark ini muncul berulang-ulang di seluruh area halaman dan <strong>tidak dapat dihilangkan</strong> dengan cara biasa. Jika screenshot diambil, watermark akan terbawa.</p>
+                </div>
+
+                <div class="sub-heading"><i class="fas fa-ban" style="color:var(--danger)"></i> Anti-Screenshot & Anti-Copy</div>
+                <div class="g-card">
+                    <div class="g-table-wrap">
+                        <table class="g-table">
+                            <thead><tr><th>Aksi yang Diblokir</th><th>Keterangan</th></tr></thead>
+                            <tbody>
+                                <tr><td><strong>Screenshot</strong> (PrintScreen)</td><<td>Diblokir via keyboard shortcut</td></tr>
+                                <tr><td><strong>Screen Record</strong> (Ctrl+Shift+S/I)</td><td>Diblokir via keyboard shortcut</td></tr>
+                                <tr><td><strong>Klik Kanan</strong></td><td>Menu konteks dinonaktifkan</td></tr>
+                                <tr><td><strong>Copy (Ctrl+C)</strong></td><td>Menyalin teks dinonaktifkan</td></tr>
+                                <tr><td><strong>Cut (Ctrl+X)</strong></td><td>Dipotong dinonaktifkan</td></tr>
+                                <tr><td><strong>Drag Foto</strong></td><td>Menarik gambar ke tab baru dinonaktifkan</td></tr>
+                                <tr><td><strong>Print (Ctrl+P)</strong></td><td>Dialog cetak diblokir</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="sub-heading"><i class="fas fa-eye-slash" style="color:var(--green-600)"></i> Blur saat App Tersembunyi</div>
+                <div class="g-card">
+                    <p>Jika Anda berpindah aplikasi (switch tab/minimize) saat membuka halaman Temukan Pasangan, halaman akan <strong>otomatis di-blur</strong> secara total. Konten baru muncul kembali saat Anda kembali ke tab Halalkan.</p>
+                    <div class="info-box gold" style="margin-top:.5rem">
+                        <i class="fas fa-mobile-alt"></i>
+                        <div><strong>Mobile:</strong> Fitur ini juga aktif di ponsel saat berpindah aplikasi atau saat notifikasi masuk.</div>
+                    </div>
+                </div>
+
+                <div class="info-box red">
+                    <i class="fas fa-gavel"></i>
+                    <div><strong>Sanksi:</strong> Setiap pelanggaran yang terdeteksi (misalnya screenshot yang tersebar tanpa watermark rusak) akan <strong>ditindak tegas</strong> sesuai aturan yang berlaku di organisasi/daerah terkait.</div>
+                </div>
+            </div>
+
+            <!-- ===================== ADMIN HOME ===================== -->
+            <div id="sec-admin-home" class="guide-section">
+                <div class="g-card">
+                    <div class="g-card-title"><div class="icon-circle icon-purple"><i class="fas fa-tachometer-alt"></i></div> Dashboard Admin</div>
+                    <p>Hanya dapat diakses oleh pengguna dengan role <span class="gbadge gbadge-purple">Admin</span>, <span class="gbadge gbadge-purple">Desa</span>, <span class="gbadge gbadge-purple">Daerah</span>, atau <span class="gbadge gbadge-purple">Super Admin</span>.</p>
+                </div>
+
+                <div class="g-card">
+                    <div class="g-card-title"><div class="icon-circle icon-green"><i class="fas fa-chart-pie"></i></div> Statistik Ringkas</div>
+                    <div class="g-table-wrap">
+                        <table class="g-table">
+                            <thead><tr><th>Kartu Statistik</th><th>Arti</th></tr></thead>
+                            <tbody>
+                                <tr><td><strong>Total Peserta</strong></td><td>Jumlah seluruh peserta yang terdaftar di wilayah admin</td></tr>
+                                <tr><td><strong>Ta'aruf Pending</strong></td><td>Pengajuan yang belum diproses</td></tr>
+                                <tr><td><strong>Sedang Proses</strong></td><td>Total ta'aruf aktif (Sedang Taaruf + Sedang Proses)</td></tr>
+                                <tr><td><strong>Sudah Menikah</strong></td><td>Pengajuan yang sudah berakhir dengan pernikahan</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="g-card">
+                    <div class="g-card-title"><div class="icon-circle icon-blue"><i class="fas fa-chart-bar"></i></div> Chart Statistik</div>
+                    <p>Di bawah statistik ringkas, tersedia 4 chart bar horizontal:</p>
+                    <ul>
+                        <li><strong>Jenis Kelamin</strong> — Distribusi Laki-laki vs Perempuan</li>
+                        <li><strong>Berdasarkan Daerah</strong> — Jumlah peserta per daerah</li>
+                        <li><strong>Berdasarkan Desa</strong> — Jumlah peserta per desa</li>
+                        <li><strong>Berdasarkan Kelompok</strong> — Jumlah peserta per kelompok</li>
+                    </ul>
+                    <p>Chart dapat di-scroll jika data terlalu panjang. Setiap bar memiliki warna berbeda dan menampilkan angka persis di sisi kanan.</p>
+                </div>
+
+                <div class="info-box blue">
+                    <i class="fas fa-user-shield"></i>
+                    <div><strong>Scope Admin:</strong> Data yang ditampilkan sesuai wilayah otoritas admin. Admin Desa hanya melihat data desanya, Admin Daerah melihat seluruh daerahnya.</div>
+                </div>
+            </div>
+
+            <!-- ===================== ADMIN USERS ===================== -->
+            <div id="sec-admin-users" class="guide-section">
+                <div class="g-card">
+                    <div class="g-card-title"><div class="icon-circle icon-green"><i class="fas fa-users"></i></div> Data Peserta (Admin)</div>
+                    <p>Halaman ini menampilkan seluruh data peserta dalam format tabel (desktop) dan kartu (mobile).</p>
+                </div>
+
+                <div class="sub-heading"><i class="fas fa-filter" style="color:var(--green-600)"></i> Filter & Pencarian</div>
+                <div class="g-card">
+                    <ul>
+                        <li><strong>Filter Daerah, Desa, Kelompok</strong> — Cascading select, sama seperti filter di halaman Temukan Pasangan</li>
+                        <li><strong>Pencarian nama</strong> — Real-time search</li>
+                        <li><strong>Jumlah tampil per halaman</strong> — Pilihan 5, 10, 20, atau 50 peserta</li>
+                    </ul>
+                </div>
+
+                <div class="sub-heading"><i class="fas fa-desktop" style="color:var(--green-600)"></i> Tampilan Desktop (Tabel)</div>
+                <div class="g-table-wrap">
+                    <table class="g-table">
+                        <thead><tr><th>Kolom</th><th>Isi</th></tr></thead>
+                        <tbody>
+                            <tr><td><strong>Peserta</strong></td><td>Foto + Nama + Email + Badge Gender</td></tr>
+                            <tr><td><strong>Data Pribadi</strong></td><td>Nama ortu, TTL, anak ke, suku, TB/BB, status menikah</td></tr>
+                            <tr><td><strong>Pekerjaan & Lainnya</strong></td><td>Pendidikan, pekerjaan, hobi, dapukan, kriteria pasangan (preview)</td></tr>
+                            <tr><td><strong>Wilayah</strong></td><td>Daerah, desa, kelompok</td></tr>
+                            <tr><td><strong>Status</strong></td><td>Badge "Lengkap" (hijau) atau "Belum" (kuning)</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="sub-heading"><i class="fas fa-mobile-alt" style="color:var(--green-600)"></i> Tampilan Mobile (Kartu)</div>
+                <div class="g-card">
+                    <p>Di layar mobile (≤768px), tabel disembunyikan dan diganti dengan <strong>kartu mobile</strong> yang berisi:</p>
+                    <ul>
+                        <li><strong>Header:</strong> Foto + Nama + Email + Badges</li>
+                        <li><strong>Section Data Pribadi:</strong> Grid 2 kolom</li>
+                        <li><strong>Section Pekerjaan:</strong> Grid 2 kolom + kriteria pasangan (jika ada)</li>
+                        <li><strong>Section Wilayah:</strong> Daerah, desa, kelompok</li>
+                    </ul>
+                </div>
+
+                <div class="info-box green">
+                    <i class="fas fa-camera"></i>
+                    <div><strong>Foto:</strong> Klik foto peserta untuk memperbesar dalam modal. Foto menggunakan lazy loading untuk performa optimal.</div>
+                </div>
+            </div>
+
+            <!-- ===================== ADMIN TAARUF ===================== -->
+            <div id="sec-admin-taaruf" class="guide-section">
+                <div class="g-card">
+                    <div class="g-card-title"><div class="icon-circle icon-gold"><i class="fas fa-heart"></i></div> Kelola Pengajuan Ta'aruf (Admin)</div>
+                    <p>Halaman ini memungkinkan admin untuk mengelola seluruh pengajuan ta'aruf: menerima, memproses, menyelesaikan, atau menolak.</p>
+                </div>
+
+                <div class="sub-heading"><i class="fas fa-filter" style="color:var(--green-600)"></i> Filter Status</div>
+                <div class="g-card">
+                    <p>Di bagian atas terdapat tab filter yang <strong>sticky</strong> (tetap terlihat saat scroll):</p>
+                    <div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:.5rem">
+                        <span class="gbadge gbadge-green" style="cursor:default">Semua</span>
+                        <span class="gbadge gbadge-gold" style="cursor:default">Belum Diterima</span>
+                        <span class="gbadge gbadge-blue" style="cursor:default">Sedang Taaruf</span>
+                        <span class="gbadge gbadge-gold" style="cursor:default">Sedang Proses</span>
+                        <span class="gbadge gbadge-green" style="cursor:default">Sudah Menikah</span>
+                        <span class="gbadge gbadge-red" style="cursor:default">Ditolak</span>
+                    </div>
+                    <p style="margin-top:.5rem">Di atas tab juga terdapat <strong>ringkasan jumlah</strong> per status dalam bentuk badge.</p>
+                </div>
+
+                <div class="sub-heading"><i class="fas fa-th-large" style="color:var(--green-600)"></i> Tampilan Kartu Ta'aruf</div>
+                <div class="g-card">
+                    <p>Setiap pengajuan ditampilkan dalam kartu grid yang berisi:</p>
+                    <ul>
+                        <li><strong>Header:</strong> Tanggal + Badge status</li>
+                        <li><strong>Flow diagram:</strong> Kartu pelamar → panah → kartu target (masing-masing dengan foto, nama, wilayah, kelompok)</li>
+                        <li><strong>Footer:</strong> Tombol aksi sesuai status saat ini</li>
+                    </ul>
+                </div>
+
+                <div class="sub-heading"><i class="fas fa-mouse-pointer" style="color:var(--green-600)"></i> Tombol Aksi per Status</div>
+                <div class="g-table-wrap">
+                    <table class="g-table">
+                        <thead><tr><th>Status Saat Ini</th><th>Tombol yang Tersedia</th><th>Aksi</th></tr></thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="gbadge gbadge-gold">Pending</span></td>
+                                <td>
+                                    <span class="gbadge gbadge-blue">Terima</span>
+                                    <span class="gbadge gbadge-red">Tolak</span>
+                                </td>
+                                <td>Ubah ke "Sedang Taaruf" atau "Rejected"</td>
+                            </tr>
+                            <tr>
+                                <td><span class="gbadge gbadge-blue">Sedang Taaruf</span></td>
+                                <td>
+                                    <span class="gbadge gbadge-gold">Proses</span>
+                                    <span class="gbadge gbadge-red">Tolak</span>
+                                </td>
+                                <td>Ubah ke "Sedang Proses" atau "Rejected"</td>
+                            </tr>
+                            <tr>
+                                <td><span class="gbadge gbadge-gold">Sedang Proses</span></td>
+                                <td>
+                                    <span class="gbadge gbadge-green">Menikah</span>
+                                    <span class="gbadge gbadge-red">Tolak</span>
+                                </td>
+                                <td>Ubah ke "Sudah Menikah" atau "Rejected"</td>
+                            </tr>
+                            <tr>
+                                <td><span class="gbadge gbadge-green">Sudah Menikah</span></td>
+                                <td><span style="color:var(--green-700);font-size:.76rem;font-weight:700"><i class="fas fa-check-circle"></i> Selesai</span></td>
+                                <td>Tidak ada aksi (status akhir)</td>
+                            </tr>
+                            <tr>
+                                <td><span class="gbadge gbadge-red">Rejected</span></td>
+                                <td><span style="color:var(--danger);font-size:.76rem;font-weight:600"><i class="fas fa-times-circle"></i> Ditolak</span></td>
+                                <td>Tidak ada aksi (status akhir)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="sub-heading"><i class="fas fa-window-restore" style="color:var(--green-600)"></i> Modal Konfirmasi (Bottom Sheet)</div>
+                <div class="g-card">
+                    <p>Saat admin menekan tombol aksi, akan muncul <strong>modal bottom sheet</strong> yang berisi:</p>
+                    <ul>
+                        <li><strong>Icon</strong> sesuai aksi (hati, spinner, cincin, silang)</li>
+                        <li><strong>Judul & deskripsi</strong> yang menjelaskan konsekuensi aksi</li>
+                        <li><strong>Flow badge:</strong> Status lama → Status baru</li>
+                        <li><strong>Info pelamar & target:</strong> Foto, nama, wilayah, kelompok</li>
+                        <li><strong>Tombol konfirmasi</strong> (warna sesuai aksi) dan <strong>tombol Batal</strong></li>
+                    </ul>
+                    <div class="info-box blue" style="margin-top:.5rem">
+                        <i class="fas fa-mobile-alt"></i>
+                        <div><strong>Mobile:</strong> Modal muncul dari bawah layar (bottom sheet). <strong>Desktop:</strong> Modal muncul di tengah layar. Tekan <strong>Escape</strong> untuk menutup.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===================== ADMIN KEGIATAN ===================== -->
+            <div id="sec-admin-kg" class="guide-section">
+                <div class="g-card">
+                    <div class="g-card-title"><div class="icon-circle icon-blue"><i class="fas fa-bullhorn"></i></div> Kelola Kegiatan (Admin)</div>
+                    <p>Admin dapat mempublikasikan informasi kegiatan yang akan ditampilkan ke seluruh peserta.</p>
+                </div>
+
+                <div class="g-card">
+                    <div class="g-card-title"><div class="icon-circle icon-green"><i class="fas fa-plus-circle"></i></div> Menambah Kegiatan</div>
+                    <ol class="step-list">
+                        <li>Isi <strong>Judul</strong> kegiatan (singkat dan jelas)</li>
+                        <li>Isi <strong>Isi Informasi</strong> (detail lengkap kegiatan)</li>
+                        <li>Opsional: Upload <strong>Gambar</strong> (maks 3MB, akan dikompres otomatis)</li>
+                        <li>Klik <strong>"Publikasikan"</strong></li>
+                        <li>Kegiatan akan langsung muncul di halaman Info Kegiatan peserta dan di panel notifikasi</li>
+                    </ol>
+                </div>
+
+                <div class="g-card">
+                    <div class="g-card-title"><div class="icon-circle icon-gold"><i class="fas fa-list"></i></div> Daftar Kegiatan</div>
+                    <p>Di bawah form, ditampilkan seluruh kegiatan yang sudah dipublikasikan dalam format kartu yang sama seperti yang dilihat peserta.</p>
+                </div>
+            </div>
+
+            <!-- ===================== FAQ ===================== -->
+            <div id="sec-faq" class="guide-section">
+                <div class="g-card">
+                    <div class="g-card-title"><div class="icon-circle icon-blue"><i class="fas fa-question-circle"></i></div> Pertanyaan yang Sering Diajukan</div>
+                </div>
+
+                <div class="g-card">
+                    <div class="g-card-title" style="font-size:.86rem"><strong>Q: Saya lupa jawaban verifikasi saat daftar. Bagaimana?</strong></div>
+                    <p style="margin-top:.3rem"><strong>A:</strong> Hubungi admin Halalkan melalui jalur komunikasi yang tersedia di organisasi/daerah Anda. Admin dapat membantu mendaftarkan akun secara manual.</p>
+                </div>
+
+                <div class="g-card">
+                    <div class="g-card-title" style="font-size:.86rem"><strong>Q: Mengapa menu Temukan Pasangan terkunci?</strong></div>
+                    <p style="margin-top:.3rem"><strong>A:</strong> Pastikan profil Anda sudah <strong>lengkap</strong> (minimal: jenis kelamin dan daerah terisi). Buka menu Edit Profil, lengkapi data, lalu simpan.</p>
+                </div>
+
+                <div class="g-card">
+                    <div class="g-card-title" style="font-size:.86rem"><strong>Q: Saya sudah mengajukan ta'aruf tapi daftar peserta hilang?</strong></div>
+                    <p style="margin-top:.3rem"><strong>A:</strong> Ini normal. Daftar peserta otomatis disembunyikan saat Anda memiliki pengajuan aktif (Pending/Sedang Taaruf/Sedang Proses). Daftar akan kembali muncul jika pengajuan ditolak.</p>
+                </div>
+
+                <div class="g-card">
+                    <div class="g-card-title" style="font-size:.86rem"><strong>Q: Apakah data saya aman?</strong></div>
+                    <p style="margin-top:.3rem"><strong>A:</strong> Ya. Halaman data peserta dilindungi watermark dengan email Anda, anti-screenshot, anti-copy, dan blur otomatis saat berpindah aplikasi. Pelanggaran ditindak tegas.</p>
+                </div>
+
+                <div class="g-card">
+                    <div class="g-card-title" style="font-size:.86rem"><strong>Q: Bagaimana jika tidak ada tim pernikahan di daerah saya?</strong></div>
+                    <p style="margin-top:.3rem"><strong>A:</strong> Pengajuan tetap tercatat di sistem, namun Anda tidak akan mendapat nomor WhatsApp tim. Hubungi pengurus organisasi agar tim pernikahan daerah didaftarkan ke sistem.</p>
+                </div>
+
+                <div class="g-card">
+                    <div class="g-card-title" style="font-size:.86rem"><strong>Q: Admin hanya bisa melihat data wilayahnya sendiri?</strong></div>
+                    <p style="margin-top:.3rem"><strong>A:</strong> Ya. Admin Desa hanya melihat data desanya. Admin Daerah melihat seluruh daerahnya. Super Admin melihat semua data.</p>
+                </div>
+
+                <div class="g-card">
+                    <div class="g-card-title" style="font-size:.86rem"><strong>Q: Apakah bisa mengajukan ta'aruf ke lebih dari satu orang?</strong></div>
+                    <p style="margin-top:.3rem"><strong>A:</strong> Tidak bisa. Sistem memblokir pengajuan baru selama ada pengajuan aktif. Anda harus menunggu pengajuan selesai atau ditolak terlebih dahulu.</p>
+                </div>
+
+                <div class="g-card">
+                    <div class="g-card-title" style="font-size:.86rem"><strong>Q: Foto saya tidak muncul / loading lama?</strong></div>
+                    <p style="margin-top:.3rem"><strong>A:</strong> Foto menggunakan lazy loading (dimuat saat terlihat di layar). Jika koneksi lambat, tunggu beberapa saat. Pastikan foto sudah berhasil di-upload saat menyimpan profil.</p>
+                </div>
+            </div>
+
+            <!-- ===================== TIPS ===================== -->
+            <div id="sec-tips" class="guide-section">
+                <div class="g-card">
+                    <div class="g-card-title"><div class="icon-circle icon-gold"><i class="fas fa-lightbulb"></i></div> Tips & Etika Ta'aruf</div>
+                    <p>Berikut adalah panduan etika yang disarankan dalam menggunakan platform Halalkan:</p>
+                </div>
+
+                <div class="sub-heading"><i class="fas fa-mosque" style="color:var(--green-600)"></i> Niat yang Benar</div>
+                <div class="g-card">
+                    <div class="info-box green">
+                        <i class="fas fa-pray"></i>
+                        <div><strong>"Sesungguhnya pernikahan itu adalah sunnahku, maka barangsiapa yang tidak mengikuti sunnahku, maka ia bukan dari golonganku."</strong><br><small>— HR. Bukhari & Muslim</small></div>
+                    </div>
+                    <p style="margin-top:.5rem">Mulailah dengan niat yang ikhlas karena Allah SWT, bukan sekadar coba-coba atau karena paksaan.</p>
+                </div>
+
+                <div class="sub-heading"><i class="fas fa-user-check" style="color:var(--green-600)"></i> Kejujuran Data</div>
+                <div class="g-card">
+                    <ul>
+                        <li>Isi data profil dengan <strong>jujur dan akurat</strong>. Jangan memalsukan data.</li>
+                        <li>Foto yang diupload hendaknya foto <strong>terbaru</strong> tanpa filter berlebihan.</li>
+                        <li>Kriteria pasangan tulis secara <strong>realistis</strong> dan proporsional.</li>
+                    </ul>
+                </div>
+
+                <div class="sub-heading"><i class="fas fa-handshake" style="color:var(--green-600)"></i> Menghormati Proses</div>
+                <div class="g-card">
+                    <ul>
+                        <li>Ikuti alur ta'aruf yang telah ditetapkan oleh tim pernikahan daerah.</li>
+                        <li>Jangan memaksa atau menghubungi pihak target secara langsung tanpa melalui tim.</li>
+                        <li>Jika pengajuan ditolak, terima dengan lapang dada dan doakan yang terbaik.</li>
+                        <li><strong>Jangan mengintip/menyebarkan data</strong> peserta lain dalam bentuk apapun.</li>
+                    </ul>
+                </div>
+
+                <div class="sub-heading"><i class="fas fa-user-shield" style="color:var(--green-600)"></i> Keamanan Digital</div>
+                <div class="g-card">
+                    <ul>
+                        <li><strong>Jangan screenshot</strong> halaman Temukan Pasangan dalam keadaan apapun.</li>
+                        <li><strong>Jangan share</strong> akun Anda kepada orang lain.</li>
+                        <li>Gunakan password yang <strong>kuat</strong> dan jangan mudah ditebak.</li>
+                        <li>Logout setelah selesai menggunakan aplikasi, terutama jika menggunakan perangkat bersama.</li>
+                        <li>Laporkan ke admin jika menemukan <strong>bug</strong> atau kejanggalan keamanan.</li>
+                    </ul>
+                </div>
+
+                <div class="sub-heading"><i class="fas fa-comments" style="color:var(--green-600)"></i> Komunikasi Sehat</div>
+                <div class="g-card">
+                    <ul>
+                        <li>Saat proses ta'aruf dimulai, komunikasi dilakukan sesuai arahan tim pernikahan.</li>
+                        <li>Pertanyaan-pertanyaan penting sebaiknya disampaikan melalui perantara (wali/orang tua).</li>
+                        <li>Jaga adab berbicara dan sopan santun dalam setiap komunikasi.</li>
+                        <li>Berdoalah kepada Allah SWT agar diberikan keputusan yang terbaik.</li>
+                    </ul>
+                </div>
+
+                <div class="info-box green" style="margin-top:.5rem">
+                    <i class="fas fa-heart"></i>
+                    <div><strong>Penutup:</strong> Semoga platform Halalkan dapat menjadi wasilah yang baik untuk menjemput jodoh yang halal dan membahagiakan. Barakallahu lakum.</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    var sectionTitles = {
+        'sec-beranda': '<i class="fas fa-home"></i> Beranda',
+        'sec-daftar': '<i class="fas fa-user-plus"></i> Daftar Akun',
+        'sec-login': '<i class="fas fa-sign-in-alt"></i> Login',
+        'sec-profil': '<i class="fas fa-user-edit"></i> Lengkapi Profil',
+        'sec-cari': '<i class="fas fa-search"></i> Temukan Pasangan',
+        'sec-taaruf': '<i class="fas fa-paper-plane"></i> Ajukan Ta\'aruf',
+        'sec-status': '<i class="fas fa-heart"></i> Status Ta\'aruf',
+        'sec-kegiatan': '<i class="fas fa-bullhorn"></i> Info Kegiatan',
+        'sec-keamanan': '<i class="fas fa-shield-alt"></i> Keamanan Data',
+        'sec-admin-home': '<i class="fas fa-tachometer-alt"></i> Dashboard Admin',
+        'sec-admin-users': '<i class="fas fa-users"></i> Data Peserta (Admin)',
+        'sec-admin-taaruf': '<i class="fas fa-heart"></i> Kelola Ta\'aruf (Admin)',
+        'sec-admin-kg': '<i class="fas fa-bullhorn"></i> Kelola Kegiatan (Admin)',
+        'sec-faq': '<i class="fas fa-question-circle"></i> FAQ',
+        'sec-tips': '<i class="fas fa-lightbulb"></i> Tips & Etika'
+    };
+
+    function showSection(id) {
+        // Sembunyikan semua section
+        document.querySelectorAll('.guide-section').forEach(function(el) {
+            el.classList.remove('active');
+        });
+        // Tampilkan yang dipilih
+        var target = document.getElementById(id);
+        if (target) {
+            target.classList.add('active');
+            // Re-trigger animation
+            target.style.animation = 'none';
+            target.offsetHeight;
+            target.style.animation = '';
+        }
+        // Update sidebar active
+        document.querySelectorAll('.guide-nav a').forEach(function(a) {
+            a.classList.remove('active');
+        });
+        var navLinks = document.querySelectorAll('.guide-nav a');
+        navLinks.forEach(function(a) {
+            if (a.getAttribute('onclick') && a.getAttribute('onclick').indexOf(id) !== -1) {
+                a.classList.add('active');
+            }
+        });
+        // Update topbar title
+        var titleEl = document.getElementById('guidePageTitle');
+        if (titleEl && sectionTitles[id]) {
+            titleEl.innerHTML = sectionTitles[id];
+        }
+        // Scroll ke atas
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        // Close mobile sidebar
+        closeGuideSidebar();
+    }
+
+    function toggleGuideSidebar() {
+        document.getElementById('guideSidebar').classList.toggle('open');
+        document.getElementById('guideOverlay').classList.toggle('open');
+    }
+
+    function closeGuideSidebar() {
+        document.getElementById('guideSidebar').classList.remove('open');
+        document.getElementById('guideOverlay').classList.remove('open');
+    }
+
+    // Keyboard: Escape tutup sidebar
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeGuideSidebar();
+    });
+</script>
+</body>
+</html>
