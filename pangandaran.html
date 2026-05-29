@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Manajemen Priangan Timur</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --secondary: #64748b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #8b5cf6; 
+            --background: #f1f5f9;
+            --surface: #ffffff;
+            --text-main: #0f172a;
+            --text-sub: #64748b;
+            --border: #e2e8f0;
+            --radius: 12px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--background); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
+        
+        /* Sidebar */
+        aside {
+            width: 260px; background: var(--surface); border-right: 1px solid var(--border);
+            display: flex; flex-direction: column; padding: 1.5rem; z-index: 20; flex-shrink: 0;
+        }
+        .brand { font-size: 1.1rem; font-weight: 800; color: var(--primary); margin-bottom: 2rem; line-height: 1.2; }
+        .brand span { font-size: 0.8rem; color: var(--text-sub); font-weight: 500; }
+        
+        nav button {
+            background: none; border: none; width: 100%; padding: 0.75rem 1rem; text-align: left;
+            cursor: pointer; border-radius: var(--radius); color: var(--text-sub); font-weight: 500;
+            margin-bottom: 0.5rem; transition: all 0.2s; display: flex; align-items: center; gap: 0.75rem;
+        }
+        nav button:hover { background-color: #f8fafc; color: var(--primary); }
+        nav button.active { background-color: #eff6ff; color: var(--primary); font-weight: 600; }
+        nav button svg { width: 20px; height: 20px; }
+
+        /* Main Content */
+        main { flex: 1; padding: 2rem; overflow-y: auto; position: relative; }
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
+        h1 { font-size: 1.5rem; font-weight: 700; }
+        .subtitle { color: var(--text-sub); font-size: 0.9rem; }
+
+        /* Stats & Cards */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+        .card { background: var(--surface); padding: 1.5rem; border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid var(--border); }
+        .stat-label { color: var(--text-sub); font-size: 0.85rem; margin-bottom: 0.5rem; }
+        .stat-value { font-size: 2rem; font-weight: 700; color: var(--text-main); }
+
+        /* Tables */
+        .table-container { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid var(--border); overflow: hidden; }
+        .toolbar { padding: 1rem; border-bottom: 1px solid var(--border); display: flex; gap: 1rem; flex-wrap: wrap; }
+        .search-input { padding: 0.5rem 1rem; border: 1px solid var(--border); border-radius: 8px; outline: none; min-width: 200px; }
+        .search-input:focus { border-color: var(--primary); }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 0.8rem; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+        th { background-color: #f8fafc; font-weight: 600; color: var(--text-sub); white-space: nowrap;}
+
+        /* Badges */
+        .badge { padding: 0.25rem 0.75rem; border-radius: 99px; font-size: 0.75rem; font-weight: 600; display: inline-block; }
+        .badge-gray { background: #f1f5f9; color: #475569; }
+        .badge-blue { background: #dbeafe; color: #1e40af; }
+        .badge-purple { background: #ede9fe; color: #5b21b6; }
+        .badge-red { background: #fee2e2; color: #991b1b; }
+        .badge-green { background: #dcfce7; color: #166534; }
+        .gender-m { color: var(--primary); font-weight: 600; font-size: 0.8rem; }
+        .gender-f { color: var(--danger); font-weight: 600; font-size: 0.8rem; }
+
+        /* MATCHMAKING GRID (ADMIN VIEW) */
+        .filter-tabs { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+        .filter-btn {
+            padding: 0.5rem 1rem; border-radius: 20px; border: 1px solid var(--border); background: var(--surface);
+            cursor: pointer; font-weight: 600; color: var(--text-sub); transition: all 0.2s; font-size: 0.85rem;
+        }
+        .filter-btn:hover { background: #f1f5f9; }
+        .filter-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+        .match-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.5rem; }
+        .profile-card {
+            background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+            padding: 1.25rem; text-align: center; transition: transform 0.2s; position: relative;
+            display: flex; flex-direction: column; height: 100%;
+        }
+        .profile-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); border-color: var(--primary); }
+        
+        /* Status Border Color */
+        .profile-card[data-status="Taaruf"] { border-left: 5px solid var(--primary); }
+        .profile-card[data-status="SL Bayangan"] { border-left: 5px solid var(--info); }
+
+        .avatar {
+            width: 50px; height: 50px; background: #e2e8f0; border-radius: 50%; margin: 0 auto 0.5rem;
+            display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: var(--text-sub); font-weight: 700;
+        }
+        .avatar.male { background: #dbeafe; color: var(--primary); }
+        .avatar.female { background: #fee2e2; color: var(--danger); }
+        
+        .profile-name { font-weight: 700; margin-bottom: 0.25rem; font-size: 1rem; }
+        .profile-meta { color: var(--text-sub); font-size: 0.75rem; margin-bottom: 0.5rem; }
+        
+        .status-box {
+            background: #f8fafc; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem;
+            font-size: 0.8rem; margin-bottom: 1rem; min-height: 40px; display: flex; align-items: center; justify-content: center;
+        }
+
+        .btn { padding: 0.5rem 1rem; border-radius: 8px; border: none; cursor: pointer; font-weight: 500; transition: all 0.2s; width: 100%; margin-top: auto;}
+        .btn:active { transform: scale(0.98); }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-dark); }
+        .btn-success { background: var(--success); color: white; }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-main); }
+        .btn-sm { padding: 0.25rem 0.75rem; font-size: 0.8rem; width: auto; }
+
+        /* Modal */
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 100; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+        .modal-overlay.active { opacity: 1; pointer-events: all; }
+        .modal { background: var(--surface); padding: 2rem; border-radius: var(--radius); width: 90%; max-width: 500px; max-height: 85vh; overflow-y: auto; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border); }
+        
+        .partner-list { display: grid; grid-template-columns: 1fr; gap: 0.5rem; margin-top: 1rem; }
+        .partner-item {
+            padding: 0.75rem; border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; gap: 1rem;
+            cursor: pointer; transition: background 0.2s;
+        }
+        .partner-item:hover { background: #f8fafc; border-color: var(--primary); }
+
+        /* Toast */
+        #toast { position: fixed; bottom: 20px; right: 20px; background: var(--text-main); color: white; padding: 12px 24px; border-radius: 8px; z-index: 200; transform: translateY(100px); transition: transform 0.3s; }
+        #toast.show { transform: translateY(0); }
+        .loading { text-align: center; padding: 2rem; color: var(--text-sub); }
+
+        @media (max-width: 768px) {
+            body { flex-direction: column; height: auto; overflow: auto; }
+            aside { width: 100%; border-right: none; border-bottom: 1px solid var(--border); padding: 1rem; }
+            nav { display: flex; overflow-x: auto; gap: 0.5rem; padding-bottom:0.5rem; }
+            nav button { width: auto; white-space: nowrap; margin-bottom: 0; }
+            main { padding: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <aside>
+        <div class="brand">
+            Priangan Timur
+            <span>| 30-31 Mei 2026</span>
+        </div>
+        <nav>
+            <button onclick="router('dashboard')" id="nav-dashboard" class="active">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg>
+                Dashboard
+            </button>
+            <button onclick="router('peserta')" id="nav-peserta">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                Data Peserta
+            </button>
+            <button onclick="router('perjodohan')" id="nav-perjodohan">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
+                Aplikasi Jodoh
+            </button>
+        </nav>
+        <div style="margin-top:auto; padding-top:1rem; font-size:0.75rem; color:var(--text-sub);">
+            Status: <span id="connection-status" style="color:orange">Loading...</span>
+        </div>
+    </aside>
+
+    <main id="main-content">
+        <!-- Dashboard -->
+        <section id="section-dashboard">
+            <header>
+                <div><h1>Dashboard</h1><p class="subtitle">Ringkasan kegiatan.</p></div>
+                <button onclick="loadDataFromSheet()" class="btn btn-outline btn-sm">🔄 Refresh</button>
+            </header>
+            <div class="stats-grid">
+                <div class="card"><div class="stat-label">Total Peserta</div><div class="stat-value" id="stat-total">-</div></div>
+                <div class="card"><div class="stat-label">Sudah Hadir</div><div class="stat-value" style="color: var(--success);" id="stat-hadir">-</div></div>
+                <div class="card"><div class="stat-label">Taaruf</div><div class="stat-value" style="color: var(--primary);" id="stat-taaruf">-</div></div>
+                <div class="card"><div class="stat-label">SL Bayangan</div><div class="stat-value" style="color: var(--info);" id="stat-sl">-</div></div>
+            </div>
+        </section>
+
+        <!-- Data Peserta -->
+        <section id="section-peserta" style="display: none;">
+            <header><div><h1>Data Peserta</h1><p class="subtitle">Kelola kehadiran & edit status manual.</p></div></header>
+            <div class="table-container">
+                <div class="toolbar"><input type="text" id="search-peserta" class="search-input" placeholder="Cari nama..." onkeyup="renderPesertaTable()"></div>
+                <table><thead><tr><th>No</th><th>Nama</th><th>L/P</th><th>Daerah</th><th>Status Jodoh</th><th>Absensi</th><th>Aksi</th></tr></thead>
+                <tbody id="peserta-table-body"><tr><td colspan="7" class="loading">Memuat...</td></tr></tbody></table>
+            </div>
+        </section>
+
+        <!-- APLIKASI JODOH (ADMIN GRID VIEW) -->
+        <section id="section-perjodohan" style="display: none;">
+            <header>
+                <div><h1>Aplikasi Perjodohan</h1><p class="subtitle">Kelola jodoh peserta secara massal.</p></div>
+                <button onclick="resetFilters()" class="btn btn-outline btn-sm">Reset Filter</button>
+            </header>
+            
+            <!-- FILTER 1: GENDER -->
+            <div class="filter-tabs" style="margin-bottom: 0.5rem;">
+                <button class="filter-btn active" id="gen-all" onclick="setGenderFilter('All', this)">Semua Gender</button>
+                <button class="filter-btn" id="gen-m" onclick="setGenderFilter('Laki-laki', this)">Laki-laki</button>
+                <button class="filter-btn" id="gen-f" onclick="setGenderFilter('Perempuan', this)">Perempuan</button>
+            </div>
+
+            <!-- FILTER 2: STATUS -->
+            <div class="filter-tabs" style="margin-bottom: 1.5rem;">
+                <button class="filter-btn active" id="stat-all" onclick="setStatusFilter('All', this)">Semua Status</button>
+                <button class="filter-btn" id="stat-belum" onclick="setStatusFilter('Belum Taaruf', this)">Belum Taaruf</button>
+                <button class="filter-btn" id="stat-taaruf" onclick="setStatusFilter('Taaruf', this)">Sedang Taaruf</button>
+                <button class="filter-btn" id="stat-sl" onclick="setStatusFilter('SL Bayangan', this)">SL Bayangan</button>
+                <button class="filter-btn" id="stat-gagal" onclick="setStatusFilter('Tidak Jadi', this)">Gagal / Batal</button>
+            </div>
+
+            <!-- Grid Container -->
+            <div id="match-container" class="match-grid">
+                <!-- Cards injected via JS -->
+            </div>
+        </section>
+    </main>
+
+    <!-- MODAL PILIH PASANGAN / KELOLA -->
+    <div class="modal-overlay" id="modal-partner">
+        <div class="modal">
+            <div class="modal-header">
+                <div>
+                    <h3 id="modal-title">Pilih Pasangan</h3>
+                    <p id="modal-user-name" style="color:var(--text-sub); font-size:0.9rem;">Untuk: ...</p>
+                </div>
+                <button onclick="closeModal('modal-partner')" class="btn btn-outline btn-sm">✕</button>
+            </div>
+            
+            <div id="modal-content-area">
+                <!-- Dynamic Content -->
+            </div>
+        </div>
+    </div>
+
+    <div id="toast">Notifikasi</div>
+
+    <script>
+        // --- KONFIGURASI ---
+        const SHEET_API_URL = "https://script.google.com/macros/s/AKfycbyOaDDPGGOM8AedDh0THru5XoTXOfHwhlSvPNWypzNu1N4rCZHgP4d45P-DQy27rXc84A/exec";
+
+        // --- STATE ---
+        let participants = [];
+        let isSaving = false;
+        let currentGenderFilter = 'All';
+        let currentStatusFilter = 'All';
+        let selectedUserId = null;
+
+        // --- CORE FUNCTIONS ---
+        async function loadDataFromSheet() {
+            const statusEl = document.getElementById('connection-status');
+            statusEl.innerText = "Loading...";
+            statusEl.style.color = "orange";
+            try {
+                const response = await fetch(SHEET_API_URL);
+                if(!response.ok) throw new Error("Network error");
+                const data = await response.json();
+                
+                participants = data.map(p => {
+                    if (!p.gender) p.gender = guessGender(p.nama);
+                    if (!p.statusRelasi) p.statusRelasi = 'Belum Taaruf';
+                    if (!p.hadir) p.hadir = 'Belum Hadir';
+                    return p;
+                });
+                
+                statusEl.innerText = "Online";
+                statusEl.style.color = "var(--success)";
+                refreshCurrentView();
+            } catch (error) {
+                console.error(error);
+                statusEl.innerText = "Error";
+                statusEl.style.color = "red";
+                showToast("Gagal memuat data.");
+            }
+        }
+
+        async function saveDataToSheet(updates) {
+            if(isSaving) return;
+            isSaving = true;
+            showToast("Menyimpan...");
+            try {
+                await fetch(SHEET_API_URL, { method: 'POST', body: JSON.stringify(updates) });
+                showToast("Tersimpan!");
+                setTimeout(loadDataFromSheet, 1000);
+            } catch (error) {
+                showToast("Gagal menyimpan.");
+                console.error(error);
+            } finally {
+                isSaving = false;
+            }
+        }
+
+        function refreshCurrentView() {
+            const activeId = document.querySelector('section[style*="block"]')?.id.replace('section-', '');
+            if(activeId === 'dashboard') renderDashboard();
+            else if(activeId === 'peserta') renderPesertaTable();
+            else if(activeId === 'perjodohan') renderPublicGrid();
+        }
+
+        function getParticipantById(id) { return participants.find(p => p.id == id); }
+        function showToast(msg) {
+            const t = document.getElementById('toast'); t.innerText = msg; t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 3000);
+        }
+        function guessGender(name) {
+            const f = ['ah', 'a', 'i', 'h', 'nisa', 'tri', 'dini', 'sari', 'wati', 'yani', 'tina', 'icha', 'na', 'tun'];
+            return f.some(s => name.toLowerCase().endsWith(s)) ? 'Perempuan' : 'Laki-laki';
+        }
+
+        // --- ROUTING ---
+        function router(sectionId) {
+            document.querySelectorAll('main > section').forEach(el => el.style.display = 'none');
+            document.getElementById(`section-${sectionId}`).style.display = 'block';
+            document.querySelectorAll('nav button').forEach(el => el.classList.remove('active'));
+            document.getElementById(`nav-${sectionId}`).classList.add('active');
+            refreshCurrentView();
+        }
+
+        // --- DASHBOARD ---
+        function renderDashboard() {
+            document.getElementById('stat-total').innerText = participants.length;
+            document.getElementById('stat-hadir').innerText = participants.filter(p => p.hadir === 'Hadir').length;
+            document.getElementById('stat-taaruf').innerText = participants.filter(p => p.statusRelasi === 'Taaruf').length;
+            document.getElementById('stat-sl').innerText = participants.filter(p => p.statusRelasi === 'SL Bayangan').length;
+        }
+
+        // --- DATA PESERTA (DENGAN MANUAL EDIT) ---
+        function renderPesertaTable() {
+            const tbody = document.getElementById('peserta-table-body');
+            tbody.innerHTML = '';
+            const search = document.getElementById('search-peserta').value.toLowerCase();
+            const filtered = participants.filter(p => p.nama.toLowerCase().includes(search));
+            
+            filtered.forEach(p => {
+                const statusBadge = getStatusBadge(p.statusRelasi);
+                const genderClass = p.gender === 'Laki-laki' ? 'gender-m' : 'gender-f';
+                const genderTxt = p.gender === 'Laki-laki' ? 'L' : 'P';
+                
+                // Tombol Absensi
+                const btnAbsenClass = p.hadir === 'Hadir' ? 'btn-outline' : 'btn-success';
+                const btnAbsenText = p.hadir === 'Hadir' ? 'Batal' : 'Hadir';
+                
+                // Dropdown Status Manual
+                const selectStatus = `
+                    <select onchange="updateStatusManual(${p.id}, this.value)" style="padding:4px; border-radius:6px; border:1px solid var(--border);">
+                        <option value="Belum Taaruf" ${p.statusRelasi === 'Belum Taaruf' ? 'selected' : ''}>Belum</option>
+                        <option value="Taaruf" ${p.statusRelasi === 'Taaruf' ? 'selected' : ''}>Taaruf</option>
+                        <option value="SL Bayangan" ${p.statusRelasi === 'SL Bayangan' ? 'selected' : ''}>SL Bayangan</option>
+                        <option value="Tidak Jadi" ${p.statusRelasi === 'Tidak Jadi' ? 'selected' : ''}>Gagal</option>
+                    </select>
+                `;
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${p.id}</td>
+                        <td><b>${p.nama}</b></td>
+                        <td><span class="${genderClass}">${genderTxt}</span></td>
+                        <td>${p.daerah}</td>
+                        <td>${selectStatus}</td>
+                        <td>${p.hadir}</td>
+                        <td>
+                            <button onclick="toggleHadir(${p.id})" class="btn btn-sm ${btnAbsenClass}">${btnAbsenText}</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function toggleHadir(id) {
+            const p = getParticipantById(id);
+            if(!p) return;
+            const newStatus = p.hadir === 'Hadir' ? 'Belum Hadir' : 'Hadir';
+            saveDataToSheet([{ id: p.id, hadir: newStatus }]);
+        }
+
+        function updateStatusManual(id, newStatus) {
+            const p = getParticipantById(id);
+            if(!p) return;
+            saveDataToSheet([{ id: p.id, statusRelasi: newStatus }]);
+        }
+
+        function getStatusBadge(status) {
+            if(status === 'Belum Taaruf') return '<span class="badge badge-gray">Belum</span>';
+            if(status === 'Taaruf') return '<span class="badge badge-blue">Taaruf</span>';
+            if(status === 'SL Bayangan') return '<span class="badge badge-purple">SL</span>';
+            if(status === 'Tidak Jadi') return '<span class="badge badge-red">Gagal</span>';
+            return status;
+        }
+
+        // --- APLIKASI JODOH (ADMIN GRID & DOUBLE FILTER) ---
+        
+        function setGenderFilter(filter, btn) {
+            currentGenderFilter = filter;
+            document.querySelectorAll('#section-perjodohan .filter-tabs:nth-of-type(1) .filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderPublicGrid();
+        }
+
+        function setStatusFilter(filter, btn) {
+            currentStatusFilter = filter;
+            document.querySelectorAll('#section-perjodohan .filter-tabs:nth-of-type(2) .filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderPublicGrid();
+        }
+
+        function resetFilters() {
+            currentGenderFilter = 'All';
+            currentStatusFilter = 'All';
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('gen-all').classList.add('active');
+            document.getElementById('stat-all').classList.add('active');
+            renderPublicGrid();
+        }
+
+        function renderPublicGrid() {
+            const container = document.getElementById('match-container');
+            container.innerHTML = '';
+
+            // FILTER KOMBINASI (Gender AND Status)
+            const displayList = participants.filter(p => {
+                const genderMatch = (currentGenderFilter === 'All') || (p.gender === currentGenderFilter);
+                const statusMatch = (currentStatusFilter === 'All') || (p.statusRelasi === currentStatusFilter);
+                return genderMatch && statusMatch;
+            });
+
+            if(displayList.length === 0) {
+                container.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:2rem; color:var(--text-sub);">Tidak ada data dengan filter ini.</div>`;
+                return;
+            }
+
+            displayList.forEach(p => {
+                const partner = p.pasanganId ? getParticipantById(p.pasanganId) : null;
+                let statusText = "Belum Ada Pasangan";
+                let statusColor = "#94a3b8"; 
+                let actionBtnText = "Pilih Pasangan";
+                let actionBtnClass = "btn-primary";
+
+                // LOGIKA TAMPILAN STATUS
+                if(p.statusRelasi === 'Taaruf' && partner) {
+                    statusText = `Taaruf dengan <b>${partner.nama}</b>`;
+                    statusColor = "var(--primary)";
+                    actionBtnText = "Kelola Hubungan";
+                    actionBtnClass = "btn-outline";
+                } else if (p.statusRelasi === 'SL Bayangan' && partner) {
+                    statusText = `SL Bayangan dgn <b>${partner.nama}</b>`;
+                    statusColor = "var(--info)";
+                    actionBtnText = "Lihat Detail";
+                    actionBtnClass = "btn-outline";
+                } else if (p.statusRelasi === 'Tidak Jadi') {
+                    statusText = "Tidak Jadi (Gagal)";
+                    statusColor = "var(--danger)";
+                    actionBtnText = "Coba Lagi";
+                    actionBtnClass = "btn-primary";
+                }
+
+                const avatarClass = p.gender === 'Laki-laki' ? 'male' : 'female';
+
+                const card = document.createElement('div');
+                card.className = 'profile-card';
+                card.setAttribute('data-status', p.statusRelasi);
+                card.innerHTML = `
+                    <div class="avatar ${avatarClass}">${p.nama.charAt(0)}</div>
+                    <div class="profile-name">${p.nama}</div>
+                    <div class="profile-meta">${p.kelompok || '-'} | ${p.daerah}</div>
+                    
+                    <div class="status-box" style="color:${statusColor}; border-color:${statusColor};">
+                        ${statusText}
+                    </div>
+
+                    <button onclick="openUserModal(${p.id})" class="btn ${actionBtnClass}">${actionBtnText}</button>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // --- MODAL LOGIC ---
+
+        function openUserModal(userId) {
+            selectedUserId = userId;
+            const user = getParticipantById(userId);
+            const modal = document.getElementById('modal-partner');
+            const content = document.getElementById('modal-content-area');
+            const title = document.getElementById('modal-title');
+            const nameDisplay = document.getElementById('modal-user-name');
+
+            nameDisplay.innerText = `Peserta: ${user.nama}`;
+            modal.classList.add('active');
+
+            // LOGIKA: Jika sudah punya pasangan, jangan tampilkan list pencarian
+            if(user.pasanganId && (user.statusRelasi === 'Taaruf' || user.statusRelasi === 'SL Bayangan')) {
+                const partner = getParticipantById(user.pasanganId);
+                title.innerText = "Kelola Hubungan";
+                
+                let html = `
+                    <div style="text-align:center; margin-bottom:1.5rem;">
+                        <p>Saat ini sedang ${user.statusRelasi} dengan:</p>
+                        <h2 style="color:var(--primary);">${partner.nama}</h2>
+                    </div>
+                `;
+
+                if(user.statusRelasi === 'Taaruf') {
+                    html += `
+                        <button onclick="updateRelationStatus('sl')" class="btn btn-success" style="margin-bottom:0.5rem">Lanjut ke SL Bayangan</button>
+                        <button onclick="updateRelationStatus('batal')" class="btn btn-danger" style="margin-bottom:0.5rem">Tidak Jadi / Putus</button>
+                    `;
+                } else {
+                    html += `<p style="text-align:center; color:var(--success);">MasyaAllah, sudah Fixed!</p>
+                             <button onclick="updateRelationStatus('batal')" class="btn btn-outline btn-sm" style="color:red; border-color:red;">Batalkan (Admin)</button>`;
+                }
+                content.innerHTML = html;
+
+            } else {
+                // Jika belum punya pasangan, Tampilkan LIST KANDIDAT (FILTER KETAT)
+                title.innerText = "Pilih Pasangan";
+                const availablePartners = getAvailablePartners(user);
+                
+                if(availablePartners.length === 0) {
+                    content.innerHTML = `<p style="text-align:center; padding:1rem;">Tidak ada pasangan tersedia yang sesuai (Filter: Beda Gender & Status Bebas).</p>`;
+                } else {
+                    let listHtml = `<div class="partner-list">`;
+                    availablePartners.forEach(p => {
+                        listHtml += `
+                            <div class="partner-item" onclick="confirmMatch(${p.id})">
+                                <div class="avatar ${p.gender === 'Laki-laki'?'male':'female'}" style="width:30px;height:30px;font-size:0.8rem;">${p.nama.charAt(0)}</div>
+                                <div>
+                                    <div style="font-weight:600">${p.nama}</div>
+                                    <div style="font-size:0.75rem; color:var(--text-sub)">${p.kelompok} | ${p.daerah}</div>
+                                </div>
+                                <div style="margin-left:auto; color:var(--success)">❤️</div>
+                            </div>
+                        `;
+                    });
+                    listHtml += `</div>`;
+                    content.innerHTML = listHtml;
+                }
+            }
+        }
+
+        // Mendapatkan pasangan yang VALID (Beda Gender, Status Belum/Gagal, Sedang tidak taaruf)
+        function getAvailablePartners(currentUser) {
+            return participants.filter(p => {
+                if(p.id == currentUser.id) return false; 
+                if(p.gender === currentUser.gender) return false; 
+                // FILTER KETAT: Hanya yang statusnya 'Belum Taaruf' atau 'Tidak Jadi'
+                if(p.statusRelasi === 'Taaruf' || p.statusRelasi === 'SL Bayangan') return false; 
+                return true;
+            });
+        }
+
+        function confirmMatch(partnerId) {
+            const partner = getParticipantById(partnerId);
+            if(confirm(`Pasangkan ${getParticipantById(selectedUserId).nama} dengan ${partner.nama}?`)) {
+                const updates = [
+                    { id: selectedUserId, statusRelasi: 'Taaruf', pasanganId: partnerId },
+                    { id: partnerId, statusRelasi: 'Taaruf', pasanganId: selectedUserId }
+                ];
+                saveDataToSheet(updates);
+                closeModal('modal-partner');
+            }
+        }
+
+        function updateRelationStatus(action) {
+            const me = getParticipantById(selectedUserId);
+            const partner = getParticipantById(me.pasanganId);
+            const updates = [];
+
+            if(action === 'sl') {
+                updates.push(
+                    { id: me.id, statusRelasi: 'SL Bayangan' },
+                    { id: partner.id, statusRelasi: 'SL Bayangan' }
+                );
+                showToast("MasyaAllah, naik ke SL Bayangan!");
+            } else if (action === 'batal') {
+                updates.push(
+                    { id: me.id, statusRelasi: 'Tidak Jadi', pasanganId: null },
+                    { id: partner.id, statusRelasi: 'Tidak Jadi', pasanganId: null }
+                );
+                showToast("Hubungan dibatalkan.");
+            }
+            saveDataToSheet(updates);
+            closeModal('modal-partner');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
+        }
+
+        // --- INIT ---
+        window.onload = function() { loadDataFromSheet(); };
+
+    </script>
+</body>
+</html>
