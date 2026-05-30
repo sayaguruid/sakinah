@@ -2,8 +2,13 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Sistem Manajemen Priangan Timur</title>
+    
+    <!-- LIBRARY UNTUK PDF (JSPDF) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+
     <style>
         :root {
             --primary: #2563eb;
@@ -22,58 +27,80 @@
             --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         body { background-color: var(--background); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
         
         /* Sidebar */
         aside {
             width: 260px; background: var(--surface); border-right: 1px solid var(--border);
             display: flex; flex-direction: column; padding: 1.5rem; z-index: 20; flex-shrink: 0;
+            transition: transform 0.3s ease;
         }
-        .brand { font-size: 1.1rem; font-weight: 800; color: var(--primary); margin-bottom: 2rem; line-height: 1.2; }
+        .brand { font-size: 1.1rem; font-weight: 800; color: var(--primary); margin-bottom: 1.5rem; line-height: 1.2; }
         .brand span { font-size: 0.8rem; color: var(--text-sub); font-weight: 500; }
         
         nav button {
-            background: none; border: none; width: 100%; padding: 0.75rem 1rem; text-align: left;
+            background: none; border: none; width: 100%; padding: 1rem 1rem; text-align: left;
             cursor: pointer; border-radius: var(--radius); color: var(--text-sub); font-weight: 500;
             margin-bottom: 0.5rem; transition: all 0.2s; display: flex; align-items: center; gap: 0.75rem;
+            font-size: 1rem;
         }
+        nav button:active { transform: scale(0.98); }
         nav button:hover { background-color: #f8fafc; color: var(--primary); }
         nav button.active { background-color: #eff6ff; color: var(--primary); font-weight: 600; }
         nav button svg { width: 20px; height: 20px; }
 
         /* Main Content */
-        main { flex: 1; padding: 2rem; overflow-y: auto; position: relative; }
-        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
+        main { flex: 1; padding: 1.5rem; overflow-y: auto; position: relative; -webkit-overflow-scrolling: touch; }
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
         h1 { font-size: 1.5rem; font-weight: 700; }
         .subtitle { color: var(--text-sub); font-size: 0.9rem; }
 
-        /* Stats & Cards */
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
-        .card { background: var(--surface); padding: 1.5rem; border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid var(--border); }
-        .stat-label { color: var(--text-sub); font-size: 0.85rem; margin-bottom: 0.5rem; }
-        .stat-value { font-size: 2rem; font-weight: 700; color: var(--text-main); }
+        /* Grouping Title */
+        .group-title {
+            font-size: 1rem; font-weight: 700; color: var(--text-sub); margin-top: 1.5rem; margin-bottom: 0.75rem;
+            display: flex; align-items: center; gap: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em;
+        }
+        .group-title::before { content: ''; display: block; width: 4px; height: 16px; background: var(--primary); border-radius: 2px; }
+
+        /* Cards */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; margin-bottom: 1rem; }
+        .card { background: var(--surface); padding: 1.25rem; border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid var(--border); transition: transform 0.2s; }
+        .card:hover { transform: translateY(-2px); }
+        .stat-label { color: var(--text-sub); font-size: 0.75rem; margin-bottom: 0.5rem; font-weight: 500; }
+        .stat-value { font-size: 1.75rem; font-weight: 700; color: var(--text-main); }
 
         /* Tables */
         .table-container { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid var(--border); overflow: hidden; }
-        .toolbar { padding: 1rem; border-bottom: 1px solid var(--border); display: flex; gap: 1rem; flex-wrap: wrap; }
-        .search-input { padding: 0.5rem 1rem; border: 1px solid var(--border); border-radius: 8px; outline: none; min-width: 200px; }
+        .toolbar { padding: 1rem; border-bottom: 1px solid var(--border); display: flex; gap: 0.5rem; flex-wrap: wrap; }
+        .search-input { padding: 0.75rem 1rem; border: 1px solid var(--border); border-radius: 8px; outline: none; min-width: 140px; font-size: 1rem; }
         .search-input:focus { border-color: var(--primary); }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 0.8rem; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
-        th { background-color: #f8fafc; font-weight: 600; color: var(--text-sub); white-space: nowrap;}
+        
+        .table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        table { width: 100%; border-collapse: collapse; min-width: 600px; }
+        th, td { padding: 1rem; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; white-space: nowrap; }
+        th { background-color: #f8fafc; font-weight: 600; color: var(--text-sub); }
 
         /* Badges */
-        .badge { padding: 0.25rem 0.75rem; border-radius: 99px; font-size: 0.75rem; font-weight: 600; display: inline-block; }
+        .badge { padding: 0.25rem 0.75rem; border-radius: 99px; font-size: 0.7rem; font-weight: 600; display: inline-block; white-space: nowrap; }
         .badge-gray { background: #f1f5f9; color: #475569; }
         .badge-blue { background: #dbeafe; color: #1e40af; }
         .badge-purple { background: #ede9fe; color: #5b21b6; }
         .badge-red { background: #fee2e2; color: #991b1b; }
         .badge-green { background: #dcfce7; color: #166534; }
-        .gender-m { color: var(--primary); font-weight: 600; font-size: 0.8rem; }
-        .gender-f { color: var(--danger); font-weight: 600; font-size: 0.8rem; }
+        
+        /* Warna Khusus untuk Detail L/P */
+        .stat-m { color: var(--primary); font-size: 1.75rem; }
+        .stat-p { color: var(--danger); font-size: 1.75rem; }
+        .stat-percent { color: var(--success); font-size: 1.5rem; } /* Style khusus persentase */
 
-        /* MATCHMAKING GRID (ADMIN VIEW) */
+        /* Pagination */
+        .pagination { padding: 1rem; display: flex; justify-content: center; align-items: center; gap: 0.5rem; }
+        .page-btn { padding: 0.5rem 1rem; border: 1px solid var(--border); border-radius: 6px; background: var(--surface); cursor: pointer; }
+        .page-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+        .page-info { font-size: 0.9rem; font-weight: 600; }
+
+        /* Matchmaking Grid */
         .filter-tabs { display: flex; gap: 0.5rem; flex-wrap: wrap; }
         .filter-btn {
             padding: 0.5rem 1rem; border-radius: 20px; border: 1px solid var(--border); background: var(--surface);
@@ -82,47 +109,45 @@
         .filter-btn:hover { background: #f1f5f9; }
         .filter-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
 
-        .match-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.5rem; }
+        .match-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 1rem; }
         .profile-card {
             background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
-            padding: 1.25rem; text-align: center; transition: transform 0.2s; position: relative;
+            padding: 1rem; text-align: center; transition: transform 0.2s; position: relative;
             display: flex; flex-direction: column; height: 100%;
         }
         .profile-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); border-color: var(--primary); }
-        
-        /* Status Border Color */
         .profile-card[data-status="Taaruf"] { border-left: 5px solid var(--primary); }
         .profile-card[data-status="SL Bayangan"] { border-left: 5px solid var(--info); }
 
         .avatar {
-            width: 50px; height: 50px; background: #e2e8f0; border-radius: 50%; margin: 0 auto 0.5rem;
+            width: 45px; height: 45px; background: #e2e8f0; border-radius: 50%; margin: 0 auto 0.5rem;
             display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: var(--text-sub); font-weight: 700;
         }
         .avatar.male { background: #dbeafe; color: var(--primary); }
         .avatar.female { background: #fee2e2; color: var(--danger); }
         
-        .profile-name { font-weight: 700; margin-bottom: 0.25rem; font-size: 1rem; }
+        .profile-name { font-weight: 700; margin-bottom: 0.25rem; font-size: 0.95rem; line-height: 1.2; }
         .profile-meta { color: var(--text-sub); font-size: 0.75rem; margin-bottom: 0.5rem; }
         
         .status-box {
             background: #f8fafc; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem;
-            font-size: 0.8rem; margin-bottom: 1rem; min-height: 40px; display: flex; align-items: center; justify-content: center;
+            font-size: 0.75rem; margin-bottom: 0.75rem; min-height: 35px; display: flex; align-items: center; justify-content: center;
         }
 
-        .btn { padding: 0.5rem 1rem; border-radius: 8px; border: none; cursor: pointer; font-weight: 500; transition: all 0.2s; width: 100%; margin-top: auto;}
+        .btn { padding: 0.75rem 1rem; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; transition: all 0.2s; width: 100%; margin-top: auto; font-size: 0.9rem;}
         .btn:active { transform: scale(0.98); }
         .btn-primary { background: var(--primary); color: white; }
         .btn-primary:hover { background: var(--primary-dark); }
         .btn-success { background: var(--success); color: white; }
         .btn-danger { background: var(--danger); color: white; }
         .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-main); }
-        .btn-sm { padding: 0.25rem 0.75rem; font-size: 0.8rem; width: auto; }
+        .btn-sm { padding: 0.5rem 1rem; font-size: 0.8rem; width: auto; }
 
         /* Modal */
-        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 100; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 100; opacity: 0; pointer-events: none; transition: opacity 0.3s; padding: 1rem; }
         .modal-overlay.active { opacity: 1; pointer-events: all; }
-        .modal { background: var(--surface); padding: 2rem; border-radius: var(--radius); width: 90%; max-width: 500px; max-height: 85vh; overflow-y: auto; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border); }
+        .modal { background: var(--surface); padding: 1.5rem; border-radius: var(--radius); width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border); }
         
         .partner-list { display: grid; grid-template-columns: 1fr; gap: 0.5rem; margin-top: 1rem; }
         .partner-item {
@@ -132,16 +157,20 @@
         .partner-item:hover { background: #f8fafc; border-color: var(--primary); }
 
         /* Toast */
-        #toast { position: fixed; bottom: 20px; right: 20px; background: var(--text-main); color: white; padding: 12px 24px; border-radius: 8px; z-index: 200; transform: translateY(100px); transition: transform 0.3s; }
-        #toast.show { transform: translateY(0); }
+        #toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--text-main); color: white; padding: 12px 24px; border-radius: 50px; z-index: 200; transition: transform 0.3s; font-size: 0.9rem; white-space: nowrap; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+        #toast.show { transform: translateX(-50%) translateY(0); }
         .loading { text-align: center; padding: 2rem; color: var(--text-sub); }
 
+        /* RESPONSIVE */
         @media (max-width: 768px) {
             body { flex-direction: column; height: auto; overflow: auto; }
-            aside { width: 100%; border-right: none; border-bottom: 1px solid var(--border); padding: 1rem; }
-            nav { display: flex; overflow-x: auto; gap: 0.5rem; padding-bottom:0.5rem; }
-            nav button { width: auto; white-space: nowrap; margin-bottom: 0; }
-            main { padding: 1rem; }
+            aside { width: 100%; border-right: none; border-bottom: 1px solid var(--border); padding: 1rem; position: sticky; top: 0; background: var(--surface); z-index: 50; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+            .brand { display: none; }
+            nav { display: flex; overflow-x: auto; gap: 0.5rem; padding-bottom: 0; -webkit-overflow-scrolling: touch; }
+            nav button { width: auto; white-space: nowrap; margin-bottom: 0; padding: 0.5rem 1rem; background: #f1f5f9; }
+            nav button.active { background: var(--primary); color: white; }
+            main { padding: 1rem; padding-bottom: 80px; }
+            .header-actions { width: 100%; display: flex; justify-content: flex-end; }
         }
     </style>
 </head>
@@ -154,19 +183,19 @@
         </div>
         <nav>
             <button onclick="router('dashboard')" id="nav-dashboard" class="active">
-                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg>
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg>
                 Dashboard
             </button>
             <button onclick="router('peserta')" id="nav-peserta">
-                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
                 Data Peserta
             </button>
             <button onclick="router('perjodohan')" id="nav-perjodohan">
                 <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
-                Aplikasi Jodoh
+                Ta'aruf
             </button>
         </nav>
-        <div style="margin-top:auto; padding-top:1rem; font-size:0.75rem; color:var(--text-sub);">
+        <div style="margin-top:auto; padding-top:1rem; font-size:0.7rem; color:var(--text-sub); display: none;">
             Status: <span id="connection-status" style="color:orange">Loading...</span>
         </div>
     </aside>
@@ -175,14 +204,30 @@
         <!-- Dashboard -->
         <section id="section-dashboard">
             <header>
-                <div><h1>Dashboard</h1><p class="subtitle">Ringkasan kegiatan.</p></div>
-                <button onclick="loadDataFromSheet()" class="btn btn-outline btn-sm">🔄 Refresh</button>
+                <div><h1>Dashboard</h1><p class="subtitle">Monitoring real-time kegiatan.</p></div>
+                <div class="header-actions" style="display:flex; gap:0.5rem;">
+                    <button onclick="loadDataFromSheet()" class="btn btn-outline btn-sm">🔄 Refresh</button>
+                    <button onclick="downloadPDF()" class="btn btn-primary btn-sm">📄 Download PDF</button>
+                </div>
             </header>
+
+            <!-- KEHADIRAN -->
+            <div class="group-title">Ringkasan Kehadiran</div>
             <div class="stats-grid">
-                <div class="card"><div class="stat-label">Total Peserta</div><div class="stat-value" id="stat-total">-</div></div>
-                <div class="card"><div class="stat-label">Sudah Hadir</div><div class="stat-value" style="color: var(--success);" id="stat-hadir">-</div></div>
-                <div class="card"><div class="stat-label">Taaruf</div><div class="stat-value" style="color: var(--primary);" id="stat-taaruf">-</div></div>
-                <div class="card"><div class="stat-label">SL Bayangan</div><div class="stat-value" style="color: var(--info);" id="stat-sl">-</div></div>
+                <div class="card"><div class="stat-label">Total Terdaftar</div><div class="stat-value" id="stat-total">-</div></div>
+                <div class="card"><div class="stat-label">Hadir (Laki-laki)</div><div class="stat-value stat-m" id="stat-hadir-l">-</div></div>
+                <div class="card"><div class="stat-label">Hadir (Perempuan)</div><div class="stat-value stat-p" id="stat-hadir-p">-</div></div>
+                <div class="card"><div class="stat-label">Total Hadir</div><div class="stat-value" style="color:var(--text-main)" id="stat-hadir-total">-</div></div>
+                <div class="card"><div class="stat-label">Persentase Hadir</div><div class="stat-value stat-percent" id="stat-percent">-</div></div>
+                <div class="card"><div class="stat-label">Tidak Hadir</div><div class="stat-value" style="color: var(--secondary);" id="stat-absen">-</div></div>
+            </div>
+
+            <!-- PROSES TAARUF -->
+            <div class="group-title">Proses Taaruf</div>
+            <div class="stats-grid">
+                <div class="card"><div class="stat-label">Sedang Taaruf</div><div class="stat-value" style="color: var(--info);" id="stat-taaruf">-</div></div>
+                <div class="card"><div class="stat-label">SL Bayangan</div><div class="stat-value" style="color: var(--primary);" id="stat-sl">-</div></div>
+                <div class="card"><div class="stat-label">Tidak Jadi</div><div class="stat-value" style="color: var(--danger);" id="stat-batal">-</div></div>
             </div>
         </section>
 
@@ -190,43 +235,67 @@
         <section id="section-peserta" style="display: none;">
             <header><div><h1>Data Peserta</h1><p class="subtitle">Kelola kehadiran & edit status manual.</p></div></header>
             <div class="table-container">
-                <div class="toolbar"><input type="text" id="search-peserta" class="search-input" placeholder="Cari nama..." onkeyup="renderPesertaTable()"></div>
-                <table><thead><tr><th>No</th><th>Nama</th><th>L/P</th><th>Daerah</th><th>Status Jodoh</th><th>Absensi</th><th>Aksi</th></tr></thead>
-                <tbody id="peserta-table-body"><tr><td colspan="7" class="loading">Memuat...</td></tr></tbody></table>
+                <!-- TOOLBAR -->
+                <div class="toolbar">
+                    <input type="text" id="search-peserta" class="search-input" placeholder="Cari nama..." onkeyup="handleSearch()">
+                    
+                    <select id="filter-hadir" class="search-input" onchange="handleSearch()">
+                        <option value="">Semua Kehadiran</option>
+                        <option value="Hadir">Hadir</option>
+                        <option value="Tidak Hadir">Tidak Hadir</option>
+                        <option value="Belum Hadir">Belum</option>
+                    </select>
+
+                    <!-- BARU: Filter Gender -->
+                    <select id="filter-gender" class="search-input" onchange="handleSearch()">
+                        <option value="">Semua Gender</option>
+                        <option value="Laki-laki">Laki-laki</option>
+                        <option value="Perempuan">Perempuan</option>
+                    </select>
+                </div>
+
+                <!-- PAGINATION CONTROL -->
+                <div class="pagination" id="pagination-controls-top" style="border-top:1px solid #f1f5f9; padding-top:1rem;">
+                    <span class="page-info" id="page-info">Halaman 1</span>
+                    <button class="page-btn" onclick="changePage(-1)" id="btn-prev">Sebelumnya</button>
+                    <button class="page-btn" onclick="changePage(1)" id="btn-next">Selanjutnya</button>
+                </div>
+                <div class="table-wrapper">
+                    <table><thead><tr><th>No</th><th>Nama</th><th>L/P</th><th>Daerah</th><th>Status</th><th>Absensi</th><th>Aksi</th></tr></thead>
+                    <tbody id="peserta-table-body"><tr><td colspan="7" class="loading">Memuat...</td></tr></tbody></table>
+                </div>
+                <div class="pagination" id="pagination-controls-bottom" style="border-top:1px solid #f1f5f9; padding-top:1rem;">
+                    <button class="page-btn" onclick="changePage(-1)">Sebelumnya</button>
+                    <span class="page-info" id="page-info-bottom"></span>
+                    <button class="page-btn" onclick="changePage(1)">Selanjutnya</button>
+                </div>
             </div>
         </section>
 
-        <!-- APLIKASI JODOH (ADMIN GRID VIEW) -->
+        <!-- APLIKASI JODOH -->
         <section id="section-perjodohan" style="display: none;">
             <header>
                 <div><h1>Aplikasi Perjodohan</h1><p class="subtitle">Kelola jodoh peserta secara massal.</p></div>
                 <button onclick="resetFilters()" class="btn btn-outline btn-sm">Reset Filter</button>
             </header>
             
-            <!-- FILTER 1: GENDER -->
             <div class="filter-tabs" style="margin-bottom: 0.5rem;">
-                <button class="filter-btn active" id="gen-all" onclick="setGenderFilter('All', this)">Semua Gender</button>
+                <button class="filter-btn active" id="gen-all" onclick="setGenderFilter('All', this)">Semua</button>
                 <button class="filter-btn" id="gen-m" onclick="setGenderFilter('Laki-laki', this)">Laki-laki</button>
                 <button class="filter-btn" id="gen-f" onclick="setGenderFilter('Perempuan', this)">Perempuan</button>
             </div>
-
-            <!-- FILTER 2: STATUS -->
             <div class="filter-tabs" style="margin-bottom: 1.5rem;">
-                <button class="filter-btn active" id="stat-all" onclick="setStatusFilter('All', this)">Semua Status</button>
-                <button class="filter-btn" id="stat-belum" onclick="setStatusFilter('Belum Taaruf', this)">Belum Taaruf</button>
-                <button class="filter-btn" id="stat-taaruf" onclick="setStatusFilter('Taaruf', this)">Sedang Taaruf</button>
+                <button class="filter-btn active" id="stat-all" onclick="setStatusFilter('All', this)">Semua</button>
+                <button class="filter-btn" id="stat-belum" onclick="setStatusFilter('Belum Taaruf', this)">Belum</button>
+                <button class="filter-btn" id="stat-taaruf" onclick="setStatusFilter('Taaruf', this)">Taaruf</button>
                 <button class="filter-btn" id="stat-sl" onclick="setStatusFilter('SL Bayangan', this)">SL Bayangan</button>
-                <button class="filter-btn" id="stat-gagal" onclick="setStatusFilter('Tidak Jadi', this)">Gagal / Batal</button>
+                <button class="filter-btn" id="stat-gagal" onclick="setStatusFilter('Tidak Jadi', this)">Gagal</button>
             </div>
-
-            <!-- Grid Container -->
-            <div id="match-container" class="match-grid">
-                <!-- Cards injected via JS -->
-            </div>
+            <div id="match-container" class="match-grid"></div>
         </section>
     </main>
 
-    <!-- MODAL PILIH PASANGAN / KELOLA -->
+    <!-- MODAL -->
     <div class="modal-overlay" id="modal-partner">
         <div class="modal">
             <div class="modal-header">
@@ -236,50 +305,44 @@
                 </div>
                 <button onclick="closeModal('modal-partner')" class="btn btn-outline btn-sm">✕</button>
             </div>
-            
-            <div id="modal-content-area">
-                <!-- Dynamic Content -->
-            </div>
+            <div id="modal-content-area"></div>
         </div>
     </div>
 
     <div id="toast">Notifikasi</div>
 
     <script>
-        // --- KONFIGURASI ---
         const SHEET_API_URL = "https://script.google.com/macros/s/AKfycbyOaDDPGGOM8AedDh0THru5XoTXOfHwhlSvPNWypzNu1N4rCZHgP4d45P-DQy27rXc84A/exec";
 
-        // --- STATE ---
         let participants = [];
         let isSaving = false;
         let currentGenderFilter = 'All';
         let currentStatusFilter = 'All';
         let selectedUserId = null;
 
-        // --- CORE FUNCTIONS ---
+        // PAGINATION STATE
+        let currentPage = 1;
+        const rowsPerPage = 10;
+        let currentFilteredData = [];
+
         async function loadDataFromSheet() {
             const statusEl = document.getElementById('connection-status');
-            statusEl.innerText = "Loading...";
-            statusEl.style.color = "orange";
+            if(statusEl) { statusEl.innerText = "Loading..."; statusEl.style.color = "orange"; }
             try {
                 const response = await fetch(SHEET_API_URL);
                 if(!response.ok) throw new Error("Network error");
                 const data = await response.json();
-                
                 participants = data.map(p => {
                     if (!p.gender) p.gender = guessGender(p.nama);
                     if (!p.statusRelasi) p.statusRelasi = 'Belum Taaruf';
                     if (!p.hadir) p.hadir = 'Belum Hadir';
                     return p;
                 });
-                
-                statusEl.innerText = "Online";
-                statusEl.style.color = "var(--success)";
+                if(statusEl) { statusEl.innerText = "Online"; statusEl.style.color = "var(--success)"; }
                 refreshCurrentView();
             } catch (error) {
                 console.error(error);
-                statusEl.innerText = "Error";
-                statusEl.style.color = "red";
+                if(statusEl) { statusEl.innerText = "Error"; statusEl.style.color = "red"; }
                 showToast("Gagal memuat data.");
             }
         }
@@ -303,7 +366,7 @@
         function refreshCurrentView() {
             const activeId = document.querySelector('section[style*="block"]')?.id.replace('section-', '');
             if(activeId === 'dashboard') renderDashboard();
-            else if(activeId === 'peserta') renderPesertaTable();
+            else if(activeId === 'peserta') handleSearch();
             else if(activeId === 'perjodohan') renderPublicGrid();
         }
 
@@ -317,7 +380,54 @@
             return f.some(s => name.toLowerCase().endsWith(s)) ? 'Perempuan' : 'Laki-laki';
         }
 
-        // --- ROUTING ---
+        // --- PDF GENERATOR ---
+        function downloadPDF() {
+            if(participants.length === 0) { showToast("Data belum dimuat."); return; }
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            doc.setFontSize(18); doc.text("Laporan Kegiatan Priangan Timur", 14, 20);
+            doc.setFontSize(11); doc.setTextColor(100);
+            doc.text(`Dicetak: ${new Date().toLocaleDateString('id-ID')}`, 14, 28);
+            doc.setFontSize(14); doc.setTextColor(0); doc.setFont(undefined, 'bold'); doc.text("Ringkasan Statistik", 14, 40);
+            
+            const total = participants.length;
+            const hadirL = participants.filter(p => p.hadir === 'Hadir' && p.gender === 'Laki-laki').length;
+            const hadirP = participants.filter(p => p.hadir === 'Hadir' && p.gender === 'Perempuan').length;
+            const totalHadir = hadirL + hadirP;
+            const absen = participants.filter(p => p.hadir !== 'Hadir').length;
+            const taaruf = participants.filter(p => p.statusRelasi === 'Taaruf').length;
+            const sl = participants.filter(p => p.statusRelasi === 'SL Bayangan').length;
+            const percentage = total > 0 ? ((totalHadir / total) * 100).toFixed(1) + '%' : '0%';
+
+            const summaryData = [
+                ['Total Terdaftar', total], 
+                ['Hadir (L)', hadirL], 
+                ['Hadir (P)', hadirP],
+                ['Total Hadir', totalHadir],
+                ['Persentase', percentage],
+                ['Tidak Hadir', absen], 
+                ['Sedang Taaruf', taaruf], 
+                ['SL Bayangan', sl]
+            ];
+            
+            doc.autoTable({ head: [['Ringkasan', 'Jumlah']], body: summaryData, startY: 45, theme: 'grid', headStyles: { fillColor: [37, 99, 235] }, styles: { fontSize: 11 } });
+
+            const finalY = doc.lastAutoTable.finalY + 15;
+            doc.setFontSize(14); doc.text("Detail Data Peserta", 14, finalY);
+
+            const tableColumn = ["No", "Nama", "JK", "Daerah", "Status", "Pasangan", "Kehadiran"];
+            const tableRows = [];
+            participants.forEach((p, index) => {
+                const partner = p.pasanganId ? getParticipantById(p.pasanganId) : null;
+                let partnerText = "-";
+                if (p.statusRelasi === 'Taaruf' && partner) partnerText = `Dengan: ${partner.nama}`;
+                else if (p.statusRelasi === 'SL Bayangan' && partner) partnerText = `Dengan: ${partner.nama}`;
+                tableRows.push([ index + 1, p.nama, p.gender === 'Laki-laki' ? 'L' : 'P', p.daerah, p.statusRelasi, partnerText, p.hadir ]);
+            });
+            doc.autoTable({ head: [tableColumn], body: tableRows, startY: finalY + 5, theme: 'grid', headStyles: { fillColor: [37, 99, 235] }, styles: { fontSize: 9 }, columnStyles: { 0:{cellWidth:10}, 1:{cellWidth:35}, 2:{cellWidth:10}, 3:{cellWidth:25}, 4:{cellWidth:30}, 5:{cellWidth:55}, 6:{cellWidth:25} } });
+            doc.save("Laporan_Priangan_Timur.pdf");
+        }
+
         function router(sectionId) {
             document.querySelectorAll('main > section').forEach(el => el.style.display = 'none');
             document.getElementById(`section-${sectionId}`).style.display = 'block';
@@ -326,61 +436,117 @@
             refreshCurrentView();
         }
 
-        // --- DASHBOARD ---
+        // --- DASHBOARD UPDATED ---
         function renderDashboard() {
-            document.getElementById('stat-total').innerText = participants.length;
-            document.getElementById('stat-hadir').innerText = participants.filter(p => p.hadir === 'Hadir').length;
+            const total = participants.length;
+            document.getElementById('stat-total').innerText = total;
+            
+            const hadirL = participants.filter(p => p.hadir === 'Hadir' && p.gender === 'Laki-laki').length;
+            const hadirP = participants.filter(p => p.hadir === 'Hadir' && p.gender === 'Perempuan').length;
+            
+            document.getElementById('stat-hadir-l').innerText = hadirL;
+            document.getElementById('stat-hadir-p').innerText = hadirP;
+
+            const totalHadir = hadirL + hadirP;
+            const percentHadir = total > 0 ? ((totalHadir / total) * 100).toFixed(1) + '%' : '0%';
+
+            document.getElementById('stat-hadir-total').innerText = totalHadir;
+            document.getElementById('stat-percent').innerText = percentHadir;
+
+            document.getElementById('stat-absen').innerText = participants.filter(p => p.hadir !== 'Hadir').length;
             document.getElementById('stat-taaruf').innerText = participants.filter(p => p.statusRelasi === 'Taaruf').length;
             document.getElementById('stat-sl').innerText = participants.filter(p => p.statusRelasi === 'SL Bayangan').length;
+            document.getElementById('stat-batal').innerText = participants.filter(p => p.statusRelasi === 'Tidak Jadi').length;
         }
 
-        // --- DATA PESERTA (DENGAN MANUAL EDIT) ---
+        // --- DATA PESERTA (UPDATED FILTER LOGIC) ---
+        function handleSearch() {
+            currentPage = 1; 
+            const search = document.getElementById('search-peserta').value.toLowerCase();
+            const filterHadir = document.getElementById('filter-hadir').value;
+            const filterGender = document.getElementById('filter-gender').value; // AMBIL VALUE GENDER
+
+            currentFilteredData = participants.filter(p => {
+                const matchName = p.nama.toLowerCase().includes(search);
+                
+                let matchHadir = true;
+                if(filterHadir) {
+                    if(filterHadir === 'Hadir') matchHadir = p.hadir === 'Hadir';
+                    if(filterHadir === 'Tidak Hadir') matchHadir = p.hadir !== 'Hadir';
+                    if(filterHadir === 'Belum Hadir') matchHadir = p.hadir === 'Belum Hadir';
+                }
+
+                let matchGender = true; // LOGIKA GENDER
+                if(filterGender) {
+                    matchGender = p.gender === filterGender;
+                }
+
+                return matchName && matchHadir && matchGender; // GABUNGKAN SEMUA FILTER
+            });
+
+            renderPesertaTable();
+        }
+
         function renderPesertaTable() {
             const tbody = document.getElementById('peserta-table-body');
             tbody.innerHTML = '';
-            const search = document.getElementById('search-peserta').value.toLowerCase();
-            const filtered = participants.filter(p => p.nama.toLowerCase().includes(search));
             
-            filtered.forEach(p => {
+            const totalPages = Math.ceil(currentFilteredData.length / rowsPerPage) || 1;
+            
+            if (currentPage > totalPages) currentPage = totalPages;
+            if (currentPage < 1) currentPage = 1;
+
+            const start = (currentPage - 1) * rowsPerPage;
+            const end = start + rowsPerPage;
+            const paginatedItems = currentFilteredData.slice(start, end);
+
+            paginatedItems.forEach(p => {
                 const statusBadge = getStatusBadge(p.statusRelasi);
-                const genderClass = p.gender === 'Laki-laki' ? 'gender-m' : 'gender-f';
+                const genderClass = p.gender === 'Laki-laki' ? 'color:var(--primary)' : 'color:var(--danger)';
                 const genderTxt = p.gender === 'Laki-laki' ? 'L' : 'P';
                 
-                // Tombol Absensi
-                const btnAbsenClass = p.hadir === 'Hadir' ? 'btn-outline' : 'btn-success';
-                const btnAbsenText = p.hadir === 'Hadir' ? 'Batal' : 'Hadir';
+                const hadirSelect = `
+                    <select onchange="updateAttendance(${p.id}, this.value)" style="padding:4px; border-radius:6px; border:1px solid var(--border); font-size:0.85rem; width:100%;">
+                        <option value="Belum Hadir" ${p.hadir === 'Belum Hadir' ? 'selected' : ''}>Belum</option>
+                        <option value="Hadir" ${p.hadir === 'Hadir' ? 'selected' : ''}>Hadir</option>
+                        <option value="Tidak Hadir" ${p.hadir === 'Tidak Hadir' ? 'selected' : ''}>Tidak Hadir</option>
+                    </select>
+                `;
                 
-                // Dropdown Status Manual
                 const selectStatus = `
-                    <select onchange="updateStatusManual(${p.id}, this.value)" style="padding:4px; border-radius:6px; border:1px solid var(--border);">
+                    <select onchange="updateStatusManual(${p.id}, this.value)" style="padding:4px; border-radius:6px; border:1px solid var(--border); font-size:0.8rem;">
                         <option value="Belum Taaruf" ${p.statusRelasi === 'Belum Taaruf' ? 'selected' : ''}>Belum</option>
                         <option value="Taaruf" ${p.statusRelasi === 'Taaruf' ? 'selected' : ''}>Taaruf</option>
-                        <option value="SL Bayangan" ${p.statusRelasi === 'SL Bayangan' ? 'selected' : ''}>SL Bayangan</option>
+                        <option value="SL Bayangan" ${p.statusRelasi === 'SL Bayangan' ? 'selected' : ''}>SL</option>
                         <option value="Tidak Jadi" ${p.statusRelasi === 'Tidak Jadi' ? 'selected' : ''}>Gagal</option>
                     </select>
                 `;
 
-                tbody.innerHTML += `
-                    <tr>
-                        <td>${p.id}</td>
-                        <td><b>${p.nama}</b></td>
-                        <td><span class="${genderClass}">${genderTxt}</span></td>
-                        <td>${p.daerah}</td>
-                        <td>${selectStatus}</td>
-                        <td>${p.hadir}</td>
-                        <td>
-                            <button onclick="toggleHadir(${p.id})" class="btn btn-sm ${btnAbsenClass}">${btnAbsenText}</button>
-                        </td>
-                    </tr>
-                `;
+                tbody.innerHTML += `<tr><td>${(start) + 1}</td><td><b>${p.nama}</b></td><td style="${genderClass}">${genderTxt}</td><td>${p.daerah}</td><td>${selectStatus}</td><td>${hadirSelect}</td><td><button onclick="toggleHadir(${p.id})" class="btn btn-sm ${p.hadir === 'Hadir' ? 'btn-outline' : 'btn-success'}">${p.hadir === 'Hadir' ? 'Batal' : 'Hadir'}</button></td></tr>`;
             });
+
+            const pageInfo = `Halaman ${currentPage} dari ${totalPages}`;
+            document.getElementById('page-info').innerText = pageInfo;
+            document.getElementById('page-info-bottom').innerText = pageInfo;
+            
+            document.getElementById('btn-prev').disabled = currentPage === 1;
+            document.getElementById('btn-next').disabled = currentPage === totalPages || totalPages === 0;
+        }
+
+        function changePage(delta) {
+            currentPage += delta;
+            renderPesertaTable();
         }
 
         function toggleHadir(id) {
             const p = getParticipantById(id);
             if(!p) return;
-            const newStatus = p.hadir === 'Hadir' ? 'Belum Hadir' : 'Hadir';
+            const newStatus = p.hadir === 'Belum Hadir' ? 'Hadir' : 'Belum Hadir';
             saveDataToSheet([{ id: p.id, hadir: newStatus }]);
+        }
+
+        function updateAttendance(id, newStatus) {
+            saveDataToSheet([{ id: id, hadir: newStatus }]);
         }
 
         function updateStatusManual(id, newStatus) {
@@ -397,25 +563,21 @@
             return status;
         }
 
-        // --- APLIKASI JODOH (ADMIN GRID & DOUBLE FILTER) ---
-        
+        // --- APLIKASI JODOH (WITH MODAL SEARCH) ---
         function setGenderFilter(filter, btn) {
             currentGenderFilter = filter;
             document.querySelectorAll('#section-perjodohan .filter-tabs:nth-of-type(1) .filter-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             renderPublicGrid();
         }
-
         function setStatusFilter(filter, btn) {
             currentStatusFilter = filter;
             document.querySelectorAll('#section-perjodohan .filter-tabs:nth-of-type(2) .filter-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             renderPublicGrid();
         }
-
         function resetFilters() {
-            currentGenderFilter = 'All';
-            currentStatusFilter = 'All';
+            currentGenderFilter = 'All'; currentStatusFilter = 'All';
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
             document.getElementById('gen-all').classList.add('active');
             document.getElementById('stat-all').classList.add('active');
@@ -425,65 +587,26 @@
         function renderPublicGrid() {
             const container = document.getElementById('match-container');
             container.innerHTML = '';
-
-            // FILTER KOMBINASI (Gender AND Status)
             const displayList = participants.filter(p => {
                 const genderMatch = (currentGenderFilter === 'All') || (p.gender === currentGenderFilter);
                 const statusMatch = (currentStatusFilter === 'All') || (p.statusRelasi === currentStatusFilter);
                 return genderMatch && statusMatch;
             });
-
-            if(displayList.length === 0) {
-                container.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:2rem; color:var(--text-sub);">Tidak ada data dengan filter ini.</div>`;
-                return;
-            }
-
+            if(displayList.length === 0) { container.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:2rem; color:var(--text-sub);">Tidak ada data.</div>`; return; }
             displayList.forEach(p => {
                 const partner = p.pasanganId ? getParticipantById(p.pasanganId) : null;
-                let statusText = "Belum Ada Pasangan";
-                let statusColor = "#94a3b8"; 
-                let actionBtnText = "Pilih Pasangan";
-                let actionBtnClass = "btn-primary";
-
-                // LOGIKA TAMPILAN STATUS
-                if(p.statusRelasi === 'Taaruf' && partner) {
-                    statusText = `Taaruf dengan <b>${partner.nama}</b>`;
-                    statusColor = "var(--primary)";
-                    actionBtnText = "Kelola Hubungan";
-                    actionBtnClass = "btn-outline";
-                } else if (p.statusRelasi === 'SL Bayangan' && partner) {
-                    statusText = `SL Bayangan dgn <b>${partner.nama}</b>`;
-                    statusColor = "var(--info)";
-                    actionBtnText = "Lihat Detail";
-                    actionBtnClass = "btn-outline";
-                } else if (p.statusRelasi === 'Tidak Jadi') {
-                    statusText = "Tidak Jadi (Gagal)";
-                    statusColor = "var(--danger)";
-                    actionBtnText = "Coba Lagi";
-                    actionBtnClass = "btn-primary";
-                }
-
+                let statusText = "Belum Ada", statusColor = "#94a3b8", actionBtnText = "Pilih", actionBtnClass = "btn-primary";
+                if(p.statusRelasi === 'Taaruf' && partner) { statusText = `Taaruf: ${partner.nama}`; statusColor = "var(--primary)"; actionBtnText = "Kelola"; actionBtnClass = "btn-outline"; }
+                else if (p.statusRelasi === 'SL Bayangan' && partner) { statusText = `SL: ${partner.nama}`; statusColor = "var(--info)"; actionBtnText = "Lihat"; actionBtnClass = "btn-outline"; }
+                else if (p.statusRelasi === 'Tidak Jadi') { statusText = "Gagal"; statusColor = "var(--danger)"; actionBtnText = "Coba"; actionBtnClass = "btn-primary"; }
                 const avatarClass = p.gender === 'Laki-laki' ? 'male' : 'female';
-
                 const card = document.createElement('div');
                 card.className = 'profile-card';
                 card.setAttribute('data-status', p.statusRelasi);
-                card.innerHTML = `
-                    <div class="avatar ${avatarClass}">${p.nama.charAt(0)}</div>
-                    <div class="profile-name">${p.nama}</div>
-                    <div class="profile-meta">${p.kelompok || '-'} | ${p.daerah}</div>
-                    
-                    <div class="status-box" style="color:${statusColor}; border-color:${statusColor};">
-                        ${statusText}
-                    </div>
-
-                    <button onclick="openUserModal(${p.id})" class="btn ${actionBtnClass}">${actionBtnText}</button>
-                `;
+                card.innerHTML = `<div class="avatar ${avatarClass}">${p.nama.charAt(0)}</div><div class="profile-name">${p.nama}</div><div class="profile-meta">${p.kelompok || '-'} | ${p.daerah}</div><div class="status-box" style="color:${statusColor}; border-color:${statusColor};">${statusText}</div><button onclick="openUserModal(${p.id})" class="btn ${actionBtnClass}">${actionBtnText}</button>`;
                 container.appendChild(card);
             });
         }
-
-        // --- MODAL LOGIC ---
 
         function openUserModal(userId) {
             selectedUserId = userId;
@@ -492,66 +615,52 @@
             const content = document.getElementById('modal-content-area');
             const title = document.getElementById('modal-title');
             const nameDisplay = document.getElementById('modal-user-name');
-
-            nameDisplay.innerText = `Peserta: ${user.nama}`;
-            modal.classList.add('active');
-
-            // LOGIKA: Jika sudah punya pasangan, jangan tampilkan list pencarian
+            nameDisplay.innerText = `Peserta: ${user.nama}`; modal.classList.add('active');
+            
             if(user.pasanganId && (user.statusRelasi === 'Taaruf' || user.statusRelasi === 'SL Bayangan')) {
                 const partner = getParticipantById(user.pasanganId);
                 title.innerText = "Kelola Hubungan";
+                let html = `<div style="text-align:center; margin-bottom:1.5rem;"><p>Sedang ${user.statusRelasi} dengan:</p><h2 style="color:var(--primary);">${partner.nama}</h2></div>`;
+                if(user.statusRelasi === 'Taaruf') { html += `<button onclick="updateRelationStatus('sl')" class="btn btn-success" style="margin-bottom:0.5rem">Lanjut SL</button><button onclick="updateRelationStatus('batal')" class="btn btn-danger" style="margin-bottom:0.5rem">Putus</button>`; }
+                else { html += `<p style="text-align:center; color:var(--success);">MasyaAllah!</p><button onclick="updateRelationStatus('batal')" class="btn btn-outline btn-sm" style="color:red;">Batalkan</button>`; }
+                content.innerHTML = html;
+            } else {
+                title.innerText = "Pilih Pasangan";
                 
                 let html = `
-                    <div style="text-align:center; margin-bottom:1.5rem;">
-                        <p>Saat ini sedang ${user.statusRelasi} dengan:</p>
-                        <h2 style="color:var(--primary);">${partner.nama}</h2>
-                    </div>
+                    <input type="text" id="search-partner" class="search-input" placeholder="Cari nama pasangan..." onkeyup="renderPartnerList()" style="margin-bottom:1rem;">
+                    <div class="partner-list" id="partner-list-container"></div>
                 `;
-
-                if(user.statusRelasi === 'Taaruf') {
-                    html += `
-                        <button onclick="updateRelationStatus('sl')" class="btn btn-success" style="margin-bottom:0.5rem">Lanjut ke SL Bayangan</button>
-                        <button onclick="updateRelationStatus('batal')" class="btn btn-danger" style="margin-bottom:0.5rem">Tidak Jadi / Putus</button>
-                    `;
-                } else {
-                    html += `<p style="text-align:center; color:var(--success);">MasyaAllah, sudah Fixed!</p>
-                             <button onclick="updateRelationStatus('batal')" class="btn btn-outline btn-sm" style="color:red; border-color:red;">Batalkan (Admin)</button>`;
-                }
                 content.innerHTML = html;
-
-            } else {
-                // Jika belum punya pasangan, Tampilkan LIST KANDIDAT (FILTER KETAT)
-                title.innerText = "Pilih Pasangan";
-                const availablePartners = getAvailablePartners(user);
-                
-                if(availablePartners.length === 0) {
-                    content.innerHTML = `<p style="text-align:center; padding:1rem;">Tidak ada pasangan tersedia yang sesuai (Filter: Beda Gender & Status Bebas).</p>`;
-                } else {
-                    let listHtml = `<div class="partner-list">`;
-                    availablePartners.forEach(p => {
-                        listHtml += `
-                            <div class="partner-item" onclick="confirmMatch(${p.id})">
-                                <div class="avatar ${p.gender === 'Laki-laki'?'male':'female'}" style="width:30px;height:30px;font-size:0.8rem;">${p.nama.charAt(0)}</div>
-                                <div>
-                                    <div style="font-weight:600">${p.nama}</div>
-                                    <div style="font-size:0.75rem; color:var(--text-sub)">${p.kelompok} | ${p.daerah}</div>
-                                </div>
-                                <div style="margin-left:auto; color:var(--success)">❤️</div>
-                            </div>
-                        `;
-                    });
-                    listHtml += `</div>`;
-                    content.innerHTML = listHtml;
-                }
+                renderPartnerList();
             }
         }
 
-        // Mendapatkan pasangan yang VALID (Beda Gender, Status Belum/Gagal, Sedang tidak taaruf)
+        function renderPartnerList() {
+            const listContainer = document.getElementById('partner-list-container');
+            const search = document.getElementById('search-partner').value.toLowerCase();
+            const user = getParticipantById(selectedUserId);
+            
+            const availablePartners = getAvailablePartners(user).filter(p => {
+                return p.nama.toLowerCase().includes(search);
+            });
+
+            if(availablePartners.length === 0) {
+                listContainer.innerHTML = `<p style="text-align:center; padding:1rem;">Tidak ada pasangan tersedia.</p>`;
+                return;
+            }
+
+            let listHtml = ``;
+            availablePartners.forEach(p => {
+                listHtml += `<div class="partner-item" onclick="confirmMatch(${p.id})"><div class="avatar ${p.gender === 'Laki-laki'?'male':'female'}" style="width:30px;height:30px;font-size:0.8rem;">${p.nama.charAt(0)}</div><div><div style="font-weight:600">${p.nama}</div><div style="font-size:0.75rem; color:var(--text-sub)">${p.kelompok} | ${p.daerah}</div></div><div style="margin-left:auto; color:var(--success)">❤️</div></div>`;
+            });
+            listContainer.innerHTML = listHtml;
+        }
+
         function getAvailablePartners(currentUser) {
             return participants.filter(p => {
                 if(p.id == currentUser.id) return false; 
                 if(p.gender === currentUser.gender) return false; 
-                // FILTER KETAT: Hanya yang statusnya 'Belum Taaruf' atau 'Tidak Jadi'
                 if(p.statusRelasi === 'Taaruf' || p.statusRelasi === 'SL Bayangan') return false; 
                 return true;
             });
@@ -560,10 +669,7 @@
         function confirmMatch(partnerId) {
             const partner = getParticipantById(partnerId);
             if(confirm(`Pasangkan ${getParticipantById(selectedUserId).nama} dengan ${partner.nama}?`)) {
-                const updates = [
-                    { id: selectedUserId, statusRelasi: 'Taaruf', pasanganId: partnerId },
-                    { id: partnerId, statusRelasi: 'Taaruf', pasanganId: selectedUserId }
-                ];
+                const updates = [ { id: selectedUserId, statusRelasi: 'Taaruf', pasanganId: partnerId }, { id: partnerId, statusRelasi: 'Taaruf', pasanganId: selectedUserId } ];
                 saveDataToSheet(updates);
                 closeModal('modal-partner');
             }
@@ -573,29 +679,13 @@
             const me = getParticipantById(selectedUserId);
             const partner = getParticipantById(me.pasanganId);
             const updates = [];
-
-            if(action === 'sl') {
-                updates.push(
-                    { id: me.id, statusRelasi: 'SL Bayangan' },
-                    { id: partner.id, statusRelasi: 'SL Bayangan' }
-                );
-                showToast("MasyaAllah, naik ke SL Bayangan!");
-            } else if (action === 'batal') {
-                updates.push(
-                    { id: me.id, statusRelasi: 'Tidak Jadi', pasanganId: null },
-                    { id: partner.id, statusRelasi: 'Tidak Jadi', pasanganId: null }
-                );
-                showToast("Hubungan dibatalkan.");
-            }
+            if(action === 'sl') { updates.push({ id: me.id, statusRelasi: 'SL Bayangan' }, { id: partner.id, statusRelasi: 'SL Bayangan' }); showToast("Naik ke SL Bayangan!"); }
+            else if (action === 'batal') { updates.push({ id: me.id, statusRelasi: 'Tidak Jadi', pasanganId: null }, { id: partner.id, statusRelasi: 'Tidak Jadi', pasanganId: null }); showToast("Hubungan dibatalkan."); }
             saveDataToSheet(updates);
             closeModal('modal-partner');
         }
 
-        function closeModal(id) {
-            document.getElementById(id).classList.remove('active');
-        }
-
-        // --- INIT ---
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
         window.onload = function() { loadDataFromSheet(); };
 
     </script>
