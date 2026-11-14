@@ -5,11 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>PNKB - Rekap Pernikahan Garut Kota</title>
 
-<!-- Fonts & Icons -->
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/@phosphor-icons/web"></script>
-
-<!-- Libraries -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
@@ -27,62 +24,27 @@
   }
 
   * { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif; -webkit-tap-highlight-color:transparent; }
-  
-  body { 
-    background: var(--bg-body); 
-    color: var(--text-main);
-    min-height: 100vh;
-  }
+  body { background: var(--bg-body); color: var(--text-main); min-height: 100vh; }
 
-  /* =========================================
-     RESPONSIVE LAYOUT (DESKTOP & MOBILE)
-  ========================================= */
-  
-  .app-container { 
-    width: 100%; 
-    min-height: 100vh;
-    background: var(--bg-card); 
-    position: relative; 
-    padding-bottom: 80px;
-  }
-
+  /* Responsive Layout */
+  .app-container { width: 100%; min-height: 100vh; background: var(--bg-card); position: relative; padding-bottom: 80px; }
   .desktop-sidebar { display: none; }
 
-  /* Desktop View */
   @media (min-width: 1024px) {
     body { padding: 40px; display: flex; justify-content: center; align-items: flex-start; }
-    .app-wrapper {
-      display: flex; width: 100%; max-width: 1400px; height: 90vh;
-      background: var(--bg-card); border-radius: 30px;
-      box-shadow: var(--shadow); overflow: hidden;
-    }
-    .desktop-sidebar {
-      display: flex; flex-direction: column; width: 260px;
-      background: #fff; border-right: 1px solid var(--border);
-      padding: 30px 20px; flex-shrink: 0;
-    }
-    .app-container {
-      flex: 1; height: 100%; overflow-y: auto;
-      padding-bottom: 30px; border-radius: 0; box-shadow: none;
-    }
+    .app-wrapper { display: flex; width: 100%; max-width: 1400px; height: 90vh; background: var(--bg-card); border-radius: 30px; box-shadow: var(--shadow); overflow: hidden; }
+    .desktop-sidebar { display: flex; flex-direction: column; width: 260px; background: #fff; border-right: 1px solid var(--border); padding: 30px 20px; flex-shrink: 0; }
+    .app-container { flex: 1; height: 100%; overflow-y: auto; padding-bottom: 30px; border-radius: 0; box-shadow: none; }
     .bottom-nav { display: none !important; }
-    
-    .desktop-grid {
-      display: grid; grid-template-columns: 1fr 1fr;
-      gap: 30px; padding: 0 40px;
-    }
+    .desktop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; padding: 0 40px; }
     .stats-card { margin: 0 0 20px 0; }
     .menu-grid { padding: 0 40px; grid-template-columns: repeat(4, 1fr); margin-bottom: 30px;}
     .section-title { font-size: 1.2rem; }
     .hero h1 { font-size: 2.2rem; }
-    
     #dataList { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
   }
 
-  /* =========================================
-     KOMPONEN UI
-  ========================================= */
-
+  /* UI Components */
   .top-header { padding: 25px 20px 15px; display: flex; align-items: center; justify-content: space-between; }
   .logo { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 1.2rem; letter-spacing: 2px; color: var(--text-main); }
   .logo-dot { width: 14px; height: 14px; background: var(--primary); border-radius: 50%; }
@@ -105,9 +67,10 @@
   .stats-card .label { font-size: 0.85rem; opacity: 0.9; }
   .stats-card i { font-size: 3rem; opacity: 0.5; }
 
+  /* Charts Grid */
   .chart-section { padding: 0 20px; margin-bottom: 25px; }
   .section-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 15px; color: var(--text-main); display: flex; justify-content: space-between; align-items: center; }
-  .chart-box { background: #fff; border: 1px solid var(--border); border-radius: 20px; padding: 15px; height: 220px; position: relative; box-shadow: 0 4px 10px rgba(0,0,0,0.02);}
+  .chart-box { background: #fff; border: 1px solid var(--border); border-radius: 20px; padding: 15px; height: 220px; position: relative; box-shadow: 0 4px 10px rgba(0,0,0,0.02); margin-bottom: 15px; }
 
   .list-section { padding: 0 20px; }
   .card { display: flex; gap: 15px; background: #fff; padding: 15px; border-radius: 16px; margin-bottom: 12px; border: 1px solid var(--border); box-shadow: 0 4px 10px rgba(0,0,0,0.02); transition: 0.2s; cursor: pointer; }
@@ -131,7 +94,6 @@
   .search-wrapper input { width: 100%; padding: 8px 10px 8px 30px; border: 1px solid #ddd; border-radius: 10px; font-size: 0.8rem; outline: none; transition: 0.2s; }
   .search-wrapper input:focus { border-color: var(--primary); width: 180px; }
 
-  /* PAGINATION STYLES */
   .pagination { display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 25px; margin-bottom: 20px; }
   .page-btn { background: #fff; border: 1px solid var(--border); color: var(--text-main); width: 35px; height: 35px; border-radius: 10px; display: flex; justify-content: center; align-items: center; font-weight: 500; cursor: pointer; transition: 0.2s; }
   .page-btn:hover:not(:disabled) { border-color: var(--primary); color: var(--primary); }
@@ -237,15 +199,24 @@
         <div class="stats-card">
           <div>
             <div class="num" id="totalData">0</div>
-            <div class="label">Total Pernikahan</div>
+            <div class="label">Total Keseluruhan Data</div>
           </div>
           <i class="ph ph-heart-straight"></i>
         </div>
 
+        <!-- Chart 1: Pernikahan Per Tahun (Hanya yang Sudah Menikah) -->
         <div class="chart-section">
-          <div class="section-title">Statistik Per Tahun</div>
+          <div class="section-title">Data Pernikahan Per Tahun</div>
           <div class="chart-box">
             <canvas id="chartTahun"></canvas>
+          </div>
+        </div>
+
+        <!-- Chart 2: Distribusi Status (Bisa Diklik) -->
+        <div class="chart-section">
+          <div class="section-title">Distribusi Status <br><span style="font-size:0.75rem; font-weight:400; color:#888;">(Klik grafik untuk memfilter data)</span></div>
+          <div class="chart-box" style="height: 200px;">
+            <canvas id="chartStatus"></canvas>
           </div>
         </div>
       </div>
@@ -259,12 +230,8 @@
           </div>
         </div>
         
-        <!-- Container Data -->
         <div id="dataList"></div>
-        
-        <!-- Container Pagination -->
         <div id="paginationContainer" class="pagination"></div>
-
       </div>
     </div>
   </main>
@@ -349,11 +316,11 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbw_X4Q_qKTB1WG3tLLCkAoZ
 let allData = [];
 let filteredData = [];
 let activeFilter = 'all';
-let chartInstance = null;
+let chartTahunInstance = null;
+let chartStatusInstance = null;
 
-// State Pagination
 let currentPage = 1;
-let rowsPerPage = window.innerWidth >= 1024 ? 6 : 5; // 6 di desktop, 5 di HP
+let rowsPerPage = window.innerWidth >= 1024 ? 6 : 5;
 
 async function loadData() {
   try {
@@ -362,12 +329,15 @@ async function loadData() {
     if (json.success) {
       allData = json.data;
       document.getElementById('totalData').innerText = allData.length;
-      handleSearch(); // Render awal
+      handleSearch(); 
     }
 
     const resStats = await fetch(`${API_URL}?action=stats`);
     const jsonStats = await resStats.json();
-    if (jsonStats.success) renderChart(jsonStats.stats.perTahun);
+    if (jsonStats.success) {
+      renderChartTahun(jsonStats.stats.perTahun);
+      renderChartStatus(jsonStats.stats.perStatus);
+    }
 
     const resWil = await fetch(`${API_URL}?action=wilayah`);
     const jsonWil = await resWil.json();
@@ -381,19 +351,22 @@ async function loadData() {
   }
 }
 
-function renderChart(perTahun) {
+// ============================================
+// RENDER CHARTS
+// ============================================
+function renderChartTahun(perTahun) {
   const labels = Object.keys(perTahun).sort();
   const values = labels.map(l => perTahun[l]);
 
-  if (chartInstance) chartInstance.destroy();
+  if (chartTahunInstance) chartTahunInstance.destroy();
 
   const ctx = document.getElementById('chartTahun').getContext('2d');
-  chartInstance = new Chart(ctx, {
+  chartTahunInstance = new Chart(ctx, {
     type: 'bar',
     data: {
       labels: labels,
       datasets: [{
-        label: 'Jumlah Pernikahan',
+        label: 'Jumlah Menikah',
         data: values,
         backgroundColor: '#E84C79',
         borderRadius: 8,
@@ -401,8 +374,7 @@ function renderChart(perTahun) {
       }]
     },
     options: {
-      responsive: true,
-      maintainAspectRatio: false,
+      responsive: true, maintainAspectRatio: false,
       plugins: { legend: { display: false } },
       scales: {
         y: { beginAtZero: true, ticks: { stepSize: 1, font: { size: 10 } }, grid: { display: false } },
@@ -412,7 +384,51 @@ function renderChart(perTahun) {
   });
 }
 
-// Fungsi dipanggil saat mencari atau ganti filter (reset ke halaman 1)
+function renderChartStatus(perStatus) {
+  const labels = Object.keys(perStatus);
+  const values = labels.map(l => perStatus[l]);
+  
+  // Warna sesuai status
+  const colors = labels.map(l => {
+    if (l === 'Sudah Menikah') return '#28a745';
+    if (l === 'Diterima') return '#ffc107';
+    if (l === 'Proses') return '#17a2b8';
+    return '#dc3545'; // Batal
+  });
+
+  if (chartStatusInstance) chartStatusInstance.destroy();
+
+  const ctx = document.getElementById('chartStatus').getContext('2d');
+  chartStatusInstance = new Chart(ctx, {
+    type: 'doughnut', // Menggunakan donat agar lebih interaktif
+    data: {
+      labels: labels,
+      datasets: [{
+        data: values,
+        backgroundColor: colors,
+        borderWidth: 2, borderColor: '#fff',
+        hoverOffset: 6
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { 
+        legend: { position: 'right', labels: { font: { size: 11 } } } 
+      },
+      onClick: (event, elements) => {
+        if (elements.length > 0) {
+          const index = elements[0].index;
+          const clickedStatus = labels[index];
+          setFilter(clickedStatus); // Filter data saat di-klik
+        }
+      }
+    }
+  });
+}
+
+// ============================================
+// LOGIKA FILTER & PAGINATION
+// ============================================
 function handleSearch() {
   currentPage = 1;
   applyFilter();
@@ -430,9 +446,7 @@ function applyFilter() {
     return true;
   });
 
-  // Urutkan dari yang terbaru
   filteredData.sort((a,b) => b.id.localeCompare(a.id));
-  
   renderList();
 }
 
@@ -445,7 +459,6 @@ function renderList() {
     return;
   }
 
-  // Hitung index data untuk halaman ini
   const totalPages = Math.ceil(filteredData.length / rowsPerPage);
   if (currentPage > totalPages) currentPage = totalPages;
   
@@ -453,7 +466,6 @@ function renderList() {
   const endIndex = startIndex + rowsPerPage;
   const paginatedData = filteredData.slice(startIndex, endIndex);
 
-  // Render Kartu Data
   container.innerHTML = paginatedData.map(d => `
     <div class="card" onclick='openModal("edit", ${JSON.stringify(d).replace(/'/g,"&#39;")})'>
       <div class="card-img"><i class="ph ph-users"></i></div>
@@ -472,9 +484,8 @@ function renderPagination(totalPages) {
   const container = document.getElementById('paginationContainer');
   container.innerHTML = '';
 
-  if (totalPages <= 1) return; // Sembunyikan jika hanya 1 halaman
+  if (totalPages <= 1) return;
 
-  // Tombol Prev
   const btnPrev = document.createElement('button');
   btnPrev.className = 'page-btn';
   btnPrev.innerHTML = '<i class="ph ph-caret-left"></i>';
@@ -482,13 +493,11 @@ function renderPagination(totalPages) {
   btnPrev.onclick = () => { currentPage--; renderList(); };
   container.appendChild(btnPrev);
 
-  // Info Halaman
   const info = document.createElement('span');
   info.className = 'page-info';
   info.innerText = `Hal ${currentPage} dari ${totalPages}`;
   container.appendChild(info);
 
-  // Tombol Next
   const btnNext = document.createElement('button');
   btnNext.className = 'page-btn';
   btnNext.innerHTML = '<i class="ph ph-caret-right"></i>';
@@ -510,6 +519,9 @@ function setFilter(f) {
   handleSearch();
 }
 
+// ============================================
+// CRUD & EXPORT
+// ============================================
 function openModal(mode, data = null) {
   document.getElementById('modalBg').classList.add('show');
   document.getElementById('modalTitle').textContent = mode === 'add' ? 'Tambah Data Baru' : 'Edit Data';
@@ -591,7 +603,6 @@ function exportPDF() {
   doc.setFontSize(10);
   doc.text(`Dicetak: ${new Date().toLocaleString('id-ID')}`, 14, 32);
   
-  // Gunakan filteredData agar PDF sesuai dengan apa yang sedang difilter user
   const tableData = filteredData.map(d => [
     d.id, d.tahun, `${d.calon_pria} & ${d.calon_wanita}`, `${d.asal_pria} - ${d.asal_wanita}`, d.status
   ]);
@@ -608,7 +619,6 @@ function exportPDF() {
   doc.save(`Rekap_Pernikahan_PNKB_${new Date().toISOString().split('T')[0]}.pdf`);
 }
 
-// Handle window resize untuk menyesuaikan jumlah baris per halaman
 window.addEventListener('resize', () => {
   const newRowsPerPage = window.innerWidth >= 1024 ? 6 : 5;
   if (newRowsPerPage !== rowsPerPage) {
