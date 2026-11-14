@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>PNKB - Rekap Pernikahan Garut Kota</title>
+
+<!-- Fonts & Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+<!-- Libraries -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+
+<style>
+  :root {
+    --primary: #E84C79;
+    --primary-light: #FFF0F5;
+    --text-main: #1a1a1a;
+    --text-muted: #888;
+    --bg-body: #f4f5f9;
+    --bg-card: #ffffff;
+    --border: #f0f0f0;
+    --shadow: 0 10px 30px rgba(0,0,0,0.05);
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif; -webkit-tap-highlight-color:transparent; }
+  
+  body { 
+    background: var(--bg-body); 
+    color: var(--text-main);
+    min-height: 100vh;
+  }
+
+  /* =========================================
+     RESPONSIVE LAYOUT (DESKTOP & MOBILE)
+  ========================================= */
+  
+  .app-container { 
+    width: 100%; 
+    min-height: 100vh;
+    background: var(--bg-card); 
+    position: relative; 
+    padding-bottom: 80px;
+  }
+
+  .desktop-sidebar { display: none; }
+
+  /* Desktop View */
+  @media (min-width: 1024px) {
+    body { padding: 40px; display: flex; justify-content: center; align-items: flex-start; }
+    .app-wrapper {
+      display: flex; width: 100%; max-width: 1400px; height: 90vh;
+      background: var(--bg-card); border-radius: 30px;
+      box-shadow: var(--shadow); overflow: hidden;
+    }
+    .desktop-sidebar {
+      display: flex; flex-direction: column; width: 260px;
+      background: #fff; border-right: 1px solid var(--border);
+      padding: 30px 20px; flex-shrink: 0;
+    }
+    .app-container {
+      flex: 1; height: 100%; overflow-y: auto;
+      padding-bottom: 30px; border-radius: 0; box-shadow: none;
+    }
+    .bottom-nav { display: none !important; }
+    
+    .desktop-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 30px; padding: 0 40px;
+    }
+    .stats-card { margin: 0 0 20px 0; }
+    .menu-grid { padding: 0 40px; grid-template-columns: repeat(4, 1fr); margin-bottom: 30px;}
+    .section-title { font-size: 1.2rem; }
+    .hero h1 { font-size: 2.2rem; }
+    
+    #dataList { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+  }
+
+  /* =========================================
+     KOMPONEN UI
+  ========================================= */
+
+  .top-header { padding: 25px 20px 15px; display: flex; align-items: center; justify-content: space-between; }
+  .logo { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 1.2rem; letter-spacing: 2px; color: var(--text-main); }
+  .logo-dot { width: 14px; height: 14px; background: var(--primary); border-radius: 50%; }
+  .icon-btn { background: var(--bg-body); border: none; width: 42px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; color: var(--text-main); cursor: pointer; transition: 0.2s; }
+  .icon-btn:hover { background: #e2e4ea; }
+
+  .hero { padding: 0 20px; text-align: center; margin-bottom: 25px; }
+  .hero h1 { font-size: 1.7rem; font-weight: 600; color: var(--text-main); line-height: 1.3; margin-bottom: 10px; }
+  .hero h1 span { color: var(--primary); }
+  .hero p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; }
+  
+  .menu-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 0 20px; margin-bottom: 25px; }
+  .menu-item { text-align: center; cursor: pointer; display: flex; flex-direction: column; align-items: center; }
+  .menu-icon { width: 60px; height: 60px; background: var(--primary-light); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; margin-bottom: 8px; color: var(--primary); transition: 0.2s; }
+  .menu-item:hover .menu-icon { transform: translateY(-3px); background: #ffe0e9; }
+  .menu-item span { font-size: 0.75rem; color: var(--text-muted); font-weight: 500; }
+
+  .stats-card { background: linear-gradient(135deg, var(--primary), #ff7b9c); margin: 0 20px 25px; border-radius: 20px; padding: 20px 25px; color: white; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 10px 20px rgba(232,76,121,0.2); }
+  .stats-card .num { font-size: 2.2rem; font-weight: 700; line-height: 1; margin-bottom: 5px; }
+  .stats-card .label { font-size: 0.85rem; opacity: 0.9; }
+  .stats-card i { font-size: 3rem; opacity: 0.5; }
+
+  .chart-section { padding: 0 20px; margin-bottom: 25px; }
+  .section-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 15px; color: var(--text-main); display: flex; justify-content: space-between; align-items: center; }
+  .chart-box { background: #fff; border: 1px solid var(--border); border-radius: 20px; padding: 15px; height: 220px; position: relative; box-shadow: 0 4px 10px rgba(0,0,0,0.02);}
+
+  .list-section { padding: 0 20px; }
+  .card { display: flex; gap: 15px; background: #fff; padding: 15px; border-radius: 16px; margin-bottom: 12px; border: 1px solid var(--border); box-shadow: 0 4px 10px rgba(0,0,0,0.02); transition: 0.2s; cursor: pointer; }
+  .card:hover { border-color: var(--primary); transform: translateY(-2px); }
+  .card-img { width: 60px; height: 60px; border-radius: 12px; background: var(--primary-light); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 1.8rem; flex-shrink: 0; }
+  .card-info { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+  .card-title { font-size: 0.95rem; font-weight: 600; color: var(--text-main); margin-bottom: 3px; }
+  .card-sub { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px; display: flex; align-items: center; gap: 5px; }
+  .card-status { font-size: 0.7rem; font-weight: 600; padding: 4px 10px; border-radius: 8px; display: inline-block; width: fit-content; }
+  
+  .st-menikah { background: #e8f5e9; color: #2e7d32; }
+  .st-diterima { background: #fff8e1; color: #f57f17; }
+  .st-proses { background: #e3f2fd; color: #1565c0; }
+  .st-batal { background: #ffebee; color: #c62828; }
+  
+  .empty-state { text-align: center; padding: 40px 0; color: var(--text-muted); font-size: 0.9rem; }
+  .empty-state i { font-size: 3rem; margin-bottom: 10px; color: #ccc; }
+
+  .search-wrapper { position: relative; width: 150px; }
+  .search-wrapper i { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
+  .search-wrapper input { width: 100%; padding: 8px 10px 8px 30px; border: 1px solid #ddd; border-radius: 10px; font-size: 0.8rem; outline: none; transition: 0.2s; }
+  .search-wrapper input:focus { border-color: var(--primary); width: 180px; }
+
+  /* PAGINATION STYLES */
+  .pagination { display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 25px; margin-bottom: 20px; }
+  .page-btn { background: #fff; border: 1px solid var(--border); color: var(--text-main); width: 35px; height: 35px; border-radius: 10px; display: flex; justify-content: center; align-items: center; font-weight: 500; cursor: pointer; transition: 0.2s; }
+  .page-btn:hover:not(:disabled) { border-color: var(--primary); color: var(--primary); }
+  .page-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+  .page-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .page-info { font-size: 0.8rem; color: var(--text-muted); margin: 0 5px; }
+
+  .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; display: flex; justify-content: space-around; padding: 15px 0 25px; border-top: 1px solid var(--border); z-index: 10; }
+  .nav-item { color: #ccc; font-size: 1.6rem; cursor: pointer; transition: 0.2s; }
+  .nav-item.active { color: var(--primary); }
+  .nav-item.fab { width: 55px; height: 55px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-top: -35px; box-shadow: 0 5px 15px rgba(232,76,121,0.3); font-size: 1.6rem; }
+  
+  .sidebar-brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.3rem; letter-spacing: 1px; color: var(--text-main); margin-bottom: 40px; padding: 0 10px; }
+  .sidebar-menu { display: flex; flex-direction: column; gap: 10px; flex: 1; }
+  .sidebar-item { display: flex; align-items: center; gap: 12px; padding: 14px 15px; border-radius: 12px; color: var(--text-muted); font-weight: 500; cursor: pointer; transition: 0.2s; }
+  .sidebar-item:hover { background: var(--bg-body); color: var(--text-main); }
+  .sidebar-item.active { background: var(--primary-light); color: var(--primary); font-weight: 600; }
+  .sidebar-item i { font-size: 1.4rem; }
+  .btn-add-desktop { margin-top: auto; background: var(--primary); color: white; border: none; padding: 15px; border-radius: 12px; font-weight: 600; font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .btn-add-desktop:hover { opacity: 0.9; }
+
+  .modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; align-items: flex-end; justify-content: center; backdrop-filter: blur(3px); }
+  .modal-bg.show { display: flex; }
+  .modal { background: #fff; width: 100%; max-width: 500px; border-radius: 30px 30px 0 0; padding: 25px; max-height: 90vh; overflow-y: auto; animation: slideUp 0.3s ease; }
+  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  
+  @media (min-width: 1024px) {
+    .modal-bg { align-items: center; }
+    .modal { border-radius: 30px; max-width: 600px; animation: zoomIn 0.2s ease; }
+    @keyframes zoomIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  }
+
+  .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+  .modal-header h3 { font-size: 1.2rem; color: var(--text-main); }
+  .close-btn { background: var(--bg-body); border: none; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: var(--text-muted); cursor: pointer; }
+
+  .form-group { margin-bottom: 15px; }
+  .form-group label { display: block; font-size: 0.85rem; font-weight: 500; color: #555; margin-bottom: 6px; }
+  .form-control { width: 100%; padding: 12px 15px; border: 1px solid #ddd; border-radius: 12px; font-size: 0.9rem; font-family: inherit; outline: none; transition: 0.2s; background: #fafafa; }
+  .form-control:focus { border-color: var(--primary); background: #fff; }
+  .btn-submit { width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 12px; font-size: 1rem; font-weight: 600; margin-top: 10px; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; }
+  .btn-submit:active { opacity: 0.8; }
+
+  .flex-row { display: flex; gap: 10px; }
+  .flex-row > * { flex: 1; }
+  .mb-3 { margin-bottom: 15px; }
+</style>
+</head>
+<body>
+
+<div class="app-wrapper">
+  <aside class="desktop-sidebar">
+    <div class="sidebar-brand"><div class="logo-dot"></div> PNKB</div>
+    <div class="sidebar-menu">
+      <div class="sidebar-item active" onclick="setFilter('all')"><i class="ph ph-house"></i> Dashboard</div>
+      <div class="sidebar-item" onclick="setFilter('Sudah Menikah')"><i class="ph ph-check-circle"></i> Sudah Menikah</div>
+      <div class="sidebar-item" onclick="setFilter('Diterima')"><i class="ph ph-file-text"></i> Diterima</div>
+      <div class="sidebar-item" onclick="setFilter('Proses')"><i class="ph ph-hourglass"></i> Proses</div>
+      <div class="sidebar-item" onclick="exportPDF()"><i class="ph ph-file-pdf"></i> Export PDF</div>
+    </div>
+    <button class="btn-add-desktop" onclick="openModal('add')">
+      <i class="ph ph-plus-circle" style="font-size:1.2rem"></i> Tambah Data
+    </button>
+  </aside>
+
+  <main class="app-container">
+    <div class="top-header">
+      <div class="logo" style="display: flex; align-items: center;">
+        <div class="logo-dot"></div> 
+        <span style="margin-left: 8px;">Rekap Pernikahan</span>
+      </div>
+      <button class="icon-btn" onclick="exportPDF()" title="Export PDF">
+        <i class="ph ph-download-simple"></i>
+      </button>
+    </div>
+
+    <div class="hero">
+      <h1>Rekap <span>Pernikahan</span><br>Garut Kota</h1>
+      <p>Semua data pernikahan terpusat dalam satu genggaman.</p>
+    </div>
+
+    <div class="menu-grid">
+      <div class="menu-item" onclick="document.getElementById('searchInput').focus()">
+        <div class="menu-icon"><i class="ph ph-magnifying-glass"></i></div>
+        <span>Cari</span>
+      </div>
+      <div class="menu-item" onclick="setFilter('Sudah Menikah')">
+        <div class="menu-icon"><i class="ph ph-check-circle"></i></div>
+        <span>Menikah</span>
+      </div>
+      <div class="menu-item" onclick="setFilter('Diterima')">
+        <div class="menu-icon"><i class="ph ph-file-text"></i></div>
+        <span>Diterima</span>
+      </div>
+      <div class="menu-item" onclick="setFilter('all')">
+        <div class="menu-icon"><i class="ph ph-list-dashes"></i></div>
+        <span>Semua</span>
+      </div>
+    </div>
+
+    <div class="desktop-grid">
+      <div>
+        <div class="stats-card">
+          <div>
+            <div class="num" id="totalData">0</div>
+            <div class="label">Total Pernikahan</div>
+          </div>
+          <i class="ph ph-heart-straight"></i>
+        </div>
+
+        <div class="chart-section">
+          <div class="section-title">Statistik Per Tahun</div>
+          <div class="chart-box">
+            <canvas id="chartTahun"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="list-section">
+        <div class="section-title">
+          Data Pernikahan
+          <div class="search-wrapper">
+            <i class="ph ph-magnifying-glass"></i>
+            <input type="text" id="searchInput" placeholder="Cari nama..." oninput="handleSearch()">
+          </div>
+        </div>
+        
+        <!-- Container Data -->
+        <div id="dataList"></div>
+        
+        <!-- Container Pagination -->
+        <div id="paginationContainer" class="pagination"></div>
+
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="bottom-nav">
+  <div class="nav-item active" onclick="setFilter('all')"><i class="ph ph-house"></i></div>
+  <div class="nav-item fab" onclick="openModal('add')"><i class="ph ph-plus"></i></div>
+  <div class="nav-item" onclick="exportPDF()"><i class="ph ph-file-pdf"></i></div>
+</div>
+
+<div class="modal-bg" id="modalBg" onclick="closeModal(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <h3 id="modalTitle">Tambah Data</h3>
+      <button class="close-btn" onclick="closeModal()"><i class="ph ph-x"></i></button>
+    </div>
+    <input type="hidden" id="editId">
+    
+    <div class="flex-row mb-3">
+      <div class="form-group" style="margin-bottom:0;">
+        <label>Tahun</label>
+        <select id="f_tahun" class="form-control">
+          <option value="2024">2024</option>
+          <option value="2025">2025</option>
+          <option value="2026">2026</option>
+        </select>
+      </div>
+      <div class="form-group" style="margin-bottom:0;">
+        <label>Status</label>
+        <select id="f_status" class="form-control">
+          <option value="Proses">Proses</option>
+          <option value="Diterima">Diterima</option>
+          <option value="Sudah Menikah">Sudah Menikah</option>
+          <option value="Batal">Batal</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Nama Calon Pria</label>
+      <input type="text" id="f_pria" class="form-control" placeholder="Cth: Ahmad">
+    </div>
+    <div class="form-group">
+      <label>Asal Pria (Ketik jika baru)</label>
+      <input type="text" id="f_asal_pria" class="form-control" list="listWilayah" placeholder="Pilih atau ketik baru...">
+    </div>
+
+    <div class="form-group">
+      <label>Nama Calon Wanita</label>
+      <input type="text" id="f_wanita" class="form-control" placeholder="Cth: Siti">
+    </div>
+    <div class="form-group">
+      <label>Asal Wanita (Ketik jika baru)</label>
+      <input type="text" id="f_asal_wanita" class="form-control" list="listWilayah" placeholder="Pilih atau ketik baru...">
+    </div>
+
+    <datalist id="listWilayah"></datalist>
+
+    <div class="form-group">
+      <label>Tanggal Nikah (Opsional)</label>
+      <input type="date" id="f_tanggal" class="form-control">
+    </div>
+    
+    <div class="form-group">
+      <label>Keterangan</label>
+      <input type="text" id="f_ket" class="form-control" placeholder="Catatan tambahan...">
+    </div>
+    
+    <button class="btn-submit" onclick="saveData()" id="btnSave">
+      <i class="ph ph-floppy-disk"></i> Simpan Data
+    </button>
+  </div>
+</div>
+
+<script>
+// ============================================
+// GANTI URL DI BAWAH INI
+// ============================================
+const API_URL = 'https://script.google.com/macros/s/AKfycbw_X4Q_qKTB1WG3tLLCkAoZI1rjPCiH-mWyvij1ttx1rBe1EnWusNr_ZyY7h8zQiaSFOg/exec';
+
+let allData = [];
+let filteredData = [];
+let activeFilter = 'all';
+let chartInstance = null;
+
+// State Pagination
+let currentPage = 1;
+let rowsPerPage = window.innerWidth >= 1024 ? 6 : 5; // 6 di desktop, 5 di HP
+
+async function loadData() {
+  try {
+    const res = await fetch(`${API_URL}?action=list`);
+    const json = await res.json();
+    if (json.success) {
+      allData = json.data;
+      document.getElementById('totalData').innerText = allData.length;
+      handleSearch(); // Render awal
+    }
+
+    const resStats = await fetch(`${API_URL}?action=stats`);
+    const jsonStats = await resStats.json();
+    if (jsonStats.success) renderChart(jsonStats.stats.perTahun);
+
+    const resWil = await fetch(`${API_URL}?action=wilayah`);
+    const jsonWil = await resWil.json();
+    if (jsonWil.success) {
+      const datalist = document.getElementById('listWilayah');
+      datalist.innerHTML = jsonWil.data.map(w => `<option value="${w}">`).join('');
+    }
+  } catch (err) {
+    console.error(err);
+    document.getElementById('dataList').innerHTML = `<div class="empty-state"><i class="ph ph-warning-circle"></i><br>Gagal memuat data. Cek koneksi API.</div>`;
+  }
+}
+
+function renderChart(perTahun) {
+  const labels = Object.keys(perTahun).sort();
+  const values = labels.map(l => perTahun[l]);
+
+  if (chartInstance) chartInstance.destroy();
+
+  const ctx = document.getElementById('chartTahun').getContext('2d');
+  chartInstance = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Jumlah Pernikahan',
+        data: values,
+        backgroundColor: '#E84C79',
+        borderRadius: 8,
+        barThickness: 40
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { beginAtZero: true, ticks: { stepSize: 1, font: { size: 10 } }, grid: { display: false } },
+        x: { grid: { display: false }, ticks: { font: { size: 11, weight: 'bold' } } }
+      }
+    }
+  });
+}
+
+// Fungsi dipanggil saat mencari atau ganti filter (reset ke halaman 1)
+function handleSearch() {
+  currentPage = 1;
+  applyFilter();
+}
+
+function applyFilter() {
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  
+  filteredData = allData.filter(d => {
+    if (activeFilter !== 'all' && d.status !== activeFilter) return false;
+    if (search) {
+      const s = `${d.calon_pria} ${d.calon_wanita}`.toLowerCase();
+      if (!s.includes(search)) return false;
+    }
+    return true;
+  });
+
+  // Urutkan dari yang terbaru
+  filteredData.sort((a,b) => b.id.localeCompare(a.id));
+  
+  renderList();
+}
+
+function renderList() {
+  const container = document.getElementById('dataList');
+  
+  if (filteredData.length === 0) {
+    container.innerHTML = `<div class="empty-state"><i class="ph ph-folder-open"></i><br>Belum ada data pernikahan.</div>`;
+    document.getElementById('paginationContainer').innerHTML = '';
+    return;
+  }
+
+  // Hitung index data untuk halaman ini
+  const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+  if (currentPage > totalPages) currentPage = totalPages;
+  
+  const startIndex = (currentPage - 1) * rowsPerPage;
+  const endIndex = startIndex + rowsPerPage;
+  const paginatedData = filteredData.slice(startIndex, endIndex);
+
+  // Render Kartu Data
+  container.innerHTML = paginatedData.map(d => `
+    <div class="card" onclick='openModal("edit", ${JSON.stringify(d).replace(/'/g,"&#39;")})'>
+      <div class="card-img"><i class="ph ph-users"></i></div>
+      <div class="card-info">
+        <div class="card-title">${d.calon_pria} & ${d.calon_wanita}</div>
+        <div class="card-sub"><i class="ph ph-calendar-blank"></i> ${d.tahun} &bull; <i class="ph ph-map-pin"></i> ${d.asal_pria}</div>
+        <div class="card-status ${stCls(d.status)}">${d.status}</div>
+      </div>
+    </div>
+  `).join('');
+
+  renderPagination(totalPages);
+}
+
+function renderPagination(totalPages) {
+  const container = document.getElementById('paginationContainer');
+  container.innerHTML = '';
+
+  if (totalPages <= 1) return; // Sembunyikan jika hanya 1 halaman
+
+  // Tombol Prev
+  const btnPrev = document.createElement('button');
+  btnPrev.className = 'page-btn';
+  btnPrev.innerHTML = '<i class="ph ph-caret-left"></i>';
+  btnPrev.disabled = currentPage === 1;
+  btnPrev.onclick = () => { currentPage--; renderList(); };
+  container.appendChild(btnPrev);
+
+  // Info Halaman
+  const info = document.createElement('span');
+  info.className = 'page-info';
+  info.innerText = `Hal ${currentPage} dari ${totalPages}`;
+  container.appendChild(info);
+
+  // Tombol Next
+  const btnNext = document.createElement('button');
+  btnNext.className = 'page-btn';
+  btnNext.innerHTML = '<i class="ph ph-caret-right"></i>';
+  btnNext.disabled = currentPage === totalPages;
+  btnNext.onclick = () => { currentPage++; renderList(); };
+  container.appendChild(btnNext);
+}
+
+function stCls(s) {
+  return s === 'Sudah Menikah' ? 'st-menikah'
+       : s === 'Diterima' ? 'st-diterima'
+       : s === 'Proses' ? 'st-proses' : 'st-batal';
+}
+
+function setFilter(f) {
+  activeFilter = f;
+  document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
+  if(event && event.currentTarget) event.currentTarget.classList.add('active');
+  handleSearch();
+}
+
+function openModal(mode, data = null) {
+  document.getElementById('modalBg').classList.add('show');
+  document.getElementById('modalTitle').textContent = mode === 'add' ? 'Tambah Data Baru' : 'Edit Data';
+  
+  if (mode === 'edit' && data) {
+    document.getElementById('editId').value = data.id;
+    document.getElementById('f_tahun').value = data.tahun;
+    document.getElementById('f_status').value = data.status;
+    document.getElementById('f_pria').value = data.calon_pria || '';
+    document.getElementById('f_asal_pria').value = data.asal_pria || '';
+    document.getElementById('f_wanita').value = data.calon_wanita || '';
+    document.getElementById('f_asal_wanita').value = data.asal_wanita || '';
+    document.getElementById('f_tanggal').value = (data.tanggal_nikah || '').toString().split('T')[0];
+    document.getElementById('f_ket').value = data.keterangan || '';
+  } else {
+    ['editId','f_pria','f_asal_pria','f_wanita','f_asal_wanita','f_tanggal','f_ket'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('f_tahun').value = new Date().getFullYear();
+    document.getElementById('f_status').value = 'Proses';
+  }
+}
+
+function closeModal(e) {
+  if (e && e.target !== e.currentTarget) return;
+  document.getElementById('modalBg').classList.remove('show');
+}
+
+async function saveData() {
+  const id = document.getElementById('editId').value;
+  const payload = {
+    action: id ? 'update' : 'create',
+    data: {
+      id: id || undefined,
+      tahun: parseInt(document.getElementById('f_tahun').value),
+      status: document.getElementById('f_status').value,
+      calon_pria: document.getElementById('f_pria').value.trim(),
+      asal_pria: document.getElementById('f_asal_pria').value.trim(),
+      calon_wanita: document.getElementById('f_wanita').value.trim(),
+      asal_wanita: document.getElementById('f_asal_wanita').value.trim(),
+      tanggal_nikah: document.getElementById('f_tanggal').value,
+      keterangan: document.getElementById('f_ket').value.trim()
+    }
+  };
+  
+  if (!payload.data.calon_pria || !payload.data.calon_wanita) {
+    alert('Nama pria & wanita wajib diisi!'); return;
+  }
+
+  const btn = document.getElementById('btnSave');
+  btn.disabled = true; 
+  btn.innerHTML = '<i class="ph ph-spinner-gap" style="animation: spin 1s linear infinite"></i> Menyimpan...';
+  
+  try {
+    await fetch(API_URL, {
+      method:'POST', body: JSON.stringify(payload),
+      headers:{ 'Content-Type':'text/plain;charset=utf-8' }
+    });
+    closeModal();
+    loadData();
+  } catch (err) {
+    alert('Gagal menyimpan: ' + err.message);
+  } finally {
+    btn.disabled = false; 
+    btn.innerHTML = '<i class="ph ph-floppy-disk"></i> Simpan Data';
+  }
+}
+
+function exportPDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF('portrait', 'mm', 'a4');
+  
+  doc.setFillColor(232, 76, 121);
+  doc.rect(0, 0, 210, 25, 'F');
+  doc.setTextColor(255,255,255);
+  doc.setFontSize(16);
+  doc.setFont('helvetica','bold');
+  doc.text('Laporan Pernikahan PNKB Garut Kota', 105, 15, { align:'center' });
+  
+  doc.setTextColor(0,0,0);
+  doc.setFontSize(10);
+  doc.text(`Dicetak: ${new Date().toLocaleString('id-ID')}`, 14, 32);
+  
+  // Gunakan filteredData agar PDF sesuai dengan apa yang sedang difilter user
+  const tableData = filteredData.map(d => [
+    d.id, d.tahun, `${d.calon_pria} & ${d.calon_wanita}`, `${d.asal_pria} - ${d.asal_wanita}`, d.status
+  ]);
+  
+  doc.autoTable({
+    startY: 38,
+    head: [['ID', 'Tahun', 'Pasangan', 'Asal', 'Status']],
+    body: tableData,
+    styles: { fontSize: 8, cellPadding: 3 },
+    headStyles: { fillColor: [232, 76, 121], textColor: [255,255,255] },
+    alternateRowStyles: { fillColor: [255, 245, 248] },
+  });
+  
+  doc.save(`Rekap_Pernikahan_PNKB_${new Date().toISOString().split('T')[0]}.pdf`);
+}
+
+// Handle window resize untuk menyesuaikan jumlah baris per halaman
+window.addEventListener('resize', () => {
+  const newRowsPerPage = window.innerWidth >= 1024 ? 6 : 5;
+  if (newRowsPerPage !== rowsPerPage) {
+    rowsPerPage = newRowsPerPage;
+    currentPage = 1;
+    renderList();
+  }
+});
+
+loadData();
+</script>
+
+<style>
+  @keyframes spin { 100% { transform: rotate(360deg); } }
+</style>
+</body>
+</html>
